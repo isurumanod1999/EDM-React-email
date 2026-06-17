@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 1,
+  "id": "d9620187-dc90-48fe-bad9-070f08ab1732",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "2b66def7-94ae-463c-9dc0-dac8a85c9f63",
+      "componentId": "footer",
+      "componentVersion": 1,
+      "props": {
+        "backgroundColor": "#1a1a1a",
+        "logoSrc": "/images/preview-928x522.jpg",
+        "logoWidth": 160,
+        "logoAlt": "Nissan",
+        "logoUrl": "https://www.nissan.com",
+        "socialTitle": "Connect with us",
+        "socialLinks": [
+          {
+            "platform": "facebook",
+            "url": "https://facebook.com/nissan",
+            "iconUrl": "https://placehold.co/28x28/ffffff/1a1a1a?text=f"
+          },
+          {
+            "platform": "instagram",
+            "url": "https://instagram.com/nissan",
+            "iconUrl": "https://placehold.co/28x28/ffffff/1a1a1a?text=ig"
+          }
+        ],
+        "showDivider": true,
+        "legalText": "Nissan MORE warranty offer valid on selected models. Terms and conditions apply.",
+        "showLinks": true,
+        "preferencesUrl": "https://www.nissan.com/preferences",
+        "unsubscribeUrl": "https://www.nissan.com/unsubscribe",
+        "privacyUrl": "https://www.nissan.com/privacy",
+        "copyright": "© 2026 Nissan Motor Corporation. All ri"
+      },
+      "label": "Footer"
+    },
+    {
+      "id": "cad890e5-b40d-4ddf-b433-6fa6bd512855",
+      "componentId": "header",
+      "componentVersion": 1,
+      "props": {
+        "logoSrc": "/images/preview-928x522.jpg",
+        "logoWidth": 250,
+        "logoAlt": "Nissan Motor Corporation",
+        "logoUrl": "https://www.nissan.com",
+        "backgroundColor": "#ffffff",
+        "deskPadding": "25px 40px",
+        "align": "center"
+      },
+      "label": "Header"
+    },
+    {
+      "id": "357b8355-4e38-475b-aaf8-2307fa5bd01a",
+      "componentId": "image-block",
+      "componentVersion": 1,
+      "props": {
+        "imgSrc": "/images/QQ%20ST.png",
+        "imgWidth": 520,
+        "altText": "Nissan Qashqai",
+        "url": "https://www.nissan.com/qashqai",
+        "backgroundColor": "#ffffff",
+        "align": "center"
+      },
+      "label": "Image Block"
+    },
+    {
+      "id": "30ec35e6-8f50-4b9c-b90b-9b3c8ca4afb5",
+      "componentId": "testimonial",
+      "componentVersion": 1,
+      "props": {
+        "quote": "This product exceeded all my expectations. Highly recommended!",
+        "authorName": "Jane Smith",
+        "authorTitle": "Verified Customer",
+        "avatarSrc": "https://placehold.co/56x56/e2e8f0/64748b?text=JS",
+        "backgroundColor": "#f7f8f8",
+        "cardBackgroundColor": "#ffffff"
+      },
+      "label": "Testimonial"
+    },
+    {
+      "id": "f19f4e8f-f612-4c12-ad6b-49a9448fe87c",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#ffffff",
+            "textAlign": "left",
+            "padding": "72px 80px 72px 80px"
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "Have questions?",
+              "as": "h2",
+              "style": {
+                "color": "#000000",
+                "fontSize": "28px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "42px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 16
+            },
+            {
+              "type": "Text",
+              "content": "If you have any questions please contact",
+              "style": {
+                "color": "#3d3d3d",
+                "fontSize": "18px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "27px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "CONTACT 1",
+              "containerStyle": {
+                "textAlign": "left",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "19px",
+                "padding": "16px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "100%",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 12
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "CONTACT 2",
+              "containerStyle": {
+                "textAlign": "left",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "color": "#000000",
+                "borderRadius": 999,
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "19px",
+                "padding": "16px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "100%",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "CTA Banner",
+        "mobileFrame": "CTA Banner"
+      },
+      "label": "CTA Banner"
+    },
+    {
+      "id": "108e3c4c-8bdd-4519-a0ea-d21afae9c522",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#ffffff",
+            "textAlign": "left",
+            "padding": "32px 24px 32px 24px"
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "Optional Heading",
+              "as": "h1",
+              "style": {
+                "color": "#000000",
+                "fontSize": "40px",
+                "fontWeight": 700,
+                "textAlign": "left",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "60px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Heading",
+              "content": "Content theme/value prop (40 characters)",
+              "as": "h2",
+              "style": {
+                "color": "#000000",
+                "fontSize": "28px",
+                "fontWeight": 400,
+                "textAlign": "left",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "42px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Text",
+              "content": "Confidence Comes Standard",
+              "style": {
+                "color": "#000000",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "left",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 8
+            },
+            {
+              "type": "Text",
+              "content": "At [Dealership Name], we’re committed to more than just great vehicles — we’re here to support you every step of the way. Whether you're exploring your first Nissan or servicing a vehicle you've loved for years, our team is dedicated to making your experience easy, transparent, and stress-free.\nFrom flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road.\nGot questions? We're just a call or visit away.",
+              "style": {
+                "color": "#3d3d3d",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "left",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 16
+            },
+            {
+              "type": "Text",
+              "content": "Additional section",
+              "style": {
+                "color": "#000000",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "left",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 8
+            },
+            {
+              "type": "Text",
+              "content": "From flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road.",
+              "style": {
+                "color": "#3d3d3d",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "left",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 8
+            },
+            {
+              "type": "Text",
+              "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "style": {
+                "color": "#3d3d3d",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "left",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Contact dealership",
+              "containerStyle": {
+                "textAlign": "left",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "19px",
+                "padding": "16px 24px",
+                "textAlign": "center",
+                "textDecoration": "none",
+                "width": "100%",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "Rich Text",
+        "mobileFrame": "Rich Text"
+      },
+      "label": "Rich Text"
+    }
+  ],
+  "createdAt": "2026-06-11T04:14:23.989Z",
+  "updatedAt": "2026-06-11T07:16:22.758Z"
+}

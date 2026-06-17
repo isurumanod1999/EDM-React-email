@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "c517f1ce-c18c-4c7a-9f3b-82fdf75842a7",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "767c11ba-b126-479c-8d37-1e51c3c2e00f",
+      "componentId": "header",
+      "componentVersion": 1,
+      "props": {
+        "logoSrc": "/images/preview-928x522.jpg",
+        "logoWidth": 250,
+        "logoAlt": "Nissan Motor Corporation",
+        "logoUrl": "https://www.nissan.com",
+        "backgroundColor": "#ffffff",
+        "deskPadding": "25px 40px",
+        "align": "center"
+      },
+      "label": "Header"
+    },
+    {
+      "id": "c7e93fb2-692c-41d4-a59e-03a379561067",
+      "componentId": "image-block",
+      "componentVersion": 1,
+      "props": {
+        "imgSrc": "/images/QQ%20ST.png",
+        "imgWidth": 520,
+        "altText": "Nissan Qashqai",
+        "url": "https://www.nissan.com/qashqai",
+        "backgroundColor": "#ffffff",
+        "align": "center"
+      },
+      "label": "Image Block"
+    }
+  ],
+  "createdAt": "2026-06-11T07:54:25.340Z",
+  "updatedAt": "2026-06-11T07:55:57.833Z"
+}
