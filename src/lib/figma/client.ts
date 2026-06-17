@@ -45,6 +45,12 @@ export interface FigmaNodeDocument {
   componentId?: string;
   boundVariables?: Record<string, FigmaVariableAlias | FigmaVariableAlias[]>;
   styles?: Record<string, string>;
+  /**
+   * Node-level hyperlink. Figma populates this for text nodes that carry a link
+   * and (via some plugin exports) for image/frame nodes. Standard REST rarely
+   * sets it on images, so callers must tolerate it being absent.
+   */
+  hyperlink?: { type?: string; url?: string; nodeID?: string };
   children?: FigmaNodeDocument[];
 }
 

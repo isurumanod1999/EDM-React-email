@@ -40,6 +40,12 @@ export interface ParsedFigmaNode {
   exportUrl?: string;
   componentId?: string;
   nodeId?: string;
+  /**
+   * Transient build-time flag (not from Figma): set on HORIZONTAL frames during
+   * mobile-layout merge to record whether the mobile counterpart is also a
+   * multi-column row. Controls whether the generated columns stack on mobile.
+   */
+  keepColumnsOnMobile?: boolean;
   children: ParsedFigmaNode[];
 }
 
@@ -195,8 +201,14 @@ export function hasButtonVisualStructure(node: ParsedFigmaNode, depth = 0): bool
         normalizeColor(child.backgroundColor) &&
         !child.imageRef
       ) {
+        const cw = child.width ?? 0;
         const ch = child.height ?? 0;
         const radius = child.cornerRadius ?? 0;
+        // A small roughly-square fill is an icon container (e.g. a dark circle),
+        // not a button pill — don't treat it as button visual structure.
+        const isIconSquare =
+          cw > 0 && ch > 0 && cw <= 80 && ch <= 80 && cw / ch >= 0.6 && cw / ch <= 1.67;
+        if (isIconSquare) continue;
         if (ch >= h * 0.4 || radius >= 8) return true;
       }
     }
@@ -215,6 +227,18 @@ export function hasButtonDescendant(node: ParsedFigmaNode): boolean {
   return node.children.some(hasButtonDescendant);
 }
 
+function nodeHasImageDescendant(node: ParsedFigmaNode): boolean {
+  const isImg =
+    node.type === 'IMAGE' ||
+    (!!node.imageRef &&
+      (node.type === 'RECTANGLE' ||
+        node.type === 'FRAME' ||
+        node.type === 'INSTANCE' ||
+        node.type === 'COMPONENT'));
+  if (isImg) return true;
+  return node.children.some(nodeHasImageDescendant);
+}
+
 export function collectExportNodeIds(root: ParsedFigmaNode): string[] {
   const ids = new Set<string>();
 
@@ -226,10 +250,27 @@ export function collectExportNodeIds(root: ParsedFigmaNode): string[] {
     const hasImageFill = Boolean(node.imageRef);
     const isImageType = node.type === 'IMAGE' || (node.type === 'RECTANGLE' && hasImageFill);
 
+    // Absolutely-positioned overlay composition (no auto-layout) that layers
+    // imagery + text — a hero "key visual". Email can't reproduce free-form
+    // overlap, so export the whole frame as one PNG even though it has text, and
+    // don't recurse into its layers (they're baked into the export).
+    const isOverlayComposite =
+      (node.type === 'FRAME' ||
+        node.type === 'INSTANCE' ||
+        node.type === 'COMPONENT' ||
+        node.type === 'GROUP') &&
+      node.layoutMode !== 'HORIZONTAL' &&
+      node.layoutMode !== 'VERTICAL' &&
+      node.children.length >= 2 &&
+      nodeHasImageDescendant(node);
+
     if (isImageType || RASTER_TYPES.has(node.type)) {
       ids.add(node.nodeId);
     } else if (node.type === 'INSTANCE' && !hasText && !hasButtons) {
       ids.add(node.nodeId);
+    } else if (isOverlayComposite && depth >= 1) {
+      ids.add(node.nodeId);
+      return; // rasterize the whole composite; skip its individual layers
     } else if (
       depth === 1 &&
       (node.type === 'FRAME' || node.type === 'GROUP' || node.type === 'INSTANCE') &&

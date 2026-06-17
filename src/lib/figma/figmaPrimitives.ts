@@ -11,7 +11,7 @@ import {
   normalizeColor,
   resolveEffectiveBackground,
 } from './parseFigmaNode';
-import type { ReactEmailNode } from './types/reactEmailAst';
+import { RESPONSIVE_COL_CLASS, type ReactEmailNode } from './types/reactEmailAst';
 
 const EMAIL_FONT =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
@@ -26,6 +26,33 @@ const SKIP_TYPES = new Set([
 ]);
 
 const CONTAINER_TYPES = new Set(['FRAME', 'COMPONENT', 'INSTANCE', 'GROUP']);
+
+/**
+ * Fallback mobile behavior for a two-column Row when there is NO mobile Figma
+ * frame AND the content-aware heuristic (columnsAreSymmetricGrid) can't decide
+ * (e.g. unknown widths). Symmetric image+text card grids stay 2-up regardless;
+ * this only covers the truly ambiguous case.
+ * `true`  → stack to a single column on mobile (safest for narrow screens).
+ * `false` → keep two columns on mobile.
+ */
+const STACK_COLUMNS_ON_MOBILE_BY_DEFAULT = true;
+
+/** Icons (small circular/square containers) are at most this wide/tall. */
+const ICON_MAX_DIMENSION = 80;
+
+/**
+ * A node that is small AND roughly square — an icon / icon-container, not a
+ * content box. Such frames must render at their intrinsic small size (centered),
+ * never stretched to the full column width or turned into a full-width pill.
+ */
+function isIconSized(node: ParsedFigmaNode): boolean {
+  const w = node.width ?? 0;
+  const h = node.height ?? 0;
+  if (w <= 0 || h <= 0) return false;
+  if (w > ICON_MAX_DIMENSION || h > ICON_MAX_DIMENSION) return false;
+  const aspect = w / h;
+  return aspect >= 0.6 && aspect <= 1.67;
+}
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -100,10 +127,14 @@ function textStyle(
 }
 
 function stripExports(node: ParsedFigmaNode): ParsedFigmaNode {
+  // Keep the full-frame PNG for raster-only nodes AND for absolutely-positioned
+  // overlay compositions (key visuals) — those must be rasterized even though
+  // they contain overlay text, because email can't reproduce free-form overlap.
   const keepRasterOnly = !hasTextDescendant(node) && !hasButtonDescendant(node);
+  const keep = keepRasterOnly || isAbsoluteComposite(node);
   return {
     ...node,
-    exportUrl: keepRasterOnly ? node.exportUrl : undefined,
+    exportUrl: keep ? node.exportUrl : undefined,
     children: node.children.map(stripExports),
   };
 }
@@ -168,6 +199,71 @@ function isCtaPhrase(text: string): boolean {
   ) || (t.length <= 40 && /see all offers|request a quote/i.test(t));
 }
 
+// ─── link detection ─────────────────────────────────────────────────────────
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Phone-only string: starts with + ( or a digit, then phone punctuation, ending in a digit.
+const PHONE_RE = /^[+(]?\d[\d\s\-().]{4,18}\d$/;
+const URL_RE = /^(https?:\/\/|www\.)\S+$/i;
+// Short, unambiguous link labels (contact rows / footers). Exact-match only.
+const LINK_WORDS = new Set([
+  'email',
+  'email us',
+  'call',
+  'call us',
+  'phone',
+  'contact us',
+  'view in browser',
+  'unsubscribe',
+]);
+
+/**
+ * Decide whether a TEXT node is really a hyperlink and what href it should carry.
+ * Conservative by design — the ENTIRE trimmed string must look like an email,
+ * phone number or URL, or exactly equal a known short link label, so ordinary
+ * body copy (even sentences that mention an address) is never linkified.
+ */
+function detectLink(node: ParsedFigmaNode): { href: string } | null {
+  const raw = node.text?.trim();
+  if (!raw) return null;
+  if (isHeading(node)) return null; // never turn a headline into a link
+
+  if (EMAIL_RE.test(raw)) return { href: `mailto:${raw}` };
+
+  if (PHONE_RE.test(raw)) {
+    const digits = raw.replace(/\D/g, '');
+    if (digits.length >= 6 && digits.length <= 15) return { href: `tel:${digits}` };
+  }
+
+  if (URL_RE.test(raw)) {
+    return { href: raw.startsWith('http') ? raw : `https://${raw}` };
+  }
+
+  const lower = raw.toLowerCase();
+  if (raw.length <= 24 && LINK_WORDS.has(lower)) return { href: '#' };
+
+  // Layer-name hint (e.g. "Email link", "Phone") on a short label.
+  if (raw.length <= 30 && /\b(link|mailto|tel|email|phone)\b/.test(node.name.toLowerCase())) {
+    return { href: '#' };
+  }
+
+  return null;
+}
+
+function mapLink(
+  node: ParsedFigmaNode,
+  href: string,
+  align?: CSSProperties['textAlign']
+): ReactEmailNode {
+  const base = textStyle(node, align);
+  return {
+    type: 'Link',
+    href,
+    content: node.text?.trim() ?? '',
+    style: { ...base, textDecoration: 'underline', display: 'inline-block' },
+  };
+}
+
 /** Find the solid-fill shape inside a button component (prefer largest colored fill). */
 function findButtonFill(node: ParsedFigmaNode, depth = 0): ParsedFigmaNode | undefined {
   if (depth > 6) return undefined;
@@ -180,7 +276,8 @@ function findButtonFill(node: ParsedFigmaNode, depth = 0): ParsedFigmaNode | und
       if (
         (child.type === 'RECTANGLE' || child.type === 'FRAME') &&
         normalizeColor(child.backgroundColor) &&
-        !child.imageRef
+        !child.imageRef &&
+        !isIconSized(child) // a small dark circle/square is an icon, not a button fill
       ) {
         const nh = node.height ?? 0;
         const ch = child.height ?? 0;
@@ -225,6 +322,8 @@ function inferButtonLabel(node: ParsedFigmaNode): string {
 }
 
 function isButtonNode(node: ParsedFigmaNode): boolean {
+  // A small square is an icon container, not a button — even with a fill + radius.
+  if (isIconSized(node)) return false;
   const h = node.height ?? 0;
   if (h > 140) return false;
 
@@ -251,7 +350,16 @@ function isImageNode(node: ParsedFigmaNode): boolean {
   if (hasTextDescendant(node)) return false;
   if (hasButtonDescendant(node)) return false;
   if (node.type === 'IMAGE') return true;
-  if (node.imageRef && (node.type === 'RECTANGLE' || node.type === 'FRAME')) return true;
+  // Raster fill on a rectangle/frame, or a small icon shipped as an instance/component.
+  if (
+    node.imageRef &&
+    (node.type === 'RECTANGLE' ||
+      node.type === 'FRAME' ||
+      node.type === 'INSTANCE' ||
+      node.type === 'COMPONENT')
+  ) {
+    return true;
+  }
   if (node.exportUrl) return true;
   return false;
 }
@@ -260,7 +368,13 @@ function isImageNode(node: ParsedFigmaNode): boolean {
 function isCtaButtonStack(node: ParsedFigmaNode): boolean {
   const kids = getContentChildren(node);
   if (kids.length < 2) return false;
-  const buttons = kids.filter((k) => isButtonNode(k) || hasButtonVisualStructure(k));
+  // Only count button-SIZED direct children. hasButtonVisualStructure recurses
+  // into descendants, so without this height guard a row of tall content cards
+  // (each merely containing a button) would be misread as a button stack and
+  // collapsed instead of becoming columns.
+  const buttons = kids.filter(
+    (k) => (k.height ?? 0) <= 120 && (isButtonNode(k) || hasButtonVisualStructure(k))
+  );
   return buttons.length >= 2;
 }
 
@@ -270,11 +384,57 @@ function getImageSrc(node: ParsedFigmaNode): string | undefined {
   return node.imageRef;
 }
 
+/** Largest-area image descendant (the background / key-visual), if any. */
+function findDominantImage(node: ParsedFigmaNode, depth = 0): ParsedFigmaNode | undefined {
+  let best: ParsedFigmaNode | undefined;
+  let bestArea = 0;
+  function walk(n: ParsedFigmaNode, d: number) {
+    if (d > 8) return;
+    if (isImageNode(n)) {
+      const area = (n.width ?? 0) * (n.height ?? 0);
+      if (area > bestArea) {
+        bestArea = area;
+        best = n;
+      }
+    }
+    for (const c of n.children) walk(c, d + 1);
+  }
+  walk(node, depth);
+  return best;
+}
+
+/**
+ * An absolutely-positioned composition (NO auto-layout) that layers images and
+ * text on top of each other — e.g. a hero "key visual" with price / headline
+ * text over a car photo, a logo and badges. Email cannot reproduce free-form
+ * overlap, so these must be rasterized to a single image (the frame's exported
+ * PNG when available, otherwise its dominant background image) instead of being
+ * stacked layer-by-layer, which yields broken giant overlay headings and
+ * stretched slivers.
+ */
+function isAbsoluteComposite(node: ParsedFigmaNode): boolean {
+  if (!CONTAINER_TYPES.has(node.type)) return false;
+  // Auto-layout frames are real stacks/rows — only no-layout frames overlap.
+  if (node.layoutMode === 'HORIZONTAL' || node.layoutMode === 'VERTICAL') return false;
+  if (isButtonNode(node) || isImageNode(node)) return false;
+  const kids = getContentChildren(node);
+  if (kids.length < 2) return false;
+  // Only when it actually contains imagery; pure-text no-layout frames are rare
+  // and handled fine by the normal stack path.
+  return !!findDominantImage(node);
+}
+
 /** A container that only groups text / buttons / images — flatten its children in order. */
 function isLayoutGroup(node: ParsedFigmaNode): boolean {
   if (!CONTAINER_TYPES.has(node.type)) return false;
   if (isButtonNode(node)) return false;
   if (isImageNode(node)) return false;
+
+  // Horizontal auto-layout frames are real columns and must reach the row
+  // handler — never flatten them, or multi-column designs collapse into one column.
+  if (node.layoutMode === 'HORIZONTAL' && getContentChildren(node).length > 1) {
+    return false;
+  }
 
   const kids = getContentChildren(node);
   if (kids.length === 0) return false;
@@ -310,14 +470,77 @@ function mapText(
   };
 }
 
+const BULLET_LINE = /^\s*([•·●▪‣◦∙*\-–—])\s+(.*\S.*)$/;
+
+/** Split a multi-line bullet TEXT node into one trimmed item per bullet line. */
+function splitBulletItems(text: string): string[] | null {
+  const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+  if (lines.length < 2) return null;
+  const items = lines.filter((l) => BULLET_LINE.test(l));
+  // Treat as a list only when (nearly) every line is a bullet.
+  if (items.length >= 2 && items.length >= lines.length - 1) {
+    return lines.map((l) => l.replace(BULLET_LINE, '$2'));
+  }
+  return null;
+}
+
+function mapBulletItem(
+  node: ParsedFigmaNode,
+  item: string,
+  align?: CSSProperties['textAlign']
+): ReactEmailNode {
+  const base = textStyle(node, align);
+  return {
+    type: 'Text',
+    content: `•  ${item}`,
+    style: {
+      ...base,
+      textAlign: 'left',
+      paddingLeft: '1.2em',
+      textIndent: '-1.2em',
+    },
+  };
+}
+
 function mapTextNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): ReactEmailNode[] {
+  if (node.type === 'TEXT' && node.text?.trim()) {
+    const link = detectLink(node);
+    if (link) return [mapLink(node, link.href, align)];
+  }
   if (node.type === 'TEXT' && node.text?.trim() && isCtaPhrase(node.text)) {
     return [mapButton(node, align)];
+  }
+  if (node.type === 'TEXT' && !isHeading(node)) {
+    const items = splitBulletItems(node.text ?? '');
+    if (items) return items.map((item) => mapBulletItem(node, item, align));
   }
   return [mapText(node, align)];
 }
 
+/** Largest corner radius anywhere in the button subtree (pill shape may live on a child). */
+function findMaxCornerRadius(node: ParsedFigmaNode, depth = 0): number {
+  let r = node.cornerRadius ?? 0;
+  if (depth < 6) {
+    for (const c of node.children) r = Math.max(r, findMaxCornerRadius(c, depth + 1));
+  }
+  return r;
+}
+
+/** First visible stroke anywhere in the button subtree (border may live on a child shape). */
+function findStroke(node: ParsedFigmaNode, depth = 0): { color?: string; weight: number } {
+  const color = normalizeColor(node.strokeColor);
+  if (color && (node.strokeWeight ?? 0) > 0) return { color, weight: node.strokeWeight ?? 1 };
+  if (depth < 6) {
+    for (const c of node.children) {
+      const s = findStroke(c, depth + 1);
+      if (s.color) return s;
+    }
+  }
+  return { weight: 0 };
+}
+
 function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): ReactEmailNode {
+  void align;
   const texts = findAllTextNodes(node);
   const primaryText = texts.find((t) => (t.text?.length ?? 0) > 2) ?? texts[0];
   const label = inferButtonLabel(node);
@@ -327,23 +550,48 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
     normalizeColor(fill?.backgroundColor) ??
     normalizeColor(node.backgroundColor);
 
-  const textColor = primaryText?.color ?? '#ffffff';
-  const radius = fill?.cornerRadius ?? node.cornerRadius ?? 0;
+  // Outline / secondary button: little or no fill but a visible stroke (search
+  // the whole subtree — the border often lives on a child pill shape).
+  const deepStroke = findStroke(node);
+  const strokeColor =
+    normalizeColor(fill?.strokeColor) ?? normalizeColor(node.strokeColor) ?? deepStroke.color;
+  const strokeWeight = fill?.strokeWeight ?? node.strokeWeight ?? deepStroke.weight ?? 0;
+  const isOutline = (!bg || isLightColor(bg)) && !!strokeColor && strokeWeight > 0;
+
+  const fillColor = isOutline ? bg ?? 'transparent' : bg;
+  const textColor = isOutline
+    ? primaryText?.color && !isLightColor(primaryText.color)
+      ? primaryText.color
+      : strokeColor && !isLightColor(strokeColor)
+        ? strokeColor
+        : '#000000'
+    : primaryText?.color ?? '#ffffff';
+  // An outline button needs a VISIBLE border: if the stroke is as light as the
+  // white/transparent fill, fall back to the dark text color so it isn't invisible.
+  const borderColor = isOutline && isLightColor(strokeColor) ? textColor : strokeColor;
+  const border = isOutline
+    ? `${Math.max(1, Math.round(strokeWeight))}px solid ${borderColor}`
+    : undefined;
+  const radius = fill?.cornerRadius ?? findMaxCornerRadius(node);
   const pillRadius = radius >= 8 ? 999 : Math.max(radius, 0);
   const fw = primaryText?.fontWeight ?? 700;
   const fs = primaryText?.fontSize ?? 14;
-  const textAlign = align ?? nodeTextAlign(node) ?? 'center';
+  // CTAs read best centered within these card/column layouts.
+  const textAlign: CSSProperties['textAlign'] = 'center';
 
   const pt = node.paddingTop ?? fill?.paddingTop ?? 0;
   const pr = node.paddingRight ?? fill?.paddingRight ?? 0;
   const pb = node.paddingBottom ?? fill?.paddingBottom ?? 0;
   const pl = node.paddingLeft ?? fill?.paddingLeft ?? 0;
-  const btnH = node.height ?? fill?.height ?? 0;
+  // Cap the height used for padding so a tall CTA *frame* (often padded with
+  // surrounding space in Figma) doesn't become an absurdly tall pill.
+  const btnH = Math.min(node.height ?? fill?.height ?? 0, 56);
+  const cappedPad = (v: number) => Math.min(Math.max(v, 0), 18);
   const verticalPad =
     pt || pb
-      ? `${pt || 14}px ${pr || 28}px ${pb || 14}px ${pl || 28}px`
+      ? `${cappedPad(pt || 14)}px ${pr || 28}px ${cappedPad(pb || 14)}px ${pl || 28}px`
       : btnH > 0
-        ? `${Math.max(12, Math.round((btnH - fs) / 2))}px ${pr || 28}px`
+        ? `${Math.min(Math.max(12, Math.round((btnH - fs) / 2)), 18)}px ${pr || 28}px`
         : '14px 28px';
 
   return {
@@ -357,8 +605,9 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
       padding: 0,
     },
     style: {
-      backgroundColor: bg,
+      backgroundColor: fillColor,
       color: textColor,
+      border,
       borderRadius: pillRadius,
       fontFamily: fontFamily(primaryText ?? node),
       fontSize: `${fs}px`,
@@ -389,6 +638,10 @@ function mapImage(node: ParsedFigmaNode): ReactEmailNode | null {
     height: node.height,
     alt: node.name,
     className: `figma-img-${node.id.replace(/[:;]/g, '-')}`,
+    // Standalone images (logos, hero art, column art) read best centered in email.
+    align: 'center',
+    // Small square icons render at a fixed small size, never stretched full-width.
+    isIcon: isIconSized(node) || undefined,
   };
 }
 
@@ -403,6 +656,117 @@ function interleaveChildGaps(
     out.push(...childGroups[i]);
   }
   return out;
+}
+
+/**
+ * Visual box styling for a content frame: background color, border (stroke),
+ * corner radius and padding. Returns undefined when the frame has no visible
+ * box, so plain content isn't wrapped in a redundant Section.
+ */
+function boxStyle(node: ParsedFigmaNode): CSSProperties | undefined {
+  const bg = resolveEffectiveBackground(node);
+  const stroke = normalizeColor(node.strokeColor);
+  const strokeWeight = node.strokeWeight ?? 0;
+  const hasBorder = !!stroke && strokeWeight > 0;
+  if (!bg && !hasBorder) return undefined;
+
+  // Icon-sized container (e.g. a small dark circle): keep it at its intrinsic
+  // small size and centered — NOT width:100% with default padding, which would
+  // balloon a ~48px circle into a full-width oval/pill.
+  if (isIconSized(node)) {
+    const iconStyle: CSSProperties = {
+      width: node.width,
+      height: node.height,
+      boxSizing: 'border-box',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    };
+    if (bg) iconStyle.backgroundColor = bg;
+    if (hasBorder) iconStyle.border = `${Math.max(1, Math.round(strokeWeight))}px solid ${stroke}`;
+    // Round shape scaled to the icon (half its size), capped at the real radius.
+    if (node.cornerRadius && node.cornerRadius > 0) {
+      const maxDim = Math.max(node.width ?? 0, node.height ?? 0);
+      iconStyle.borderRadius = Math.min(node.cornerRadius, Math.round(maxDim / 2));
+    }
+    const pad = formatPadding(node);
+    if (pad) iconStyle.padding = pad;
+    return iconStyle;
+  }
+
+  const style: CSSProperties = { width: '100%' };
+  const align = nodeTextAlign(node);
+  if (align) style.textAlign = align;
+  if (bg) style.backgroundColor = bg;
+  if (hasBorder) style.border = `${Math.max(1, Math.round(strokeWeight))}px solid ${stroke}`;
+  // Colored / bordered blocks need breathing room even when Figma padding is 0.
+  style.padding = formatPadding(node) ?? '12px 16px';
+  if (node.cornerRadius && node.cornerRadius > 0) style.borderRadius = node.cornerRadius;
+  return style;
+}
+
+/** Wrap mapped children in a Section carrying the frame's box styling, if any. */
+function wrapBox(node: ParsedFigmaNode, children: ReactEmailNode[]): ReactEmailNode[] {
+  const style = boxStyle(node);
+  if (children.length === 0) {
+    // A small colored/bordered icon whose only glyph was a dropped vector still
+    // renders as a small standalone shape (a dark circle); larger empty boxes
+    // contribute nothing.
+    if (style && isIconSized(node)) return [{ type: 'Section', style, children: [] }];
+    return [];
+  }
+  if (!style) return children;
+  return [{ type: 'Section', style, children }];
+}
+
+function hasImageDescendant(node: ParsedFigmaNode): boolean {
+  if (isImageNode(node)) return true;
+  return node.children.some(hasImageDescendant);
+}
+
+/** Largest image dimension anywhere in the subtree (0 if no image). */
+function largestImageDimension(node: ParsedFigmaNode, depth = 0): number {
+  let d = isImageNode(node) ? Math.max(node.width ?? 0, node.height ?? 0) : 0;
+  if (depth < 8) {
+    for (const c of node.children) d = Math.max(d, largestImageDimension(c, depth + 1));
+  }
+  return d;
+}
+
+/** A column whose only image is icon-sized (icon + short label unit). */
+function columnLooksLikeIconUnit(col: ParsedFigmaNode): boolean {
+  const dim = largestImageDimension(col);
+  return dim > 0 && dim <= ICON_MAX_DIMENSION;
+}
+
+/**
+ * Content-aware default (used ONLY when no mobile frame says otherwise): should a
+ * desktop two-column Row stay 2-up on mobile?
+ *
+ * Returns true for symmetric "grid / comparison" rows — repeated cards of roughly
+ * equal width that each pair an image with text (e.g. X-TRAIL/QASHQAI compare,
+ * 2UP product grid). Returns false for asymmetric rows (e.g. image-left /
+ * text-right banner) so they collapse to one column on mobile.
+ *
+ * Thresholds (deliberately conservative):
+ *  - every column is 33%–60% of the parent width, and
+ *  - the widest and narrowest columns are within 15 percentage points, and
+ *  - every column contains BOTH an image and text (same card shape), and
+ *  - the images are NOT icon-sized (small icon + label rows stack on mobile).
+ */
+function columnsAreSymmetricGrid(kids: ParsedFigmaNode[], parentWidth: number): boolean {
+  if (kids.length < 2) return false;
+
+  const ratios = kids.map((k) => (k.width && parentWidth ? k.width / parentWidth : NaN));
+  if (ratios.some((r) => Number.isNaN(r))) return false; // unknown widths → not confident
+  if (Math.max(...ratios) - Math.min(...ratios) > 0.15) return false;
+  if (ratios.some((r) => r < 0.33 || r > 0.6)) return false;
+
+  // Rows of small icon + short-label units (contact / social rows) read better
+  // stacked on mobile than squeezed multi-up, and are visually distinct from
+  // large image cards — let them fall through to the stacking default.
+  if (kids.every(columnLooksLikeIconUnit)) return false;
+
+  return kids.every((k) => hasImageDescendant(k) && hasTextDescendant(k));
 }
 
 // ─── ordered walk (core algorithm) ──────────────────────────────────────────
@@ -454,11 +818,35 @@ function mapNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): Rea
     }
   }
 
-  // 6. Layout group — flatten children in Figma order
+  // 5.5 Absolutely-positioned overlay composition (key visual) — rasterize to a
+  // single image rather than stacking its overlapping layers. Prefer the frame's
+  // exported PNG (overlay text baked in); otherwise fall back to its dominant
+  // background image (overlay text/decoration can't be reproduced as live text).
+  if (isAbsoluteComposite(node)) {
+    if (node.exportUrl) {
+      return [
+        {
+          type: 'Img',
+          src: node.exportUrl,
+          width: Math.min(node.width ?? 600, 600),
+          height: node.height,
+          alt: node.name,
+          align: 'center',
+        },
+      ];
+    }
+    const dominant = findDominantImage(node);
+    if (dominant) {
+      const img = mapImage(dominant);
+      if (img) return [img];
+    }
+  }
+
+  // 6. Layout group — flatten children in Figma order (preserving any box)
   if (isLayoutGroup(node)) {
     const kids = getContentChildren(node);
     const groups = kids.map((child) => mapNode(child, effectiveAlign));
-    return interleaveChildGaps(groups, node.gap);
+    return wrapBox(node, interleaveChildGaps(groups, node.gap));
   }
 
   // 7. Horizontal row
@@ -466,25 +854,57 @@ function mapNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): Rea
     const kids = getContentChildren(node);
     if (kids.length > 1) {
       const parentW = node.width ?? 600;
-      const columns: ReactEmailNode[] = kids.map((child) => ({
-        type: 'Column',
-        style: {
-          width: child.width
-            ? `${Math.min(100, Math.round((child.width / parentW) * 100))}%`
-            : `${Math.round(100 / kids.length)}%`,
-          verticalAlign: 'top',
-        },
+      const gutter = node.gap && node.gap > 0 ? Math.round(node.gap / 2) : 0;
+
+      const mapped = kids.map((child) => ({
+        child,
         children: mapNode(child, effectiveAlign),
       }));
-      return [{ type: 'Row', style: { width: '100%' }, children: columns }];
+      // Drop columns that produced nothing (e.g. icon slots that were skipped).
+      const nonEmpty = mapped.filter((m) => m.children.length > 0);
+
+      // Collapsed to a single real column → flatten inside the box, no Row.
+      if (nonEmpty.length <= 1) {
+        return wrapBox(node, nonEmpty.flatMap((m) => m.children));
+      }
+
+      // Mobile column decision (strongest signal first):
+      //  1. explicit mobile frame (keepColumnsOnMobile) always wins;
+      //  2. else content-aware default: symmetric image+text cards stay 2-up;
+      //  3. else the ambiguous-case fallback constant.
+      const stackOnMobile =
+        node.keepColumnsOnMobile !== undefined
+          ? !node.keepColumnsOnMobile
+          : columnsAreSymmetricGrid(nonEmpty.map((m) => m.child), parentW)
+            ? false
+            : STACK_COLUMNS_ON_MOBILE_BY_DEFAULT;
+
+      const columns: ReactEmailNode[] = nonEmpty.map((m, i) => ({
+        type: 'Column',
+        className: stackOnMobile ? RESPONSIVE_COL_CLASS : undefined,
+        style: {
+          width: m.child.width
+            ? `${Math.min(100, Math.round((m.child.width / parentW) * 100))}%`
+            : `${Math.round(100 / nonEmpty.length)}%`,
+          verticalAlign: 'top',
+          ...(gutter
+            ? {
+                paddingLeft: i === 0 ? 0 : gutter,
+                paddingRight: i === nonEmpty.length - 1 ? 0 : gutter,
+              }
+            : {}),
+        },
+        children: m.children,
+      }));
+      return wrapBox(node, [{ type: 'Row', style: { width: '100%' }, children: columns }]);
     }
   }
 
-  // 8. Recurse into children
+  // 8. Recurse into children (preserving any box)
   const kids = getContentChildren(node);
   if (kids.length > 0) {
     const groups = kids.map((child) => mapNode(child, effectiveAlign));
-    return interleaveChildGaps(groups, node.gap);
+    return wrapBox(node, interleaveChildGaps(groups, node.gap));
   }
 
   return [];
@@ -502,6 +922,16 @@ function isFullSection(child: ParsedFigmaNode): boolean {
 function applyMobileLayout(desktop: ParsedFigmaNode, mobile: ParsedFigmaNode): ParsedFigmaNode {
   function walk(desk: ParsedFigmaNode, mob: ParsedFigmaNode | undefined): ParsedFigmaNode {
     if (!mob) return desk;
+
+    // Per-row mobile column decision: if this desktop row's mobile counterpart
+    // is ALSO a multi-column horizontal layout, keep two columns on mobile;
+    // if the mobile counterpart is vertical/single-column, let it stack.
+    let keepColumnsOnMobile: boolean | undefined;
+    if (desk.layoutMode === 'HORIZONTAL' && getContentChildren(desk).length > 1) {
+      keepColumnsOnMobile =
+        mob.layoutMode === 'HORIZONTAL' && getContentChildren(mob).length > 1;
+    }
+
     return {
       ...desk,
       paddingTop: mob.paddingTop ?? desk.paddingTop,
@@ -510,6 +940,7 @@ function applyMobileLayout(desktop: ParsedFigmaNode, mobile: ParsedFigmaNode): P
       paddingLeft: mob.paddingLeft ?? desk.paddingLeft,
       gap: mob.gap ?? desk.gap,
       backgroundColor: resolveEffectiveBackground(mob) ?? resolveEffectiveBackground(desk),
+      keepColumnsOnMobile,
       children: desk.children.map((child) => {
         const mc = mob.children.find((c) => c.name === child.name);
         return walk(child, mc);
@@ -584,7 +1015,11 @@ export function buildPrimitivesFromFigma(
       isCtaButtonStack(k) ||
       (isButtonNode(k) && !isFullSection(k))
   );
-  const shouldSplit = fullSections.length > 1 && !hasCtaSibling;
+  // A horizontal auto-layout root is a row of columns, not stacked page
+  // sections — let mapNode build the Row/Column structure instead of splitting.
+  const rootIsRow =
+    root.layoutMode === 'HORIZONTAL' && getContentChildren(root).length > 1;
+  const shouldSplit = fullSections.length > 1 && !hasCtaSibling && !rootIsRow;
 
   if (shouldSplit) {
     for (const section of fullSections) {

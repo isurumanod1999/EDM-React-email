@@ -1,5 +1,7 @@
+import { readFileSync } from 'fs';
+import path from 'path';
 import { buildPrimitivesFromFigma } from '../src/lib/figma/figmaPrimitives';
-import type { ParsedFigmaNode } from '../src/lib/figma/parseFigmaNode';
+import { collectExportNodeIds, type ParsedFigmaNode } from '../src/lib/figma/parseFigmaNode';
 import type { ReactEmailNode } from '../src/lib/figma/types/reactEmailAst';
 
 const btnPrimary: ParsedFigmaNode = {
@@ -222,4 +224,137 @@ function run(label: string, node: ParsedFigmaNode) {
 const a = run('Real Figma structure (content + CTA sibling)', openingRealStructure);
 const b = run('Vectorized button labels', openingVectorButtons);
 
-process.exit(a && b ? 0 : 1);
+// ── Absolutely-positioned overlay key-visual (rasterize, don't stack layers) ──
+
+const KNOWN_REACT_EMAIL = new Set([
+  'Section', 'Container', 'Row', 'Column', 'Text', 'Heading', 'Img', 'Link', 'Button', 'Hr', 'Spacer',
+]);
+
+function collectAst(tree: ReactEmailNode): ReactEmailNode[] {
+  const all: ReactEmailNode[] = [];
+  (function walk(n: ReactEmailNode) {
+    all.push(n);
+    if ('children' in n && Array.isArray(n.children)) n.children.forEach(walk);
+  })(tree);
+  return all;
+}
+function maxFontSize(nodes: ReactEmailNode[]): number {
+  let max = 0;
+  for (const n of nodes) {
+    if ((n.type === 'Text' || n.type === 'Heading') && n.style?.fontSize != null) {
+      const fs = parseFloat(String(n.style.fontSize));
+      if (Number.isFinite(fs)) max = Math.max(max, fs);
+    }
+  }
+  return max;
+}
+function findByName(node: ParsedFigmaNode, name: string): ParsedFigmaNode | undefined {
+  if (node.name === name) return node;
+  for (const c of node.children ?? []) {
+    const hit = findByName(c, name);
+    if (hit) return hit;
+  }
+  return undefined;
+}
+
+const kvComposite: ParsedFigmaNode = {
+  id: 'kv', nodeId: '1:100', type: 'INSTANCE', name: 'KV 600px',
+  width: 600, height: 900, visible: true, backgroundColor: '#ffffff',
+  children: [
+    { id: 'bg', nodeId: '1:101', type: 'RECTANGLE', name: 'BG', width: 600, height: 1067, visible: true, imageRef: 'hash-bg', children: [] },
+    { id: 'car', nodeId: '1:102', type: 'RECTANGLE', name: 'Car', width: 528, height: 854, visible: true, imageRef: 'hash-car', children: [] },
+    { id: 'price', nodeId: '1:103', type: 'GROUP', name: 'Price', width: 540, height: 151, visible: true,
+      children: [
+        { id: 'p1', nodeId: '1:104', type: 'TEXT', name: '$', width: 55, height: 55, visible: true, text: '$', fontSize: 84, fontWeight: 700, color: '#ffffff', children: [] },
+        { id: 'p2', nodeId: '1:105', type: 'TEXT', name: 'Amount', width: 494, height: 107, visible: true, text: '38,888', fontSize: 164, fontWeight: 700, color: '#ffffff', children: [] },
+      ] },
+  ],
+};
+
+function checkComposites(): boolean {
+  let ok = true;
+
+  // (1) With exportUrl → single Img using the exported PNG, no giant overlay text.
+  {
+    const withExport: ParsedFigmaNode = { ...kvComposite, exportUrl: '/images/uploads/kv.png' };
+    const tree = buildPrimitivesFromFigma(withExport, undefined, []);
+    const nodes = collectAst(tree);
+    const imgs = nodes.filter((n): n is Extract<ReactEmailNode, { type: 'Img' }> => n.type === 'Img');
+    const usesExport = imgs.some((i) => i.src === '/images/uploads/kv.png');
+    const noGiant = maxFontSize(nodes) < 60;
+    const pass = imgs.length === 1 && usesExport && noGiant;
+    console.log(`${pass ? 'PASS' : 'FAIL'} Absolute composite WITH exportUrl → single KV image (imgs=${imgs.length}, usesExport=${usesExport}, maxFont=${maxFontSize(nodes)})`);
+    ok = ok && pass;
+  }
+
+  // (2) Without exportUrl → falls back to dominant background image; overlay text dropped.
+  {
+    const tree = buildPrimitivesFromFigma(kvComposite, undefined, []);
+    const nodes = collectAst(tree);
+    const imgs = nodes.filter((n) => n.type === 'Img');
+    const noGiant = maxFontSize(nodes) < 60;
+    const pass = imgs.length === 1 && noGiant;
+    console.log(`${pass ? 'PASS' : 'FAIL'} Absolute composite WITHOUT exportUrl → dominant bg image, overlay dropped (imgs=${imgs.length}, maxFont=${maxFontSize(nodes)})`);
+    ok = ok && pass;
+  }
+
+  // (3) collectExportNodeIds marks the composite frame for PNG export. The
+  // composite must sit below the root (depth >= 1) — we never rasterize the whole
+  // top-level frame — so wrap it in a parent as in a real import.
+  {
+    const wrapped: ParsedFigmaNode = {
+      id: 'root', nodeId: '1:1', type: 'FRAME', name: 'Hero', width: 600, height: 1500,
+      visible: true, layoutMode: 'VERTICAL', children: [kvComposite],
+    };
+    const ids = collectExportNodeIds(wrapped);
+    const pass = ids.includes('1:100');
+    console.log(`${pass ? 'PASS' : 'FAIL'} collectExportNodeIds exports the overlay composite frame (got ${ids.length} ids, includes KV=${pass})`);
+    ok = ok && pass;
+  }
+
+  return ok;
+}
+
+// ── Persisted REAL fixture regression (node 400:1500 of NSSNAM-2779) ──────────
+
+function checkRealFixture(): boolean {
+  const fp = path.join(process.cwd(), 'scripts', 'fixtures', 'nissan-april-400-1500.json');
+  let root: ParsedFigmaNode;
+  try {
+    root = JSON.parse(readFileSync(fp, 'utf8')) as ParsedFigmaNode;
+  } catch {
+    console.log('SKIP Real fixture (scripts/fixtures/nissan-april-400-1500.json not found)');
+    return true; // don't fail CI if the fixture isn't present
+  }
+
+  const tree = buildPrimitivesFromFigma(root, undefined, []);
+  const nodes = collectAst(tree);
+  const { buttons, headings } = countTypes(tree);
+  const imgs = nodes.filter((n) => n.type === 'Img').length;
+  const unknown = [...new Set(nodes.map((n) => n.type))].filter((t) => !KNOWN_REACT_EMAIL.has(t));
+  const giant = maxFontSize(nodes);
+
+  const fails: string[] = [];
+  if (headings < 1) fails.push(`expected >=1 Heading, got ${headings}`);
+  if (buttons !== 2) fails.push(`expected 2 Buttons (filled + outline), got ${buttons}`);
+  if (imgs < 1 || imgs > 2) fails.push(`expected KV collapsed to 1 image (1-2), got ${imgs}`);
+  if (giant >= 60) fails.push(`overlay text leaked as giant heading (maxFont=${giant})`);
+  if (unknown.length) fails.push(`non-react.email node types: ${unknown.join(', ')}`);
+
+  // The outline composite (KV 600px) must be marked for export in a real import.
+  const kv = findByName(root, 'KV 600px');
+  if (kv?.nodeId) {
+    const ids = collectExportNodeIds(root);
+    if (!ids.includes(kv.nodeId)) fails.push('KV 600px not marked for PNG export');
+  }
+
+  const pass = fails.length === 0;
+  console.log(`${pass ? 'PASS' : 'FAIL'} Real fixture 400:1500 (KV rasterized, Opening intact): ${headings} Heading, ${buttons} Button, ${imgs} Img, maxFont=${giant}`);
+  if (!pass) fails.forEach((f) => console.log('   - ' + f));
+  return pass;
+}
+
+const c = checkComposites();
+const d = checkRealFixture();
+
+process.exit(a && b && c && d ? 0 : 1);

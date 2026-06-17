@@ -12,28 +12,43 @@ import {
   Hr,
   Head,
 } from '@/lib/email/react-email';
-import type { ReactEmailNode, FigmaReactEmailBlockProps } from '@/lib/figma/types/reactEmailAst';
+import {
+  RESPONSIVE_COL_CLASS,
+  type ReactEmailNode,
+  type FigmaReactEmailBlockProps,
+} from '@/lib/figma/types/reactEmailAst';
 
 const EMAIL_FONT =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
-function collectResponsiveImgClasses(node: ReactEmailNode, classes = new Set<string>()): Set<string> {
+interface ResponsiveInfo {
+  imgClasses: Set<string>;
+  hasStackColumns: boolean;
+}
+
+function collectResponsiveInfo(
+  node: ReactEmailNode,
+  info: ResponsiveInfo = { imgClasses: new Set(), hasStackColumns: false }
+): ResponsiveInfo {
   if (node.type === 'Img' && node.mobileSrc && node.className) {
-    classes.add(node.className);
+    info.imgClasses.add(node.className);
+  }
+  if (node.type === 'Column' && node.className === RESPONSIVE_COL_CLASS) {
+    info.hasStackColumns = true;
   }
   if ('children' in node && Array.isArray(node.children)) {
     for (const child of node.children) {
-      collectResponsiveImgClasses(child, classes);
+      collectResponsiveInfo(child, info);
     }
   }
-  return classes;
+  return info;
 }
 
 function ResponsiveStyles({ tree }: { tree: ReactEmailNode }) {
-  const classes = collectResponsiveImgClasses(tree);
-  if (classes.size === 0) return null;
+  const { imgClasses, hasStackColumns } = collectResponsiveInfo(tree);
+  if (imgClasses.size === 0 && !hasStackColumns) return null;
 
-  const rules = [...classes]
+  const imgRules = [...imgClasses]
     .map(
       (cls) => `
     .${cls}-desk { display: block !important; }
@@ -45,21 +60,49 @@ function ResponsiveStyles({ tree }: { tree: ReactEmailNode }) {
     )
     .join('\n');
 
+  // Stack React Email columns (rendered as <td>) on mobile.
+  const columnRules = hasStackColumns
+    ? `
+    @media only screen and (max-width: 600px) {
+      .${RESPONSIVE_COL_CLASS} {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        box-sizing: border-box !important;
+      }
+    }`
+    : '';
+
+  // `Head` is an official React Email component. Injecting a `<style>` block
+  // inside it is React Email's *documented* mechanism for responsive media
+  // queries (React Email has no dedicated `Style` component) — see
+  // https://react.email/docs/components/head. This is the sanctioned pattern,
+  // not a hand-rolled layout element.
   return (
     <Head>
-      <style>{rules}</style>
+      <style>{`${imgRules}\n${columnRules}`}</style>
     </Head>
   );
 }
 
 function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
   switch (node.type) {
-    case 'Section':
+    case 'Section': {
+      // Fixed-width sections (e.g. small icon containers) must not be forced to
+      // 100% width, or they stretch into full-width bars/ovals.
+      const hasFixedWidth =
+        node.style?.width !== undefined && node.style.width !== '100%';
       return (
-        <Section key={key} style={{ width: '100%', ...node.style }}>
+        <Section
+          key={key}
+          style={{ ...(hasFixedWidth ? {} : { width: '100%' }), ...node.style }}
+        >
           {node.children.map((child, i) => renderNode(child, `${key}-s-${i}`))}
         </Section>
       );
+    }
 
     case 'Container':
       return (
@@ -85,7 +128,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
 
     case 'Column':
       return (
-        <Column key={key} style={node.style}>
+        <Column key={key} className={node.className} style={node.style}>
           {node.children.map((child, i) => renderNode(child, `${key}-c-${i}`))}
         </Column>
       );
@@ -124,34 +167,51 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
       );
 
     case 'Img': {
-      const imgStyle: React.CSSProperties = {
-        display: 'block',
-        maxWidth: '100%',
-        height: 'auto',
-      };
+      const alignMargin =
+        node.align === 'center'
+          ? { marginLeft: 'auto', marginRight: 'auto' }
+          : node.align === 'right'
+            ? { marginLeft: 'auto' }
+            : {};
+      // Small icons render at their fixed intrinsic size and are never stretched
+      // to the container width (no maxWidth:100%).
+      const imgStyle: React.CSSProperties = node.isIcon
+        ? {
+            display: 'block',
+            width: node.width,
+            height: node.height,
+            ...alignMargin,
+          }
+        : {
+            display: 'block',
+            maxWidth: '100%',
+            height: 'auto',
+            ...alignMargin,
+          };
 
       if (node.mobileSrc) {
         const base = node.className ?? `figma-img-${key}`;
-        return (
-          <React.Fragment key={key}>
-            <Img
-              src={node.src}
-              width={node.width}
-              height={node.height}
-              alt={node.alt ?? ''}
-              className={`${base}-desk`}
-              style={imgStyle}
-            />
-            <Img
-              src={node.mobileSrc}
-              width={node.width}
-              height={node.height}
-              alt={node.alt ?? ''}
-              className={`${base}-mob`}
-              style={imgStyle}
-            />
-          </React.Fragment>
-        );
+        // Desktop + mobile variants returned as a keyed array (no wrapper DOM).
+        return [
+          <Img
+            key={`${key}-desk`}
+            src={node.src}
+            width={node.width}
+            height={node.height}
+            alt={node.alt ?? ''}
+            className={`${base}-desk`}
+            style={imgStyle}
+          />,
+          <Img
+            key={`${key}-mob`}
+            src={node.mobileSrc}
+            width={node.width}
+            height={node.height}
+            alt={node.alt ?? ''}
+            className={`${base}-mob`}
+            style={imgStyle}
+          />,
+        ];
       }
 
       return (
@@ -161,15 +221,23 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
           width={node.width}
           height={node.height}
           alt={node.alt ?? ''}
-          style={{ ...imgStyle, margin: '0 0 16px 0' }}
+          style={{ ...imgStyle, marginBottom: 16 }}
         />
       );
     }
 
     case 'Link':
       return (
-        <Link key={key} href={node.href} style={{ color: 'inherit', textDecoration: 'underline' }}>
-          {node.children.map((child, i) => renderNode(child, `${key}-l-${i}`))}
+        <Link
+          key={key}
+          href={node.href}
+          style={{
+            fontFamily: EMAIL_FONT,
+            textDecoration: 'underline',
+            ...node.style,
+          }}
+        >
+          {node.content}
         </Link>
       );
 
@@ -221,10 +289,13 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
       );
 
     case 'Spacer':
+      // Vertical spacing composed only from React Email primitives (Section +
+      // Text). The content is a non-breaking space *string* (text content, not
+      // an HTML element) so the Text keeps its height across email clients.
       return (
         <Section key={key} style={{ height: node.height, lineHeight: '1px', fontSize: '1px' }}>
           <Text style={{ margin: 0, fontSize: '1px', lineHeight: `${node.height}px` }}>
-            &nbsp;
+            {'\u00A0'}
           </Text>
         </Section>
       );
@@ -243,6 +314,10 @@ export const FigmaReactEmailBlock: React.FC<FigmaReactEmailBlockProps> = ({ tree
     );
   }
 
+  // A React Fragment groups the responsive <Head><style> and the rendered tree.
+  // Fragments emit NO DOM of their own (no wrapper element), so this is not a
+  // hand-rolled layout primitive — there is no React Email component for "group
+  // siblings without markup".
   return (
     <>
       <ResponsiveStyles tree={tree} />
