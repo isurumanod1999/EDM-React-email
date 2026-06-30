@@ -53,6 +53,8 @@ export interface FigmaNodeDocument {
   cornerRadius?: number;
   rectangleCornerRadii?: number[];
   strokeWeight?: number;
+  /** Whether the frame clips overflowing children (Figma "Clip content"). */
+  clipsContent?: boolean;
   componentId?: string;
   boundVariables?: Record<string, FigmaVariableAlias | FigmaVariableAlias[]>;
   styles?: Record<string, string>;

@@ -308,7 +308,10 @@ function findButtonFill(node: ParsedFigmaNode, depth = 0): ParsedFigmaNode | und
     if (d > 6) return;
     for (const child of n.children) {
       if (
-        (child.type === 'RECTANGLE' || child.type === 'FRAME') &&
+        (child.type === 'RECTANGLE' ||
+          child.type === 'FRAME' ||
+          child.type === 'INSTANCE' ||
+          child.type === 'COMPONENT') &&
         normalizeColor(child.backgroundColor) &&
         !child.imageRef &&
         !isIconSized(child) // a small dark circle/square is an icon, not a button fill
@@ -531,43 +534,62 @@ function mapBulletItem(
   };
 }
 
+const ZERO_WIDTH = /[\u200b\u200c\u200d\ufeff]/g;
+
 /**
- * Split a TEXT node's copy into paragraphs at newline boundaries. Figma stores
- * multi-paragraph body copy as a single TEXT node with `\n` separators; relying
- * on `white-space: pre-line` to render those breaks is unreliable across email
- * clients, so emit one real paragraph block per line with proper spacing.
+ * Split a TEXT node's copy into real paragraph blocks at Figma's hard line
+ * breaks. This is the faithful model of Figma's text engine:
+ *  - every `\n` is a paragraph boundary (Figma renders each as its own block);
+ *  - the gap between consecutive paragraphs is the node's own `paragraphSpacing`
+ *    (0 when unset — so a tight "<Name>," greeting stays tight, while a legal
+ *    disclaimer with paragraphSpacing=8 gets 8px between every numbered item);
+ *  - an EXTRA blank line (an empty paragraph) adds one line-height of space,
+ *    matching designers who insert a blank line for a bigger visual break.
+ *
+ * Relying on `white-space: pre-line` for these breaks is unreliable across
+ * email clients, so we emit one real <Text> per paragraph with explicit
+ * spacing. This single rule covers intro copy, multi-paragraph bodies, and the
+ * long numbered disclaimers shipped in every campaign.
  */
 function mapParagraphs(
   node: ParsedFigmaNode,
   align?: CSSProperties['textAlign']
 ): ReactEmailNode[] {
-  // Paragraph boundaries are BLANK lines (\n\n). A single newline is a line
-  // break *within* a paragraph and is preserved (rendered via `pre-line`), so
-  // tight breaks like a "<Name>," greeting above its sentence don't get an
-  // extra paragraph gap.
-  const paragraphs = (node.text ?? '')
-    .split(/\n[ \t]*\n+/)
-    .map((p) => p.trim())
-    .filter(Boolean);
+  const rawLines = (node.text ?? '').split('\n');
 
-  if (paragraphs.length <= 1) return [mapText(node, align)];
+  type Block = { content: string; extraBlanks: number };
+  const blocks: Block[] = [];
+  let pendingBlanks = 0;
+
+  for (const raw of rawLines) {
+    const line = raw.replace(ZERO_WIDTH, '').trim();
+    if (line === '') {
+      if (blocks.length > 0) pendingBlanks += 1;
+      continue;
+    }
+    if (pendingBlanks > 0 && blocks.length > 0) {
+      blocks[blocks.length - 1].extraBlanks += pendingBlanks;
+    }
+    pendingBlanks = 0;
+    blocks.push({ content: line, extraBlanks: 0 });
+  }
+
+  if (blocks.length <= 1) return [mapText(node, align)];
 
   const base = textStyle(node, align);
   const fs = node.fontSize ?? 16;
-  const gap =
-    node.paragraphSpacing && node.paragraphSpacing > 0
-      ? node.paragraphSpacing
-      : Math.round(fs * 0.9);
+  const lh = node.lineHeight ?? Math.round(fs * 1.4);
+  const gap = node.paragraphSpacing != null ? node.paragraphSpacing : 0;
 
-  return paragraphs.map((content, i) => ({
-    type: 'Text',
-    content,
-    style: {
-      ...base,
-      margin: 0,
-      marginBottom: i === paragraphs.length - 1 ? 0 : gap,
-    },
-  }));
+  return blocks.map((block, i) => {
+    const isLast = i === blocks.length - 1;
+    const marginBottom = (isLast ? 0 : gap) + block.extraBlanks * lh;
+    return {
+      type: 'Text',
+      content: block.content,
+      style: { ...base, margin: 0, marginBottom },
+    } as ReactEmailNode;
+  });
 }
 
 function mapTextNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): ReactEmailNode[] {
@@ -581,9 +603,8 @@ function mapTextNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']):
   if (node.type === 'TEXT' && !isHeading(node)) {
     const items = splitBulletItems(node.text ?? '');
     if (items) return items.map((item) => mapBulletItem(node, item, align));
-    // Only break into separate paragraph blocks when there's a blank line.
-    // Plain single line breaks stay in one block and render via `pre-line`.
-    if (/\n[ \t]*\n/.test(node.text ?? '')) return mapParagraphs(node, align);
+    // Any hard line break → real paragraph blocks (gap = Figma paragraphSpacing).
+    if ((node.text ?? '').includes('\n')) return mapParagraphs(node, align);
   }
   return [mapText(node, align)];
 }

@@ -353,8 +353,96 @@ const RED = { r: 195 / 255, g: 0, b: 47 / 255 };
 
   const tree = build(doc);
   const ts = texts(tree);
-  check('F. blank lines → 3 paragraph blocks (single \\n stays tight)', ts.length === 3, `texts=${ts.length}`);
-  check('F. greeting line break preserved inside first block', String(ts[0]?.content ?? '').includes('<Name>,\nFirst sentence'), `p0=${JSON.stringify(ts[0]?.content)}`);
+  check('F. each Figma line break becomes its own paragraph block', ts.length === 4, `texts=${ts.length}`);
+  check('F. greeting is its own block', ts[0]?.content === '<Name>,', `p0=${ts[0]?.content}`);
+  check('F. greeting stays tight (paragraphSpacing 0 → no gap)', Number(ts[0]?.style?.marginBottom ?? -1) === 0, `mb0=${ts[0]?.style?.marginBottom}`);
+  check('F. blank line adds a bigger gap after its paragraph', Number(ts[1]?.style?.marginBottom ?? 0) > 0, `mb1=${ts[1]?.style?.marginBottom}`);
+}
+
+// ── Scenario G: fixed-height "CTA" slot stacking 5 variants → only 1 renders ──
+// Mirrors the real Nissan "CTA" frame: a 48px-tall clip-content frame holding
+// five stacked button variants. Figma shows only the top one (red SEE ALL
+// OFFERS); the converter must emit ONE button with the real fill + label.
+{
+  const variant = (id: string, label: string, fill: { r: number; g: number; b: number }, y: number, txtFill = { r: 1, g: 1, b: 1 }): FigmaNodeDocument => ({
+    id,
+    name: 'CTA',
+    type: 'INSTANCE',
+    visible: true,
+    absoluteBoundingBox: { x: 0, y, width: 290, height: 48 },
+    cornerRadius: 24,
+    layoutMode: 'HORIZONTAL',
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 12,
+    paddingBottom: 12,
+    fills: [SOLID(fill.r, fill.g, fill.b)],
+    children: [
+      { ...text(`${id}-t`, 'Label', label, { fontSize: 14, fontWeight: 700, textAlignHorizontal: 'CENTER' }, txtFill, 150, 24), absoluteBoundingBox: { x: 24, y: y + 12, width: 150, height: 24 } },
+    ],
+  });
+
+  const B42535 = { r: 180 / 255, g: 37 / 255, b: 53 / 255 };
+  const doc: FigmaNodeDocument = {
+    id: '7:1',
+    name: 'CTA',
+    type: 'FRAME',
+    visible: true,
+    clipsContent: true,
+    layoutMode: 'VERTICAL',
+    itemSpacing: 24,
+    absoluteBoundingBox: { x: 0, y: 0, width: 290, height: 48 },
+    children: [
+      variant('7:2', 'SEE ALL OFFERS', B42535, 0),
+      variant('7:3', 'Learn More', { r: 0.94, g: 0.94, b: 0.94 }, 72, { r: 0, g: 0, b: 0 }),
+      variant('7:4', 'RESERVE YOURS ONLINE', { r: 1, g: 1, b: 1 }, 144, { r: 0, g: 0, b: 0 }),
+      variant('7:5', 'See all offers', B42535, 216),
+      variant('7:6', 'Request a quote', { r: 0.94, g: 0.94, b: 0.94 }, 288, { r: 0, g: 0, b: 0 }),
+    ],
+  };
+
+  const tree = build(doc);
+  const bs = buttons(tree);
+  check('G. clipped CTA slot emits exactly ONE button (not 5)', bs.length === 1, `count=${bs.length}`);
+  check('G. the visible (top) variant wins — red #b42535', bs[0]?.style?.backgroundColor === '#b42535', `bg=${bs[0]?.style?.backgroundColor}`);
+  check('G. label is the top variant text', bs[0]?.label === 'SEE ALL OFFERS', `label=${bs[0]?.label}`);
+}
+
+// ── Scenario H: numbered legal disclaimer → one spaced paragraph per item ─────
+// Every Nissan campaign ships a long numbered disclaimer as a single TEXT node
+// with `\n` between items. It must render as separate, spaced paragraphs (with
+// a side gutter), not one solid wall of text.
+{
+  const disclaimer =
+    '1. Cashback offer available at participating dealers, while stocks last. Nissan reserves the right to vary this offer.\n' +
+    '2. Optional No Repayments offer is available to approved applicants only. Interest will accrue and be capitalised.\n' +
+    '3. The X-TRAIL loyalty finance offer is available to current Nissan owners. Terms and conditions apply.\n' +
+    '\n' +
+    'If you do not wish to receive future emails click here to unsubscribe.\n' +
+    'NISSAN MOTOR CO. (AUSTRALIA) PTY. LTD.\n' +
+    '1 Peters Avenue, Mulgrave, Victoria 3170';
+
+  const doc: FigmaNodeDocument = {
+    id: '8:1',
+    name: 'Disclaimer',
+    type: 'FRAME',
+    visible: true,
+    absoluteBoundingBox: { x: 0, y: 0, width: 600, height: 400 },
+    layoutMode: 'VERTICAL',
+    fills: [SOLID(1, 1, 1)],
+    children: [
+      text('8:2', 'Disclaimer', disclaimer, { fontSize: 10, fontWeight: 400, textAlignHorizontal: 'LEFT', paragraphSpacing: 8 }, { r: 0.4, g: 0.4, b: 0.4 }, 552, 360),
+    ],
+  };
+
+  const tree = build(doc);
+  const ts = texts(tree);
+  check('H. disclaimer split into 6 paragraphs (3 items + 3 footer lines)', ts.length === 6, `texts=${ts.length}`);
+  check('H. each item kept its number', String(ts[0]?.content ?? '').startsWith('1.') && String(ts[2]?.content ?? '').startsWith('3.'), `p0=${String(ts[0]?.content ?? '').slice(0, 4)}`);
+  check('H. paragraphSpacing (8px) applied between items', Number(ts[0]?.style?.marginBottom ?? 0) === 8, `mb=${ts[0]?.style?.marginBottom}`);
+  check('H. small disclaimer font preserved (10px)', String(ts[0]?.style?.fontSize) === '10px', `fs=${ts[0]?.style?.fontSize}`);
+  const root = tree as { style?: Record<string, unknown> };
+  check('H. side gutter added on text-only block', /\b(2[4-9]|[3-9]\d)px\b/.test(String(root.style?.padding ?? '')), `padding=${root.style?.padding}`);
 }
 
 console.log(pass ? '\nALL FIDELITY CHECKS PASSED' : '\nSOME FIDELITY CHECKS FAILED');

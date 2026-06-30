@@ -118,7 +118,7 @@
                 {
                   "type": "Button",
                   "href": "#",
-                  "label": "See all offers",
+                  "label": "SEE ALL OFFERS →",
                   "containerStyle": {
                     "textAlign": "center",
                     "width": "100%",
@@ -126,14 +126,15 @@
                     "padding": 0
                   },
                   "style": {
-                    "backgroundColor": "#3a3a3a",
+                    "backgroundColor": "#b42535",
                     "color": "#ffffff",
                     "borderRadius": 999,
                     "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-                    "fontSize": "16px",
-                    "fontWeight": 400,
+                    "fontSize": "14px",
+                    "fontWeight": 700,
+                    "letterSpacing": "0.5px",
                     "lineHeight": "24px",
-                    "padding": "16px 36px",
+                    "padding": "14px 32px",
                     "textAlign": "center",
                     "textDecoration": "none",
                     "width": "auto",

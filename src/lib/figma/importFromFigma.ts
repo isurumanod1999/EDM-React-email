@@ -19,6 +19,50 @@ import {
 import { parseFigmaUrl } from './parseUrl';
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'uploads');
+const DEBUG_DIR = path.join(process.cwd(), 'data', 'figma-debug');
+
+/**
+ * Dump the exact data we got from Figma (raw API node document + the parsed
+ * tree the converter actually consumes) so it can be inspected. Writes a JSON
+ * file and prints a concise structural summary to the server console. Enabled
+ * unless FIGMA_DEBUG="false".
+ */
+async function debugDumpFigma(
+  label: string,
+  rawNodeDoc: unknown,
+  parsed: ParsedFigmaNode,
+  variables: unknown
+): Promise<void> {
+  if (process.env.FIGMA_DEBUG === 'false') return;
+  try {
+    await fs.mkdir(DEBUG_DIR, { recursive: true });
+    const safe = label.replace(/[^a-z0-9-_]+/gi, '_').slice(0, 40);
+    const file = path.join(DEBUG_DIR, `${safe}-${Date.now()}.json`);
+    await fs.writeFile(
+      file,
+      JSON.stringify({ label, rawNodeDoc, parsed, variables }, null, 2),
+      'utf8'
+    );
+
+    const summarize = (n: ParsedFigmaNode, depth = 0): string => {
+      const pad = '  '.repeat(depth);
+      const bits: string[] = [`${n.type} "${n.name}" ${n.width ?? '?'}x${n.height ?? '?'}`];
+      if (n.backgroundColor) bits.push(`bg=${n.backgroundColor}`);
+      if (n.text) bits.push(`text="${n.text.slice(0, 40).replace(/\n/g, '\\n')}"`);
+      if (n.color) bits.push(`color=${n.color}`);
+      const line = `${pad}- ${bits.join(' ')}`;
+      return [line, ...n.children.map((c) => summarize(c, depth + 1))].join('\n');
+    };
+
+    console.log(`\n──── FIGMA IMPORT DEBUG: ${label} ────`);
+    console.log(`Full data written to: ${file}`);
+    console.log('Parsed tree the converter consumes:');
+    console.log(summarize(parsed));
+    console.log('──── end ────\n');
+  } catch (err) {
+    console.warn('Figma debug dump failed (non-fatal):', err);
+  }
+}
 
 const DOWNLOAD_ATTEMPTS = 3;
 const PER_ATTEMPT_TIMEOUT_MS = 30000;
@@ -98,6 +142,24 @@ async function downloadToUploads(imageUrl: string, prefix: string): Promise<stri
   );
 }
 
+/**
+ * Best-effort download: never throws. A failed image fetch (e.g. the S3 CDN is
+ * blocked/slow) must NOT abort the whole import — text/layout still build from
+ * the node tree. Returns undefined when the asset couldn't be fetched.
+ */
+async function safeDownloadToUploads(
+  imageUrl: string,
+  prefix: string
+): Promise<string | undefined> {
+  try {
+    return await downloadToUploads(imageUrl, prefix);
+  } catch (err) {
+    const reason = err instanceof Error ? err.message : String(err);
+    console.warn(`Figma asset download skipped (${prefix}): ${reason}`);
+    return undefined;
+  }
+}
+
 async function resolveTreeAssets(
   fileKey: string,
   node: ParsedFigmaNode
@@ -118,7 +180,8 @@ async function resolveTreeAssets(
   for (const ref of imageRefs) {
     const remoteUrl = fileImages[ref];
     if (remoteUrl) {
-      localRefMap[ref] = await downloadToUploads(remoteUrl, 'figma-asset');
+      const local = await safeDownloadToUploads(remoteUrl, 'figma-asset');
+      if (local) localRefMap[ref] = local;
     }
   }
 
@@ -128,7 +191,8 @@ async function resolveTreeAssets(
   for (const nodeId of exportNodeIds) {
     const remoteUrl = renderImages[nodeId];
     if (remoteUrl) {
-      localExportMap[nodeId] = await downloadToUploads(remoteUrl, 'figma-export');
+      const local = await safeDownloadToUploads(remoteUrl, 'figma-export');
+      if (local) localExportMap[nodeId] = local;
     }
   }
 
@@ -142,7 +206,7 @@ export interface FigmaImportInput {
 }
 
 export interface FigmaImportResult {
-  desktopUrl: string;
+  desktopUrl?: string;
   mobileUrl?: string;
   designContext: string;
   fileName: string;
@@ -172,10 +236,19 @@ export async function importFromFigma(input: FigmaImportInput): Promise<FigmaImp
 
   const nodeIds = mobile ? [desktop.nodeId, mobile.nodeId] : [desktop.nodeId];
 
+  // Only the node document is essential. Variables (token colours) and the
+  // frame-preview render are best-effort — if those calls fail we still build
+  // from the node tree rather than failing the whole import with nothing.
   const [nodesResponse, variablesMeta, frameImages] = await Promise.all([
     getFigmaNodes(desktop.fileKey, nodeIds),
-    getFigmaVariables(desktop.fileKey),
-    getFigmaImages(desktop.fileKey, nodeIds, 2),
+    getFigmaVariables(desktop.fileKey).catch((err) => {
+      console.warn('Figma variables fetch failed (non-fatal):', err);
+      return undefined;
+    }),
+    getFigmaImages(desktop.fileKey, nodeIds, 2).catch((err) => {
+      console.warn('Figma frame render fetch failed (non-fatal):', err);
+      return {} as Record<string, string | null>;
+    }),
   ]);
 
   const variables = variablesMeta?.variables;
@@ -185,18 +258,19 @@ export async function importFromFigma(input: FigmaImportInput): Promise<FigmaImp
     throw new Error('Could not load the selected Figma frame. Check the node-id in the URL.');
   }
 
+  // The frame-preview render is a nice-to-have (used as a pixel-accurate
+  // fallback for image-heavy heroes). It must never block the import — a
+  // text/layout frame builds fine from the node tree without it.
   const desktopImageUrl = frameImages[desktop.nodeId];
-  if (!desktopImageUrl) {
-    throw new Error('Figma could not render the desktop frame as an image.');
-  }
-
-  const savedDesktopUrl = await downloadToUploads(desktopImageUrl, 'figma-desk');
+  const savedDesktopUrl = desktopImageUrl
+    ? await safeDownloadToUploads(desktopImageUrl, 'figma-desk')
+    : undefined;
 
   let savedMobileUrl: string | undefined;
   let designContext = extractDesignContext(desktopNodeDoc);
 
   let parsedDesktop = parseFigmaNode(desktopNodeDoc, variables);
-  parsedDesktop.exportUrl = savedDesktopUrl;
+  if (savedDesktopUrl) parsedDesktop.exportUrl = savedDesktopUrl;
 
   let parsedMobile: ParsedFigmaNode | undefined;
 
@@ -210,15 +284,17 @@ export async function importFromFigma(input: FigmaImportInput): Promise<FigmaImp
     }
 
     if (mobileImageUrl) {
-      savedMobileUrl = await downloadToUploads(mobileImageUrl, 'figma-mob');
-      if (parsedMobile) {
+      savedMobileUrl = await safeDownloadToUploads(mobileImageUrl, 'figma-mob');
+      if (parsedMobile && savedMobileUrl) {
         parsedMobile.exportUrl = savedMobileUrl;
       }
     }
   }
 
   parsedDesktop = await resolveTreeAssets(desktop.fileKey, parsedDesktop);
-  parsedDesktop.exportUrl = savedDesktopUrl;
+  if (savedDesktopUrl) parsedDesktop.exportUrl = savedDesktopUrl;
+
+  await debugDumpFigma(desktopNodeDoc.name, desktopNodeDoc, parsedDesktop, variables);
 
   if (parsedMobile) {
     parsedMobile = await resolveTreeAssets(desktop.fileKey, parsedMobile);
@@ -228,7 +304,7 @@ export async function importFromFigma(input: FigmaImportInput): Promise<FigmaImp
   }
 
   return {
-    desktopUrl: savedDesktopUrl,
+    desktopUrl: savedDesktopUrl ?? undefined,
     mobileUrl: savedMobileUrl,
     designContext,
     fileName: nodesResponse.name,

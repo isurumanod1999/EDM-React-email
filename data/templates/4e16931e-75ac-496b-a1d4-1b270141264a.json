@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "4e16931e-75ac-496b-a1d4-1b270141264a",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "b330afd4-0ea9-4a04-a985-1518e8cbec1b",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "left",
+            "padding": "0px 40px 0px 40px"
+          },
+          "children": []
+        },
+        "sourceFrame": "Frame 1618868352",
+        "mobileFrame": ""
+      },
+      "label": "Frame 1618868352"
+    }
+  ],
+  "createdAt": "2026-06-30T03:32:41.611Z",
+  "updatedAt": "2026-06-30T03:44:19.865Z"
+}

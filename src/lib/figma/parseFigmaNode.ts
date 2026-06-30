@@ -157,12 +157,42 @@ export function parseFigmaNode(
     imageRef: extractImageRef(node.fills),
     componentId: node.componentId,
     nodeId: node.id,
-    children: (node.children ?? [])
-      .filter((child) => child.visible !== false)
-      .map((child) => parseFigmaNode(child, variables)),
+    children: visibleChildren(node).map((child) => parseFigmaNode(child, variables)),
   };
 
   return parsed;
+}
+
+/**
+ * Return the children that are actually visible in the rendered frame.
+ *
+ * Besides honouring the `visible` flag, this drops children that are fully
+ * clipped away by a fixed-height (or fixed-width) frame with "Clip content"
+ * enabled. Design systems commonly stack every component variant inside one
+ * slot (e.g. a 48px-tall "CTA" frame holding 5 button variants); Figma shows
+ * only the top one, so the converter must not emit all of them.
+ */
+function visibleChildren(node: FigmaNodeDocument): FigmaNodeDocument[] {
+  const kids = (node.children ?? []).filter((child) => child.visible !== false);
+  if (kids.length <= 1 || node.clipsContent === false) return kids;
+
+  const pBox = node.absoluteBoundingBox;
+  if (!pBox || pBox.x == null || pBox.y == null) return kids;
+  const px = pBox.x;
+  const py = pBox.y;
+  const pw = pBox.width;
+  const ph = pBox.height;
+
+  const TOL = 2;
+  return kids.filter((child) => {
+    const cb = child.absoluteBoundingBox;
+    if (!cb || cb.x == null || cb.y == null) return true;
+    // Fully past the clipped bottom edge → hidden.
+    if (ph != null && cb.y - py >= ph - TOL) return false;
+    // Fully past the clipped right edge → hidden.
+    if (pw != null && cb.x - px >= pw - TOL) return false;
+    return true;
+  });
 }
 
 export function collectImageRefs(node: ParsedFigmaNode): string[] {
