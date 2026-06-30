@@ -22,6 +22,8 @@ export interface ParsedFigmaNode {
   letterSpacing?: number;
   paragraphSpacing?: number;
   textAlign?: string;
+  /** Figma text casing: UPPER | LOWER | TITLE | ORIGINAL. */
+  textCase?: string;
   color?: string;
   backgroundColor?: string;
   paddingTop?: number;
@@ -70,6 +72,7 @@ function extractTextStyle(
   letterSpacing?: number;
   paragraphSpacing?: number;
   textAlign?: string;
+  textCase?: string;
   color?: string;
 } {
   const style = node.style as
@@ -83,6 +86,7 @@ function extractTextStyle(
         letterSpacing?: number;
         paragraphSpacing?: number;
         textAlignHorizontal?: string;
+        textCase?: string;
       }
     | undefined;
 
@@ -103,6 +107,7 @@ function extractTextStyle(
     letterSpacing: style?.letterSpacing,
     paragraphSpacing: style?.paragraphSpacing,
     textAlign: style?.textAlignHorizontal?.toLowerCase(),
+    textCase: style?.textCase,
     color: extractTextColor(node, variables),
   };
 }
@@ -135,6 +140,7 @@ export function parseFigmaNode(
     letterSpacing: textStyle.letterSpacing,
     paragraphSpacing: textStyle.paragraphSpacing,
     textAlign: textStyle.textAlign,
+    textCase: textStyle.textCase,
     color: textStyle.color,
     backgroundColor: extractBackgroundColor(node, variables),
     paddingTop: node.paddingTop,

@@ -107,6 +107,39 @@ function formatPadding(node: ParsedFigmaNode): string | undefined {
   return `${pt}px ${pr}px ${pb}px ${pl}px`;
 }
 
+/** Body copy that runs edge-to-edge is unreadable; guarantee a side gutter. */
+const MIN_TEXT_PADDING_X = 24;
+
+function bumpHorizontalPadding(padding: string | undefined): string {
+  const parts = (padding ?? '0px').trim().split(/\s+/);
+  let top = '0px';
+  let right = '0px';
+  let bottom = '0px';
+  let left = '0px';
+  if (parts.length === 1) [top, right, bottom, left] = [parts[0], parts[0], parts[0], parts[0]];
+  else if (parts.length === 2) [top, right, bottom, left] = [parts[0], parts[1], parts[0], parts[1]];
+  else if (parts.length === 3) [top, right, bottom, left] = [parts[0], parts[1], parts[2], parts[1]];
+  else [top, right, bottom, left] = [parts[0], parts[1], parts[2], parts[3]];
+
+  const toNum = (v: string) => parseFloat(v) || 0;
+  if (toNum(right) < MIN_TEXT_PADDING_X) right = `${MIN_TEXT_PADDING_X}px`;
+  if (toNum(left) < MIN_TEXT_PADDING_X) left = `${MIN_TEXT_PADDING_X}px`;
+  return `${top} ${right} ${bottom} ${left}`;
+}
+
+function textTransform(node: ParsedFigmaNode): CSSProperties['textTransform'] {
+  switch (node.textCase) {
+    case 'UPPER':
+      return 'uppercase';
+    case 'LOWER':
+      return 'lowercase';
+    case 'TITLE':
+      return 'capitalize';
+    default:
+      return undefined;
+  }
+}
+
 function textStyle(
   node: ParsedFigmaNode,
   align?: CSSProperties['textAlign']
@@ -122,6 +155,7 @@ function textStyle(
     padding: 0,
     lineHeight: node.lineHeight ? `${node.lineHeight}px` : `${Math.round(fs * 1.5)}px`,
     letterSpacing: node.letterSpacing ? `${node.letterSpacing}px` : undefined,
+    textTransform: textTransform(node),
     whiteSpace: 'pre-line',
   };
 }
@@ -306,19 +340,14 @@ function inferButtonLabel(node: ParsedFigmaNode): string {
   const fromText = buttonLabel(node);
   if (fromText) return fromText;
 
-  const name = node.name.toLowerCase();
-  if (/secondary|quote/.test(name)) return 'REQUEST A QUOTE';
-  if (/primary|see.?all|offer/.test(name)) return 'SEE ALL OFFERS →';
+  // No readable label (e.g. the text was vectorized). Fall back to the layer
+  // name only when it reads like a human label — NEVER a brand-specific phrase,
+  // so the converter stays generic across any design.
+  const name = node.name.trim();
+  const structural = /^(button|cta|btn|frame|group|rectangle|instance|component|vector|union|shape)\b/i;
+  if (name && name.length <= 30 && !structural.test(name)) return name;
 
-  const fill = findButtonFill(node);
-  const bg = normalizeColor(fill?.backgroundColor) ?? normalizeColor(node.backgroundColor);
-  if (bg === '#ffffff' || bg === '#fff') return 'REQUEST A QUOTE';
-  if (bg && /c3002f|cc0000|b3002f|e60012|d40019/i.test(bg.replace(/#/g, ''))) {
-    return 'SEE ALL OFFERS →';
-  }
-  if (/cta|button|btn/.test(name)) return 'SEE ALL OFFERS →';
-
-  return 'Click here';
+  return 'Learn more';
 }
 
 function isButtonNode(node: ParsedFigmaNode): boolean {
@@ -502,6 +531,45 @@ function mapBulletItem(
   };
 }
 
+/**
+ * Split a TEXT node's copy into paragraphs at newline boundaries. Figma stores
+ * multi-paragraph body copy as a single TEXT node with `\n` separators; relying
+ * on `white-space: pre-line` to render those breaks is unreliable across email
+ * clients, so emit one real paragraph block per line with proper spacing.
+ */
+function mapParagraphs(
+  node: ParsedFigmaNode,
+  align?: CSSProperties['textAlign']
+): ReactEmailNode[] {
+  // Paragraph boundaries are BLANK lines (\n\n). A single newline is a line
+  // break *within* a paragraph and is preserved (rendered via `pre-line`), so
+  // tight breaks like a "<Name>," greeting above its sentence don't get an
+  // extra paragraph gap.
+  const paragraphs = (node.text ?? '')
+    .split(/\n[ \t]*\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  if (paragraphs.length <= 1) return [mapText(node, align)];
+
+  const base = textStyle(node, align);
+  const fs = node.fontSize ?? 16;
+  const gap =
+    node.paragraphSpacing && node.paragraphSpacing > 0
+      ? node.paragraphSpacing
+      : Math.round(fs * 0.9);
+
+  return paragraphs.map((content, i) => ({
+    type: 'Text',
+    content,
+    style: {
+      ...base,
+      margin: 0,
+      marginBottom: i === paragraphs.length - 1 ? 0 : gap,
+    },
+  }));
+}
+
 function mapTextNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): ReactEmailNode[] {
   if (node.type === 'TEXT' && node.text?.trim()) {
     const link = detectLink(node);
@@ -513,6 +581,9 @@ function mapTextNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']):
   if (node.type === 'TEXT' && !isHeading(node)) {
     const items = splitBulletItems(node.text ?? '');
     if (items) return items.map((item) => mapBulletItem(node, item, align));
+    // Only break into separate paragraph blocks when there's a blank line.
+    // Plain single line breaks stay in one block and render via `pre-line`.
+    if (/\n[ \t]*\n/.test(node.text ?? '')) return mapParagraphs(node, align);
   }
   return [mapText(node, align)];
 }
@@ -558,17 +629,19 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
   const strokeWeight = fill?.strokeWeight ?? node.strokeWeight ?? deepStroke.weight ?? 0;
   const isOutline = (!bg || isLightColor(bg)) && !!strokeColor && strokeWeight > 0;
 
-  const fillColor = isOutline ? bg ?? 'transparent' : bg;
+  // Preserve the button's ACTUAL Figma colors — they are already correct for the
+  // design's own background. We can't see the section background here, so coercing
+  // to a "safe" black/white would break faithful designs (e.g. a white-outline
+  // button on a dark hero would vanish).
   const textColor = isOutline
-    ? primaryText?.color && !isLightColor(primaryText.color)
-      ? primaryText.color
-      : strokeColor && !isLightColor(strokeColor)
-        ? strokeColor
-        : '#000000'
+    ? primaryText?.color ?? strokeColor ?? '#000000'
     : primaryText?.color ?? '#ffffff';
-  // An outline button needs a VISIBLE border: if the stroke is as light as the
-  // white/transparent fill, fall back to the dark text color so it isn't invisible.
-  const borderColor = isOutline && isLightColor(strokeColor) ? textColor : strokeColor;
+  // A solid button whose fill couldn't be resolved (gradient/variable fill, or a
+  // fill bound to a Figma color token we can't read) must never render as bare
+  // text. Fall back to a visible pill that contrasts with the label color.
+  const fallbackFill = isLightColor(textColor) ? '#333333' : '#e0e0e0';
+  const fillColor = isOutline ? bg ?? 'transparent' : bg ?? fallbackFill;
+  const borderColor = strokeColor ?? textColor;
   const border = isOutline
     ? `${Math.max(1, Math.round(strokeWeight))}px solid ${borderColor}`
     : undefined;
@@ -576,6 +649,11 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
   const pillRadius = radius >= 8 ? 999 : Math.max(radius, 0);
   const fw = primaryText?.fontWeight ?? 700;
   const fs = primaryText?.fontSize ?? 14;
+  // A CTA pill should hug its label and center, not stretch edge-to-edge. Only
+  // render full-width when the Figma button itself is near the email's content
+  // width (i.e. it was genuinely designed as a full-width bar).
+  const buttonWidth = node.width ?? fill?.width ?? 0;
+  const fullWidth = buttonWidth >= 480;
   // CTAs read best centered within these card/column layouts.
   const textAlign: CSSProperties['textAlign'] = 'center';
 
@@ -617,9 +695,13 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
         : `${Math.round(fs * 1.2)}px`,
       padding: verticalPad,
       textAlign: 'center',
-      textTransform: label === label.toUpperCase() && /[A-Z]/.test(label) ? 'uppercase' : undefined,
+      textTransform:
+        (primaryText && textTransform(primaryText) === 'uppercase') ||
+        (label === label.toUpperCase() && /[A-Z]/.test(label))
+          ? 'uppercase'
+          : undefined,
       textDecoration: 'none',
-      width: '100%',
+      width: fullWidth ? '100%' : 'auto',
       maxWidth: '100%',
       display: 'inline-block',
       boxSizing: 'border-box',
@@ -1068,6 +1150,24 @@ export function buildPrimitivesFromFigma(
       type: 'Section',
       style: { maxWidth: 600, width: '100%', margin: '0 auto', backgroundColor: rootBg },
       children: sectionNodes,
+    };
+  }
+
+  // Text-only layouts (e.g. a copy-heavy hero) often have no horizontal padding
+  // in Figma because the text frame is width-constrained — which collapses to
+  // edge-to-edge copy in email. Guarantee a side gutter. Skipped when the layout
+  // contains imagery, so full-bleed hero art is never inset.
+  if (
+    tree.type === 'Section' &&
+    hasTextDescendant(root) &&
+    !hasImageDescendant(root)
+  ) {
+    tree = {
+      ...tree,
+      style: {
+        ...tree.style,
+        padding: bumpHorizontalPadding(tree.style?.padding as string | undefined),
+      },
     };
   }
 

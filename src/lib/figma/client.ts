@@ -1,18 +1,29 @@
 const FIGMA_API = 'https://api.figma.com/v1';
 const IMAGE_BATCH_SIZE = 200;
 
+export interface FigmaVariableAlias {
+  type?: string;
+  id?: string;
+}
+
+export interface FigmaGradientStop {
+  position?: number;
+  color?: { r: number; g: number; b: number; a?: number };
+  /** A stop color can itself be bound to a Figma color variable/token. */
+  boundVariables?: { color?: FigmaVariableAlias };
+}
+
 export interface FigmaPaint {
   type?: string;
   visible?: boolean;
   opacity?: number;
   color?: { r: number; g: number; b: number; a?: number };
+  /** Present on GRADIENT_* paints instead of a single `color`. */
+  gradientStops?: FigmaGradientStop[];
+  /** Per-paint variable bindings — design systems bind a fill's color here. */
+  boundVariables?: { color?: FigmaVariableAlias };
   imageRef?: string;
   scaleMode?: string;
-}
-
-export interface FigmaVariableAlias {
-  type?: string;
-  id?: string;
 }
 
 export interface FigmaNodeDocument {

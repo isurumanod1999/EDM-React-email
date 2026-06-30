@@ -156,7 +156,89 @@ Rapidly turning well-structured Figma campaigns into a high-quality React Email 
 
 ---
 
-## 5. Recommended workflow (hybrid)
+## 5. Customization & fixing rendering issues (device/client-specific)
+
+Email rendering differs across clients **and** OS/device versions (e.g. Apple Mail on iPhone 15/16/17 vs 13/14, Pixel vs iPhone, Gmail vs Outlook vs Apple Mail). A key demo question is: *when a campaign breaks in one client, can we get in and fix it?*
+
+### The important clarification
+**React Email output is fully customizable code — it is not a closed black box.** It is React/JSX that compiles to HTML, so every fix an email developer makes by hand is possible: a `<style>` block in `<Head>`, inline styles per element, VML "bulletproof" buttons, ghost tables, background-image fallbacks, and even raw-HTML escape hatches. So the claim "we can't customize React Email" is a myth.
+
+### The genuine caveats (where the manual process still wins)
+- **MSO/Outlook conditional comments** (`<!--[if mso]>…<![endif]-->`) are awkward in React Email: React can't natively emit HTML comments, so they require a small helper (e.g. `react-email-mso`) or a post-processing step. Reliable, but **less direct** than hand-written HTML.
+- **The tool's generated output is not pre-hardened.** Our app emits clean React Email, but does **not** auto-inject the full suite of Outlook/VML/device hacks your master Handlebars template has accumulated. A nasty client-specific bug means a developer hardens the generated code (or we bake the fix into the generator).
+- **Re-generation overwrites manual edits.** Fixes hand-applied to generated output are lost on re-import — unless the fix is made in the **mapper/template** (fix once, applies to all).
+- **Pixel-perfect:** the manual process achieves it by slicing everything to images. React Email / our tool **can also be pixel-perfect** by using image slices for those sections (the tool already rasterizes complex/overlay art), but they default to live text (better accessibility) and use images only where needed.
+
+### Side-by-side: fixing rendering issues
+| Capability | Manual (Handlebars) | React Email (hand) | Our tool |
+|---|---|---|---|
+| Edit raw HTML directly | Yes, instantly | Yes (escape hatch / post-process) | Yes, on the **generated** output |
+| MSO `<!--[if mso]>` comments | Native, easy | Possible via helper/post-process | Not auto-injected today |
+| VML bulletproof buttons | Hand-written | Built into `Button`; custom possible | Inherits `Button`; custom = manual |
+| Per-device/client targeted CSS | Full control | Full control | Edit generated code |
+| Pixel-perfect arbitrary art | Yes (image slices) | Yes (if using image slices) | Yes (auto-rasterizes complex sections) |
+| Fixes survive re-generation | N/A | N/A | Only if fixed in the mapper/template |
+
+### Demo takeaway
+The master template's real value is the **years of client/device hardening baked into it**. React Email doesn't *lack the ability* to do that — it lacks *your specific hacks* until they're ported in **once**. Port those proven fixes into the React Email layer (or the tool's output template) a single time and every generated email inherits them — combining the tool's speed with the manual process's bulletproofing.
+
+---
+
+## 6. Framework landscape: Handlebars vs React Email vs JSX Email (+ our tool) & ESP fit
+
+> Incorporates an internal competitor analysis (Handlebars vs React Email vs **JSX Email**). It adds a third framework and the ESP/Adobe Campaign angle, both relevant to the demo.
+
+### A third framework: JSX Email
+Besides React Email there is also **[JSX Email](https://jsx.email)** — a community-driven JSX/TSX email framework with extra developer tooling.
+- **Pros:** modern DX, native TypeScript, improved CLI, preview server, **built-in email-client compatibility checking**, CSS-support validation, spam analysis, async components/Suspense, plugin architecture, strong Tailwind support.
+- **Cons:** smaller community than React Email, another framework layer, requires React/JSX expertise, more complex setup than Handlebars.
+- **Best for:** SaaS / developer-focused teams (like React Email).
+- **Note for us:** our tool targets **React Email** output specifically; JSX Email is listed here for completeness as the main alternative framework.
+
+### Feature comparison (4-way)
+| Feature | Handlebars (manual) | React Email | JSX Email | Our tool |
+|---|---|---|---|---|
+| Learning curve | Low | Medium–High | Medium–High | **Low** (to generate) |
+| Requires React knowledge | No | Yes | Yes | No to generate; Yes to hand-edit output |
+| Direct HTML control | **Excellent** | Limited (abstraction) | Limited (abstraction) | Limited (edit generated code) |
+| Email-client workarounds | Easy | Moderate | Moderate | Moderate (inherits React Email) |
+| Outlook fixes | **Easy** | Harder (abstraction) | Harder (abstraction) | Harder (edit generated code) |
+| Dynamic content / personalization | Excellent | Excellent | Excellent | Manual (added post-build) |
+| Component reusability | Manual | **Excellent** | **Excellent** | Excellent (React Email output) |
+| TypeScript support | Optional | Native | Native | Native (output) |
+| Preview environment | Depends on tooling | Built-in | Built-in | Built-in (app preview) |
+| Compatibility checking | Manual / Email on Acid | Tools available | **Built-in checker** | Manual + React Email |
+| Tailwind support | Custom | Supported | Strong | Via React Email |
+| ESP integration | Universal | Universal (needs render pipeline) | Universal (needs render pipeline) | Universal (exports HTML) |
+| Best for | **Marketing EDMs** | SaaS / transactional | SaaS / developer teams | **Fast Figma → EDM drafts** |
+
+### ESP / Adobe Campaign fit (important for marketing EDMs)
+- **Handlebars** plugs naturally into ESPs like **Adobe Campaign**, Salesforce Marketing Cloud, Acoustic, Braze, and Oracle Responsys — its tokens (`<%@ include %>`, `<%= %>`) are the personalization layer those platforms expect.
+- **React Email / JSX Email** need a **rendering pipeline** to turn components into the HTML the ESP sends.
+- **Our tool** exports standard HTML/React Email that you then wire with the ESP's personalization tokens (the manual step you already do).
+
+### Risk assessment (4-way)
+| Risk | Handlebars | React Email | JSX Email | Our tool |
+|---|---|---|---|---|
+| Email-client rendering issues | Low | Medium | Medium | Medium |
+| Framework dependency risk | Low | Medium | Medium | Medium–High (React Email + tool) |
+| Developer skill gap | Low | High | High | Low to generate; Medium to harden |
+| Migration complexity | N/A | High | High | **Low** (additive — generates React Email) |
+| Debugging complexity | Low | Medium–High | Medium–High | Medium |
+
+### Balanced conclusion (from the competitor analysis, framed for us)
+For **marketing-focused EDM production tied to Adobe Campaign**, **Handlebars currently offers the best balance** of reliability, flexibility, maintainability, and email-client control — especially when frequent Outlook/client-specific fixes are needed. **React Email and JSX Email** give a superior developer experience for React teams but don't, on their own, justify migrating away from a mature Handlebars pipeline today.
+
+**Where our tool fits:** it isn't a competing framework to migrate to — it's an **accelerator on top of React Email** that removes the slowest, most manual step (turning a Figma design into a first working template). Use it to generate the draft fast, then keep the team's Handlebars hardening/personalization for the final, client-proof send.
+
+### When to consider moving further toward React Email / JSX Email
+- The org moves toward a **React-first** strategy.
+- Email templates become **highly componentized** / a shared design system spans web + email.
+- **Transactional email** becomes a bigger focus (where React Email/JSX Email shine).
+
+---
+
+## 7. Recommended workflow (hybrid)
 
 The three approaches are not mutually exclusive. A pragmatic pipeline:
 
@@ -170,10 +252,12 @@ This keeps the **speed** of the tool, the **maintainability** of React Email, an
 
 ---
 
-## 6. Glossary
+## 8. Glossary
 - **EDM** — Electronic Direct Mail (marketing email).
 - **MSO conditionals** — `<!--[if mso]>` comments that target Microsoft Outlook's Word rendering engine.
 - **Image swap (`m-hide`/`m-show`)** — showing a desktop image on wide screens and a mobile image under the breakpoint.
 - **Handlebars tokens** — server-side merge fields (`<%@ include %>`, `<%= %>`) for CRM personalization.
 - **React Email primitives** — `Section`, `Row`, `Column`, `Text`, `Heading`, `Img`, `Link`, `Button`, `Hr`, `Preview`, etc. (https://react.email/docs/components).
+- **JSX Email** — an alternative JSX/TSX email framework (https://jsx.email) with built-in compatibility checking and tooling; a sibling to React Email.
+- **ESP** — Email Service Provider / sending platform (e.g. Adobe Campaign, Salesforce Marketing Cloud, Braze) that handles personalization tokens and delivery.
 - **Deterministic mapping** — same input always yields the same output (no AI/randomness).

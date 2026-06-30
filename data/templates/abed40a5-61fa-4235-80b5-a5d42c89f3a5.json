@@ -98,16 +98,16 @@
                 },
                 {
                   "type": "Text",
-                  "content": "<Name>,  On top of our EOFY offers and low finance rates, eligible Nissan owners can access an extra $2,000 cashback1 on selected X-TRAIL, Navara and ARIYA models from  18–20 June.  Plus, take advantage of an unbeatable 2.9% finance on selected QASHQAI models8 before it ends on 30 June.  Don't miss your chance to save before EOFY ends!",
+                  "content": "<Name>,\nOn top of our EOFY offers and low finance rates, eligible Nissan owners can access an extra $2,000 cashback1 on selected X-TRAIL, Navara and ARIYA models from 18–20 June.\n\nPlus, take advantage of an unbeatable 2.9% finance on selected QASHQAI models8 before it ends on 30 June.\n\nDon't miss your chance to save before EOFY ends!",
                   "style": {
                     "color": "#ffffff",
-                    "fontSize": "16px",
+                    "fontSize": "17px",
                     "fontWeight": 400,
                     "textAlign": "center",
                     "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
                     "margin": 0,
                     "padding": 0,
-                    "lineHeight": "24px",
+                    "lineHeight": "27px",
                     "whiteSpace": "pre-line"
                   }
                 },
@@ -126,16 +126,17 @@
                     "padding": 0
                   },
                   "style": {
+                    "backgroundColor": "#3a3a3a",
                     "color": "#ffffff",
                     "borderRadius": 999,
                     "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
                     "fontSize": "16px",
                     "fontWeight": 400,
                     "lineHeight": "24px",
-                    "padding": "16px 28px",
+                    "padding": "16px 36px",
                     "textAlign": "center",
                     "textDecoration": "none",
-                    "width": "100%",
+                    "width": "auto",
                     "maxWidth": "100%",
                     "display": "inline-block",
                     "boxSizing": "border-box",

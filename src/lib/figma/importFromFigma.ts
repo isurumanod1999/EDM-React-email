@@ -20,19 +20,82 @@ import { parseFigmaUrl } from './parseUrl';
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'uploads');
 
+const DOWNLOAD_ATTEMPTS = 3;
+const PER_ATTEMPT_TIMEOUT_MS = 30000;
+
+/**
+ * Optional proxy support. Figma renders are served from an S3 CDN host that is
+ * often blocked separately from api.figma.com on corporate networks. Node's
+ * global fetch (undici) does NOT honour HTTP(S)_PROXY automatically, so wire up
+ * a ProxyAgent when one is configured. Guarded so it never breaks if undici
+ * can't be resolved.
+ */
+const proxyUrl =
+  process.env.HTTPS_PROXY ||
+  process.env.https_proxy ||
+  process.env.HTTP_PROXY ||
+  process.env.http_proxy;
+
+let proxyDispatcher: unknown;
+async function getProxyDispatcher(): Promise<unknown> {
+  if (!proxyUrl) return undefined;
+  if (proxyDispatcher !== undefined) return proxyDispatcher || undefined;
+  try {
+    // Non-literal specifier so TS/webpack don't statically resolve undici
+    // (it ships with Node at runtime as the global fetch implementation).
+    const moduleName = 'undici';
+    const undici = (await import(/* webpackIgnore: true */ moduleName)) as {
+      ProxyAgent: new (opts: { uri: string }) => unknown;
+    };
+    proxyDispatcher = new undici.ProxyAgent({ uri: proxyUrl });
+  } catch {
+    proxyDispatcher = null; // tried and failed; don't retry the import
+  }
+  return proxyDispatcher || undefined;
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function downloadToUploads(imageUrl: string, prefix: string): Promise<string> {
-  const res = await fetch(imageUrl, { signal: AbortSignal.timeout(60000) });
-  if (!res.ok) {
-    throw new Error(`Failed to download Figma render (${res.status})`);
+  const dispatcher = await getProxyDispatcher();
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= DOWNLOAD_ATTEMPTS; attempt++) {
+    try {
+      const res = await fetch(imageUrl, {
+        signal: AbortSignal.timeout(PER_ATTEMPT_TIMEOUT_MS),
+        headers: { 'User-Agent': 'edm-react-email-tool' },
+        // undici-specific option; ignored when no proxy is configured.
+        ...(dispatcher ? { dispatcher } : {}),
+      } as RequestInit);
+
+      if (!res.ok) {
+        throw new Error(`Failed to download Figma render (HTTP ${res.status})`);
+      }
+
+      await fs.mkdir(UPLOAD_DIR, { recursive: true });
+      const buffer = Buffer.from(await res.arrayBuffer());
+      const filename = `${prefix}-${generateId()}.png`;
+      await fs.writeFile(path.join(UPLOAD_DIR, filename), buffer);
+
+      return `/images/uploads/${filename}`;
+    } catch (err) {
+      lastError = err;
+      if (attempt < DOWNLOAD_ATTEMPTS) {
+        await sleep(attempt * 1500); // 1.5s, then 3s
+      }
+    }
   }
 
-  await fs.mkdir(UPLOAD_DIR, { recursive: true });
-
-  const buffer = Buffer.from(await res.arrayBuffer());
-  const filename = `${prefix}-${generateId()}.png`;
-  await fs.writeFile(path.join(UPLOAD_DIR, filename), buffer);
-
-  return `/images/uploads/${filename}`;
+  const reason = lastError instanceof Error ? lastError.message : String(lastError);
+  const isTimeout = /timeout|UND_ERR_CONNECT|fetch failed|ENOTFOUND|ECONNREFUSED/i.test(reason);
+  throw new Error(
+    isTimeout
+      ? `Could not reach Figma's image CDN after ${DOWNLOAD_ATTEMPTS} attempts (${reason}). ` +
+        `Your network/firewall/VPN is likely blocking Figma's S3 host (s3-alpha-sig.figma.com), ` +
+        `or you're offline. If you're behind a corporate proxy, set the HTTPS_PROXY environment variable and restart the dev server.`
+      : `Failed to download a Figma render (${reason}).`
+  );
 }
 
 async function resolveTreeAssets(
