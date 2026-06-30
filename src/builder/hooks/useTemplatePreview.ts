@@ -3,7 +3,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { EmailTemplateDocument } from '@/lib/schema/template';
 
-export function useTemplatePreview(template: EmailTemplateDocument | null, debounceMs = 400) {
+export function useTemplatePreview(
+  template: EmailTemplateDocument | null,
+  debounceMs = 400,
+  editable = false
+) {
   const [html, setHtml] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -11,9 +15,9 @@ export function useTemplatePreview(template: EmailTemplateDocument | null, debou
   const previewKey = useMemo(
     () =>
       template
-        ? JSON.stringify({ meta: template.meta, blocks: template.blocks })
+        ? JSON.stringify({ meta: template.meta, blocks: template.blocks, editable })
         : null,
-    [template]
+    [template, editable]
   );
 
   useEffect(() => {
@@ -26,6 +30,7 @@ export function useTemplatePreview(template: EmailTemplateDocument | null, debou
     const payload = JSON.parse(previewKey) as {
       meta: EmailTemplateDocument['meta'];
       blocks: EmailTemplateDocument['blocks'];
+      editable: boolean;
     };
 
     const controller = new AbortController();

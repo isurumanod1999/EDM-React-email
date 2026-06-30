@@ -40,6 +40,8 @@ export const emailTemplateDocumentSchema = z.object({
 export const renderTemplateRequestSchema = z.object({
   meta: emailTemplateMetaSchema.optional(),
   blocks: z.array(templateBlockSchema).min(1),
+  /** Editor-only: inject per-node selection attributes + the click bridge. */
+  editable: z.boolean().optional(),
 });
 
 export const exportTemplateRequestSchema = z.object({

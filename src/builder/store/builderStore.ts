@@ -1,9 +1,15 @@
 import { create } from 'zustand';
+import type { CSSProperties } from 'react';
 import type { EmailTemplateDocument, EmailTemplateMeta, TemplateBlock } from '@/lib/schema/template';
 import type { ComponentRegistryEntry } from '@/lib/registry/types';
+import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
 import { generateId } from '@/lib/utils/id';
 import { setNestedValue } from '@/builder/utils/props';
+import { updateNodeAtPath, parsePath } from '@/builder/lib/treeEdit';
 import type { FigmaSession } from '@/builder/types/figmaSession';
+
+/** Which CSSProperties bag on a node an edit targets. */
+export type StyleTarget = 'style' | 'containerStyle';
 
 interface BuilderState {
   template: EmailTemplateDocument | null;
@@ -11,6 +17,7 @@ interface BuilderState {
   registryByCategory: Record<string, ComponentRegistryEntry[]>;
   paletteByCategory: Record<string, ComponentRegistryEntry[]>;
   selectedBlockId: string | null;
+  selectedNodePath: string | null;
   figmaSession: FigmaSession | null;
   isDirty: boolean;
   isSaving: boolean;
@@ -27,6 +34,18 @@ interface BuilderState {
   loadRegistry: () => Promise<void>;
   loadTemplate: (id: string) => Promise<void>;
   selectBlock: (id: string | null) => void;
+  selectNode: (blockId: string, nodePath: string | null) => void;
+  updateNodeStyle: (
+    blockId: string,
+    nodePath: string,
+    patch: CSSProperties,
+    target?: StyleTarget
+  ) => void;
+  updateNodeContent: (
+    blockId: string,
+    nodePath: string,
+    patch: Record<string, unknown>
+  ) => void;
   addBlock: (componentId: string, index?: number) => void;
   addBlocksFromAi: (blocks: { componentId: string; props: Record<string, unknown>; label?: string }[]) => void;
   removeBlock: (id: string) => void;
@@ -62,6 +81,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   registryByCategory: {},
   paletteByCategory: {},
   selectedBlockId: null,
+  selectedNodePath: null,
   figmaSession: null,
   isDirty: false,
   isSaving: false,
@@ -72,7 +92,14 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   saveMessage: null,
 
   setTemplate: (template) =>
-    set({ template, isDirty: false, selectedBlockId: null, saveError: null, saveMessage: null }),
+    set({
+      template,
+      isDirty: false,
+      selectedBlockId: null,
+      selectedNodePath: null,
+      saveError: null,
+      saveMessage: null,
+    }),
 
   setFigmaSession: (session) => set({ figmaSession: session }),
 
@@ -111,6 +138,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         isDirty: false,
         isLoading: false,
         selectedBlockId: null,
+        selectedNodePath: null,
       });
     } catch (error) {
       set({ isLoading: false });
@@ -118,7 +146,56 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     }
   },
 
-  selectBlock: (id) => set({ selectedBlockId: id }),
+  selectBlock: (id) =>
+    set((state) => ({
+      selectedBlockId: id,
+      // Switching blocks clears any node selection from the previous block.
+      selectedNodePath: id === state.selectedBlockId ? state.selectedNodePath : null,
+    })),
+
+  selectNode: (blockId, nodePath) =>
+    set({ selectedBlockId: blockId, selectedNodePath: nodePath }),
+
+  updateNodeStyle: (blockId, nodePath, patch, target = 'style') => {
+    const { template } = get();
+    if (!template) return;
+
+    const block = template.blocks.find((b) => b.id === blockId);
+    const tree = block?.props?.tree as ReactEmailNode | undefined;
+    if (!tree) return;
+
+    const nextTree = updateNodeAtPath(tree, parsePath(nodePath), (node) => {
+      const current = ((node as Record<string, unknown>)[target] as CSSProperties | undefined) ?? {};
+      const merged: Record<string, unknown> = { ...current };
+      for (const [key, value] of Object.entries(patch)) {
+        if (value === undefined || value === '') delete merged[key];
+        else merged[key] = value;
+      }
+      return { ...node, [target]: merged } as ReactEmailNode;
+    });
+
+    get().updateBlockProp(blockId, 'tree', nextTree);
+  },
+
+  updateNodeContent: (blockId, nodePath, patch) => {
+    const { template } = get();
+    if (!template) return;
+
+    const block = template.blocks.find((b) => b.id === blockId);
+    const tree = block?.props?.tree as ReactEmailNode | undefined;
+    if (!tree) return;
+
+    const nextTree = updateNodeAtPath(tree, parsePath(nodePath), (node) => {
+      const next: Record<string, unknown> = { ...node };
+      for (const [key, value] of Object.entries(patch)) {
+        if (value === undefined) delete next[key];
+        else next[key] = value;
+      }
+      return next as ReactEmailNode;
+    });
+
+    get().updateBlockProp(blockId, 'tree', nextTree);
+  },
 
   addBlock: (componentId, index) => {
     const { registry, template } = get();
@@ -185,6 +262,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     set({
       ...markDirty(get(), { blocks }),
       selectedBlockId: selectedBlockId === id ? null : selectedBlockId,
+      selectedNodePath: selectedBlockId === id ? null : get().selectedNodePath,
     });
   },
 

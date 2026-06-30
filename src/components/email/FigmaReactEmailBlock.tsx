@@ -21,6 +21,40 @@ import {
 const EMAIL_FONT =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
+/** Editor-only context threaded through the render so nodes can be selected. */
+interface RenderCtx {
+  editable: boolean;
+  blockId?: string;
+}
+
+/**
+ * Data attributes that let the live preview map a clicked DOM element back to
+ * its AST node. Returned empty (no attributes) unless `editable`, so the
+ * exported email markup stays clean. React Email forwards `data-*` props to the
+ * underlying HTML element.
+ */
+function editAttrs(ctx: RenderCtx, path: number[]): Record<string, string> {
+  if (!ctx.editable) return {};
+  return {
+    'data-node-path': path.join('.'),
+    ...(ctx.blockId ? { 'data-block-id': ctx.blockId } : {}),
+  };
+}
+
+/**
+ * Wrap text content in an anchor when an href is set. Color/decoration inherit
+ * so the design's own styling is preserved — the text just becomes clickable,
+ * and the href is emitted into the exported HTML.
+ */
+function linkWrap(href: string | undefined, content: React.ReactNode): React.ReactNode {
+  if (!href) return content;
+  return (
+    <Link href={href} style={{ color: 'inherit', textDecoration: 'inherit' }}>
+      {content}
+    </Link>
+  );
+}
+
 interface ResponsiveInfo {
   imgClasses: Set<string>;
   hasStackColumns: boolean;
@@ -87,7 +121,14 @@ function ResponsiveStyles({ tree }: { tree: ReactEmailNode }) {
   );
 }
 
-function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
+function renderNode(
+  node: ReactEmailNode,
+  key: string,
+  path: number[],
+  ctx: RenderCtx
+): React.ReactNode {
+  const sel = editAttrs(ctx, path);
+
   switch (node.type) {
     case 'Section': {
       // Fixed-width sections (e.g. small icon containers) must not be forced to
@@ -97,9 +138,10 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
       return (
         <Section
           key={key}
+          {...sel}
           style={{ ...(hasFixedWidth ? {} : { width: '100%' }), ...node.style }}
         >
-          {node.children.map((child, i) => renderNode(child, `${key}-s-${i}`))}
+          {node.children.map((child, i) => renderNode(child, `${key}-s-${i}`, [...path, i], ctx))}
         </Section>
       );
     }
@@ -108,6 +150,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
       return (
         <Container
           key={key}
+          {...sel}
           style={{
             maxWidth: 600,
             width: '100%',
@@ -115,21 +158,21 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
             ...node.style,
           }}
         >
-          {node.children.map((child, i) => renderNode(child, `${key}-ct-${i}`))}
+          {node.children.map((child, i) => renderNode(child, `${key}-ct-${i}`, [...path, i], ctx))}
         </Container>
       );
 
     case 'Row':
       return (
-        <Row key={key} style={{ width: '100%', ...node.style }}>
-          {node.children.map((child, i) => renderNode(child, `${key}-r-${i}`))}
+        <Row key={key} {...sel} style={{ width: '100%', ...node.style }}>
+          {node.children.map((child, i) => renderNode(child, `${key}-r-${i}`, [...path, i], ctx))}
         </Row>
       );
 
     case 'Column':
       return (
-        <Column key={key} className={node.className} style={node.style}>
-          {node.children.map((child, i) => renderNode(child, `${key}-c-${i}`))}
+        <Column key={key} {...sel} className={node.className} style={node.style}>
+          {node.children.map((child, i) => renderNode(child, `${key}-c-${i}`, [...path, i], ctx))}
         </Column>
       );
 
@@ -137,6 +180,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
       return (
         <Text
           key={key}
+          {...sel}
           style={{
             margin: 0,
             padding: 0,
@@ -145,7 +189,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
             ...node.style,
           }}
         >
-          {node.content}
+          {linkWrap(node.href, node.content)}
         </Text>
       );
 
@@ -153,6 +197,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
       return (
         <Heading
           key={key}
+          {...sel}
           as={node.as ?? 'h2'}
           style={{
             margin: 0,
@@ -162,7 +207,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
             ...node.style,
           }}
         >
-          {node.content}
+          {linkWrap(node.href, node.content)}
         </Heading>
       );
 
@@ -189,12 +234,18 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
             ...alignMargin,
           };
 
+      // When the image links somewhere, the anchor (not the <img>) carries the
+      // selection attrs and click-through href; otherwise the <img> does.
+      const imgSel = node.href ? {} : sel;
+
+      let imgContent: React.ReactNode;
       if (node.mobileSrc) {
         const base = node.className ?? `figma-img-${key}`;
         // Desktop + mobile variants returned as a keyed array (no wrapper DOM).
-        return [
+        imgContent = [
           <Img
             key={`${key}-desk`}
+            {...imgSel}
             src={node.src}
             width={node.width}
             height={node.height}
@@ -204,6 +255,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
           />,
           <Img
             key={`${key}-mob`}
+            {...imgSel}
             src={node.mobileSrc}
             width={node.width}
             height={node.height}
@@ -212,24 +264,41 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
             style={imgStyle}
           />,
         ];
+      } else {
+        imgContent = (
+          <Img
+            key={`${key}-img`}
+            {...imgSel}
+            src={node.src}
+            width={node.width}
+            height={node.height}
+            alt={node.alt ?? ''}
+            style={{ ...imgStyle, marginBottom: node.href ? undefined : 16 }}
+          />
+        );
       }
 
-      return (
-        <Img
-          key={key}
-          src={node.src}
-          width={node.width}
-          height={node.height}
-          alt={node.alt ?? ''}
-          style={{ ...imgStyle, marginBottom: 16 }}
-        />
-      );
+      if (node.href) {
+        return (
+          <Link
+            key={key}
+            {...sel}
+            href={node.href}
+            style={{ display: 'block', textDecoration: 'none', marginBottom: 16, ...alignMargin }}
+          >
+            {imgContent}
+          </Link>
+        );
+      }
+
+      return imgContent;
     }
 
     case 'Link':
       return (
         <Link
           key={key}
+          {...sel}
           href={node.href}
           style={{
             fontFamily: EMAIL_FONT,
@@ -255,6 +324,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
           }}
         >
             <Button
+              {...sel}
               href={node.href}
               style={{
                 margin: 0,
@@ -277,6 +347,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
       return (
         <Hr
           key={key}
+          {...sel}
           style={{
             borderColor: '#e6ebf1',
             borderWidth: '1px',
@@ -293,7 +364,7 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
       // Text). The content is a non-breaking space *string* (text content, not
       // an HTML element) so the Text keeps its height across email clients.
       return (
-        <Section key={key} style={{ height: node.height, lineHeight: '1px', fontSize: '1px' }}>
+        <Section key={key} {...sel} style={{ height: node.height, lineHeight: '1px', fontSize: '1px' }}>
           <Text style={{ margin: 0, fontSize: '1px', lineHeight: `${node.height}px` }}>
             {'\u00A0'}
           </Text>
@@ -305,7 +376,11 @@ function renderNode(node: ReactEmailNode, key: string): React.ReactNode {
   }
 }
 
-export const FigmaReactEmailBlock: React.FC<FigmaReactEmailBlockProps> = ({ tree }) => {
+export const FigmaReactEmailBlock: React.FC<FigmaReactEmailBlockProps> = ({
+  tree,
+  editable,
+  blockId,
+}) => {
   if (!tree) {
     return (
       <Section style={{ maxWidth: 600, padding: 20 }}>
@@ -314,6 +389,8 @@ export const FigmaReactEmailBlock: React.FC<FigmaReactEmailBlockProps> = ({ tree
     );
   }
 
+  const ctx: RenderCtx = { editable: Boolean(editable), blockId };
+
   // A React Fragment groups the responsive <Head><style> and the rendered tree.
   // Fragments emit NO DOM of their own (no wrapper element), so this is not a
   // hand-rolled layout primitive — there is no React Email component for "group
@@ -321,7 +398,7 @@ export const FigmaReactEmailBlock: React.FC<FigmaReactEmailBlockProps> = ({ tree
   return (
     <>
       <ResponsiveStyles tree={tree} />
-      {renderNode(tree, 'root')}
+      {renderNode(tree, 'root', [], ctx)}
     </>
   );
 };

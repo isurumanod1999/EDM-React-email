@@ -18,6 +18,7 @@ import { ComponentPalette } from './ComponentPalette';
 import { BlockCanvas } from './BlockCanvas';
 import { PropertyPanel } from './PropertyPanel';
 import { LivePreview } from './LivePreview';
+import { ComponentCustomizer } from './ComponentCustomizer';
 import '@/builder/builder.css';
 
 interface BuilderEditorProps {
@@ -126,6 +127,7 @@ export function BuilderEditor({ templateId }: BuilderEditorProps) {
             <LivePreview />
           </main>
           <PropertyPanel />
+          <ComponentCustomizer />
         </div>
       </div>
 

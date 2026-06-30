@@ -9,11 +9,20 @@ import { getComponentDefinition } from '@/lib/registry';
 export interface DynamicEmailTemplateProps {
   meta?: Partial<EmailTemplateMeta>;
   blocks: TemplateBlock[];
+  /**
+   * Editor-only: when true, Figma blocks render with per-node selection
+   * attributes so the live preview is clickable. Never set for export.
+   */
+  editable?: boolean;
 }
+
+/** Import-only block whose AST supports in-preview node selection. */
+const FIGMA_BLOCK_ID = 'figma-react-email';
 
 export function DynamicEmailTemplate({
   meta,
   blocks,
+  editable,
 }: DynamicEmailTemplateProps): React.ReactElement {
   const resolvedMeta: EmailTemplateMeta = {
     ...DEFAULT_TEMPLATE_META,
@@ -61,7 +70,39 @@ export function DynamicEmailTemplate({
             }
 
             const Component = definition.component;
-            return <Component key={block.id} {...(block.props as object)} />;
+
+            // Figma blocks render per-node selection attrs internally.
+            if (editable && block.componentId === FIGMA_BLOCK_ID) {
+              return (
+                <Component
+                  key={block.id}
+                  {...(block.props as object)}
+                  editable
+                  blockId={block.id}
+                />
+              );
+            }
+
+            const rendered = <Component {...(block.props as object)} />;
+
+            // Built-in blocks aren't AST trees, so they're selectable at the
+            // block level: a wrapper carries data-block-id so a click in the
+            // preview opens this block's properties. Wrapper only in editor
+            // preview — export markup is never wrapped.
+            if (editable) {
+              return (
+                <div
+                  key={block.id}
+                  data-block-id={block.id}
+                  data-block-root="1"
+                  className="__fc-block"
+                >
+                  {rendered}
+                </div>
+              );
+            }
+
+            return <React.Fragment key={block.id}>{rendered}</React.Fragment>;
           })}
         </Container>
       </Body>
