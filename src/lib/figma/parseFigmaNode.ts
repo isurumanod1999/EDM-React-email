@@ -125,6 +125,13 @@ export function parseFigmaNode(
         ? Math.max(...node.rectangleCornerRadii)
         : undefined;
 
+  // A border can be lost three ways: the weight lives in `individualStrokeWeights`
+  // (per-side), the weight is omitted entirely (Figma's implicit 1px default), or
+  // the stroke color is variable-bound. Resolve the color first, then derive a
+  // weight that survives all three so outline buttons keep their border.
+  const strokeColor = extractStrokeColor(node, variables);
+  const strokeWeight = effectiveStrokeWeight(node, strokeColor);
+
   const parsed: ParsedFigmaNode = {
     id: node.id,
     type: node.type,
@@ -152,8 +159,8 @@ export function parseFigmaNode(
     primaryAxisAlign: node.primaryAxisAlignItems,
     counterAxisAlign: node.counterAxisAlignItems,
     cornerRadius,
-    strokeColor: extractStrokeColor(node, variables),
-    strokeWeight: node.strokeWeight,
+    strokeColor,
+    strokeWeight,
     imageRef: extractImageRef(node.fills),
     componentId: node.componentId,
     nodeId: node.id,
@@ -161,6 +168,32 @@ export function parseFigmaNode(
   };
 
   return parsed;
+}
+
+/**
+ * Resolve a node's stroke weight so a visible border is never dropped.
+ *
+ * Figma reports borders three different ways:
+ *  - `strokeWeight` (uniform) — the common case.
+ *  - `individualStrokeWeights` (per-side) — `strokeWeight` is then often absent,
+ *    so we take the thickest visible side.
+ *  - neither, when the weight is left at Figma's implicit 1px default — if a
+ *    stroke paint resolved to a color, we treat the weight as 1.
+ */
+function effectiveStrokeWeight(
+  node: FigmaNodeDocument,
+  strokeColor: string | undefined
+): number | undefined {
+  if (typeof node.strokeWeight === 'number' && node.strokeWeight > 0) {
+    return node.strokeWeight;
+  }
+  const sides = node.individualStrokeWeights;
+  if (sides) {
+    const maxSide = Math.max(sides.top ?? 0, sides.right ?? 0, sides.bottom ?? 0, sides.left ?? 0);
+    if (maxSide > 0) return maxSide;
+  }
+  if (strokeColor) return 1;
+  return node.strokeWeight;
 }
 
 /**

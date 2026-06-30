@@ -53,6 +53,15 @@ export interface FigmaNodeDocument {
   cornerRadius?: number;
   rectangleCornerRadii?: number[];
   strokeWeight?: number;
+  /** Per-side stroke weights, present when a node's border sides differ. */
+  individualStrokeWeights?: {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  };
+  /** Stroke alignment: INSIDE | OUTSIDE | CENTER. */
+  strokeAlign?: string;
   /** Whether the frame clips overflowing children (Figma "Clip content"). */
   clipsContent?: boolean;
   componentId?: string;

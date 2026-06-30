@@ -621,7 +621,7 @@ function findMaxCornerRadius(node: ParsedFigmaNode, depth = 0): number {
 /** First visible stroke anywhere in the button subtree (border may live on a child shape). */
 function findStroke(node: ParsedFigmaNode, depth = 0): { color?: string; weight: number } {
   const color = normalizeColor(node.strokeColor);
-  if (color && (node.strokeWeight ?? 0) > 0) return { color, weight: node.strokeWeight ?? 1 };
+  if (color) return { color, weight: Math.max(1, Math.round(node.strokeWeight ?? 1)) };
   if (depth < 6) {
     for (const c of node.children) {
       const s = findStroke(c, depth + 1);
@@ -663,35 +663,40 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
   const fallbackFill = isLightColor(textColor) ? '#333333' : '#e0e0e0';
   const fillColor = isOutline ? bg ?? 'transparent' : bg ?? fallbackFill;
   const borderColor = strokeColor ?? textColor;
-  const border = isOutline
+  // Render the border whenever Figma has a visible stroke — outline CTAs depend
+  // on it, and a filled CTA can legitimately carry a stroke too. (Previously this
+  // only fired for `isOutline`, so any bordered solid button lost its outline.)
+  const hasBorder = !!strokeColor && strokeWeight > 0;
+  const border = hasBorder
     ? `${Math.max(1, Math.round(strokeWeight))}px solid ${borderColor}`
     : undefined;
   const radius = fill?.cornerRadius ?? findMaxCornerRadius(node);
   const pillRadius = radius >= 8 ? 999 : Math.max(radius, 0);
   const fw = primaryText?.fontWeight ?? 700;
   const fs = primaryText?.fontSize ?? 14;
-  // A CTA pill should hug its label and center, not stretch edge-to-edge. Only
-  // render full-width when the Figma button itself is near the email's content
-  // width (i.e. it was genuinely designed as a full-width bar).
-  const buttonWidth = node.width ?? fill?.width ?? 0;
-  const fullWidth = buttonWidth >= 480;
+  const lineH = primaryText?.lineHeight ?? Math.round(fs * 1.2);
   // CTAs read best centered within these card/column layouts.
   const textAlign: CSSProperties['textAlign'] = 'center';
 
-  const pt = node.paddingTop ?? fill?.paddingTop ?? 0;
+  // CTA dimensions follow the Figma design. Nissan campaign CTAs are typically
+  // 290×48 (desktop) / 190×40 (mobile); honour whatever the design specifies and
+  // fall back to a 290px-wide pill only when the width is missing. Render
+  // full-width only when the button was genuinely designed as a wide bar.
+  const designW = Math.round(node.width ?? fill?.width ?? 0);
+  const designH = Math.round(node.height ?? fill?.height ?? 0);
+  const fullWidth = designW >= 480;
+  const widthValue = fullWidth ? '100%' : `${designW > 0 ? designW : 290}px`;
+
+  // Vertical padding is derived so the rendered pill matches the design height
+  // (default 48px). Width is fixed to the design width via `widthValue`, and
+  // box-sizing: border-box means horizontal padding only insets the label.
   const pr = node.paddingRight ?? fill?.paddingRight ?? 0;
-  const pb = node.paddingBottom ?? fill?.paddingBottom ?? 0;
   const pl = node.paddingLeft ?? fill?.paddingLeft ?? 0;
-  // Cap the height used for padding so a tall CTA *frame* (often padded with
-  // surrounding space in Figma) doesn't become an absurdly tall pill.
-  const btnH = Math.min(node.height ?? fill?.height ?? 0, 56);
-  const cappedPad = (v: number) => Math.min(Math.max(v, 0), 18);
-  const verticalPad =
-    pt || pb
-      ? `${cappedPad(pt || 14)}px ${pr || 28}px ${cappedPad(pb || 14)}px ${pl || 28}px`
-      : btnH > 0
-        ? `${Math.min(Math.max(12, Math.round((btnH - fs) / 2)), 18)}px ${pr || 28}px`
-        : '14px 28px';
+  const targetH = designH > 0 ? Math.min(designH, 64) : 48;
+  const borderPx = hasBorder ? Math.max(1, Math.round(strokeWeight)) : 0;
+  const vPad = Math.max(4, Math.round((targetH - lineH) / 2) - borderPx);
+  const hPad = (pl || pr) > 0 ? Math.min(pl || pr, 48) : 24;
+  const verticalPad = `${vPad}px ${hPad}px`;
 
   return {
     type: 'Button',
@@ -722,7 +727,7 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
           ? 'uppercase'
           : undefined,
       textDecoration: 'none',
-      width: fullWidth ? '100%' : 'auto',
+      width: widthValue,
       maxWidth: '100%',
       display: 'inline-block',
       boxSizing: 'border-box',

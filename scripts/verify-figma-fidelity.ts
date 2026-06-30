@@ -109,7 +109,7 @@ const RED = { r: 195 / 255, g: 0, b: 47 / 255 };
   check('A. exactly one button', buttons(tree).length === 1);
   check('A. button fill = red #c3002f', btn?.style?.backgroundColor === '#c3002f', `bg=${btn?.style?.backgroundColor}`);
   check('A. button label uppercased', btn?.label === 'Shop Now' && btn?.style?.textTransform === 'uppercase', `tt=${btn?.style?.textTransform}`);
-  check('A. button hugs content (not full-width)', btn?.style?.width === 'auto', `w=${btn?.style?.width}`);
+  check('A. button uses the Figma design width (220px), not hug/full', btn?.style?.width === '220px', `w=${btn?.style?.width}`);
   check('A. button font size from Figma (14px)', String(btn?.style?.fontSize) === '14px', `fs=${btn?.style?.fontSize}`);
 }
 
@@ -406,6 +406,7 @@ const RED = { r: 195 / 255, g: 0, b: 47 / 255 };
   check('G. clipped CTA slot emits exactly ONE button (not 5)', bs.length === 1, `count=${bs.length}`);
   check('G. the visible (top) variant wins — red #b42535', bs[0]?.style?.backgroundColor === '#b42535', `bg=${bs[0]?.style?.backgroundColor}`);
   check('G. label is the top variant text', bs[0]?.label === 'SEE ALL OFFERS', `label=${bs[0]?.label}`);
+  check('G. CTA renders at the Nissan design width (290px)', bs[0]?.style?.width === '290px', `w=${bs[0]?.style?.width}`);
 }
 
 // ── Scenario H: numbered legal disclaimer → one spaced paragraph per item ─────
@@ -443,6 +444,54 @@ const RED = { r: 195 / 255, g: 0, b: 47 / 255 };
   check('H. small disclaimer font preserved (10px)', String(ts[0]?.style?.fontSize) === '10px', `fs=${ts[0]?.style?.fontSize}`);
   const root = tree as { style?: Record<string, unknown> };
   check('H. side gutter added on text-only block', /\b(2[4-9]|[3-9]\d)px\b/.test(String(root.style?.padding ?? '')), `padding=${root.style?.padding}`);
+}
+
+// ── Scenario I: outline CTA whose border lives in individualStrokeWeights ─────
+// The "REQUEST A QUOTE" secondary CTA: transparent fill, white stroke, but the
+// weight is reported per-side (no uniform `strokeWeight`). The border must still
+// survive. A second variant omits the weight entirely (Figma's implicit 1px).
+{
+  const WHITE = { r: 1, g: 1, b: 1 };
+  const outlineBtn = (id: string, weightKind: 'individual' | 'implicit'): FigmaNodeDocument => ({
+    id,
+    name: 'CTA',
+    type: 'INSTANCE',
+    visible: true,
+    absoluteBoundingBox: { x: 0, y: id === '9:3' ? 60 : 0, width: 290, height: 48 },
+    cornerRadius: 24,
+    layoutMode: 'HORIZONTAL',
+    paddingLeft: 24,
+    paddingRight: 24,
+    fills: [], // transparent — fill comes from the section behind it
+    strokes: [SOLID(WHITE.r, WHITE.g, WHITE.b)],
+    ...(weightKind === 'individual'
+      ? { individualStrokeWeights: { top: 1, right: 1, bottom: 1, left: 1 } }
+      : {}),
+    children: [
+      text(`${id}-t`, 'Label', 'Request a quote', { fontSize: 14, fontWeight: 700, textAlignHorizontal: 'CENTER', textCase: 'UPPER' }, WHITE, 150, 24),
+    ],
+  });
+
+  const doc: FigmaNodeDocument = {
+    id: '9:1',
+    name: 'CTA group',
+    type: 'FRAME',
+    visible: true,
+    layoutMode: 'VERTICAL',
+    itemSpacing: 12,
+    absoluteBoundingBox: { x: 0, y: 0, width: 290, height: 108 },
+    fills: [SOLID(0, 0, 0)],
+    children: [outlineBtn('9:2', 'individual'), outlineBtn('9:3', 'implicit')],
+  };
+
+  const tree = build(doc);
+  const bs = buttons(tree);
+  check('I. both outline CTAs emitted', bs.length === 2, `count=${bs.length}`);
+  check('I. per-side stroke weight produces a border', /1px solid/.test(String(bs[0]?.style?.border ?? '')), `border=${bs[0]?.style?.border}`);
+  check('I. implicit (omitted) stroke weight still produces a border', /1px solid/.test(String(bs[1]?.style?.border ?? '')), `border=${bs[1]?.style?.border}`);
+  check('I. border keeps the Figma stroke color (white)', String(bs[0]?.style?.border ?? '').includes('#ffffff'), `border=${bs[0]?.style?.border}`);
+  check('I. outline CTA still uses the design width (290px)', bs[0]?.style?.width === '290px', `w=${bs[0]?.style?.width}`);
+  check('I. textCase UPPER applied to outline label', bs[0]?.style?.textTransform === 'uppercase', `tt=${bs[0]?.style?.textTransform}`);
 }
 
 console.log(pass ? '\nALL FIDELITY CHECKS PASSED' : '\nSOME FIDELITY CHECKS FAILED');
