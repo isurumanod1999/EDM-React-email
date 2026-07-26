@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AiImportModal } from '@/builder/components/AiImportModal';
+import { FigmaBatchModal } from '@/builder/components/FigmaBatchModal';
 import { FigmaBuildModal } from '@/builder/components/FigmaBuildModal';
 import { FigmaFetchModal } from '@/builder/components/FigmaFetchModal';
 import { SendTestModal } from '@/builder/components/SendTestModal';
@@ -29,6 +30,7 @@ export function BuilderToolbar() {
   const [aiImportOpen, setAiImportOpen] = useState(false);
   const [figmaFetchOpen, setFigmaFetchOpen] = useState(false);
   const [figmaBuildOpen, setFigmaBuildOpen] = useState(false);
+  const [figmaBatchOpen, setFigmaBatchOpen] = useState(false);
   const [sendOpen, setSendOpen] = useState(false);
 
   const handleDuplicate = async () => {
@@ -156,6 +158,14 @@ export function BuilderToolbar() {
         </button>
         <button
           type="button"
+          className="btn btn-secondary btn-sm btn-figma"
+          onClick={() => setFigmaBatchOpen(true)}
+          title="Import several Figma components at once (parallel)"
+        >
+          Batch Import
+        </button>
+        <button
+          type="button"
           className="btn btn-secondary btn-sm"
           onClick={() => setAiImportOpen(true)}
           title="Upload screenshots to generate email components"
@@ -214,6 +224,7 @@ export function BuilderToolbar() {
           setFigmaFetchOpen(true);
         }}
       />
+      <FigmaBatchModal open={figmaBatchOpen} onClose={() => setFigmaBatchOpen(false)} />
       <AiImportModal open={aiImportOpen} onClose={() => setAiImportOpen(false)} />
       <SendTestModal open={sendOpen} onClose={() => setSendOpen(false)} />
     </header>
