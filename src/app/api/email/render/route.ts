@@ -117,6 +117,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ html, templateId: template.id });
     }
 
+    // An empty canvas is a normal editor state, not an error — return a blank
+    // preview instead of throwing a noisy validation error.
+    if (Array.isArray(body.blocks) && body.blocks.length === 0) {
+      return NextResponse.json({ html: '' });
+    }
+
     const parsed = renderTemplateRequestSchema.parse(body);
 
     const rendered = await render(

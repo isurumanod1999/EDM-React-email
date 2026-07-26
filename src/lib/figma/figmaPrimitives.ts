@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { ParsedFigmaNode } from './parseFigmaNode';
+import type { FigmaTextRun, ParsedFigmaNode } from './parseFigmaNode';
 import {
   findAllTextNodes,
   findNodeByPath,
@@ -69,6 +69,36 @@ function nodeTextAlign(node: ParsedFigmaNode): CSSProperties['textAlign'] {
   );
 }
 
+function parseRgbColor(color?: string): [number, number, number] | undefined {
+  if (!color) return undefined;
+  const c = color.replace(/\s/g, '').toLowerCase();
+  if (c === 'white') return [255, 255, 255];
+  if (c === 'black') return [0, 0, 0];
+  const hex6 = c.match(/^#([0-9a-f]{6})$/);
+  if (hex6) {
+    const n = parseInt(hex6[1], 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  const hex3 = c.match(/^#([0-9a-f]{3})$/);
+  if (hex3) {
+    return [
+      parseInt(hex3[1][0] + hex3[1][0], 16),
+      parseInt(hex3[1][1] + hex3[1][1], 16),
+      parseInt(hex3[1][2] + hex3[1][2], 16),
+    ];
+  }
+  const m = c.match(/^rgba?\((\d+),(\d+),(\d+)/);
+  if (m) return [Number(m[1]), Number(m[2]), Number(m[3])];
+  return undefined;
+}
+
+/** Perceived brightness (0–255) via Rec. 709 luma. */
+function colorLuminance(color?: string): number | undefined {
+  const rgb = parseRgbColor(color);
+  if (!rgb) return undefined;
+  return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+}
+
 function isLightColor(color?: string): boolean {
   if (!color) return false;
   const c = color.replace(/\s/g, '').toLowerCase();
@@ -78,11 +108,53 @@ function isLightColor(color?: string): boolean {
   return false;
 }
 
+function isDarkColor(color?: string): boolean {
+  const lum = colorLuminance(color);
+  return lum != null && lum < 90;
+}
+
+/**
+ * Collect text colors split by whether the text sits directly on the section
+ * surface or inside a button/CTA pill. Button labels are inverted (e.g. dark
+ * text on a light pill sitting on a dark section), so they must NOT count toward
+ * deciding the section's own background — that was making dark heroes render
+ * with a transparent (washed-out) background.
+ */
+function partitionTextColors(
+  node: ParsedFigmaNode,
+  insideButton: boolean,
+  acc: { surface: string[]; button: string[] }
+): void {
+  const nowButton = insideButton || isButtonNode(node);
+  if (node.type === 'TEXT' && node.text?.trim() && node.color) {
+    (nowButton ? acc.button : acc.surface).push(node.color);
+  }
+  for (const child of node.children) partitionTextColors(child, nowButton, acc);
+}
+
+/**
+ * A section whose on-surface copy is all light was designed to sit on a dark
+ * background. Email has no inherited parent background, so that dark fill (which
+ * lives on an ancestor frame we don't import) must be reconstructed onto the
+ * section itself — otherwise light text renders on white and looks washed out.
+ *
+ * The dark color is recovered from the design itself: an inverted (light-pill)
+ * button's dark label is almost always the section's dark brand color. Falls
+ * back to a dark neutral when there's no such signal.
+ */
 function inferHeroBackground(node: ParsedFigmaNode): string | undefined {
-  const texts = findAllTextNodes(node);
-  if (texts.length === 0) return undefined;
-  if (texts.every((t) => isLightColor(t.color))) return '#000000';
-  return undefined;
+  const acc: { surface: string[]; button: string[] } = { surface: [], button: [] };
+  partitionTextColors(node, false, acc);
+
+  const pool = acc.surface.length > 0 ? acc.surface : acc.button;
+  if (pool.length === 0) return undefined;
+  if (!pool.every((c) => isLightColor(c))) return undefined;
+
+  const darkLabel = acc.button
+    .filter((c) => isDarkColor(c))
+    .sort((a, b) => (colorLuminance(a) ?? 0) - (colorLuminance(b) ?? 0))[0];
+
+  return darkLabel ?? '#111318';
 }
 
 function sectionStyle(node: ParsedFigmaNode): CSSProperties {
@@ -153,18 +225,58 @@ function textStyle(
     fontFamily: fontFamily(node),
     margin: 0,
     padding: 0,
-    lineHeight: node.lineHeight ? `${node.lineHeight}px` : `${Math.round(fs * 1.5)}px`,
+    // Round fractional line heights (Figma % line-height yields values like
+    // 54.599998px) — email clients render integer px far more reliably.
+    lineHeight: node.lineHeight ? `${Math.round(node.lineHeight)}px` : `${Math.round(fs * 1.5)}px`,
     letterSpacing: node.letterSpacing ? `${node.letterSpacing}px` : undefined,
     textTransform: textTransform(node),
     whiteSpace: 'pre-line',
   };
 }
 
+/**
+ * Faithful per-node mobile typography copied from a matched mobile Figma frame,
+ * emitted as a ≤600px media-query override (only the values that differ from
+ * desktop). Returns undefined when no mobile frame matched this node — the
+ * renderer then applies proportional auto-scaling instead, which also covers
+ * campaigns that were built before mobile support existed.
+ */
+function mobileTextStyle(node: ParsedFigmaNode): CSSProperties | undefined {
+  if (node.mobileFontSize == null) return undefined;
+  const out: CSSProperties = {};
+  if (node.mobileFontSize !== node.fontSize) {
+    out.fontSize = `${node.mobileFontSize}px`;
+  }
+  if (node.mobileLineHeight && node.mobileLineHeight !== node.lineHeight) {
+    out.lineHeight = `${Math.round(node.mobileLineHeight)}px`;
+  }
+  if (node.mobileLetterSpacing != null && node.mobileLetterSpacing !== node.letterSpacing) {
+    out.letterSpacing = `${node.mobileLetterSpacing}px`;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+/** Attach a mobileStyle to a Text/Heading/Link node only when there is one. */
+function withMobile<T extends ReactEmailNode>(node: T, mobile?: CSSProperties): T {
+  return mobile ? { ...node, mobileStyle: mobile } : node;
+}
+
 function stripExports(node: ParsedFigmaNode): ParsedFigmaNode {
+  // An auto-layout frame (HORIZONTAL/VERTICAL) with content children is a REAL
+  // layout — a header row, a card stack, etc. Its children carry their own
+  // images (e.g. a logo exported on its own), so it must be laid out, NOT
+  // flattened to one full-frame PNG. Flattening here produced heavy images and
+  // a padded section wrapping a shrunken frame render. Only leaf raster nodes
+  // and free-form overlap compositions keep their full-frame export.
+  const isAutoLayoutContainer =
+    (node.layoutMode === 'HORIZONTAL' || node.layoutMode === 'VERTICAL') &&
+    getContentChildren(node).length > 0;
+
   // Keep the full-frame PNG for raster-only nodes AND for absolutely-positioned
   // overlay compositions (key visuals) — those must be rasterized even though
   // they contain overlay text, because email can't reproduce free-form overlap.
-  const keepRasterOnly = !hasTextDescendant(node) && !hasButtonDescendant(node);
+  const keepRasterOnly =
+    !hasTextDescendant(node) && !hasButtonDescendant(node) && !isAutoLayoutContainer;
   const keep = keepRasterOnly || isAbsoluteComposite(node);
   return {
     ...node,
@@ -290,12 +402,15 @@ function mapLink(
   align?: CSSProperties['textAlign']
 ): ReactEmailNode {
   const base = textStyle(node, align);
-  return {
-    type: 'Link',
-    href,
-    content: node.text?.trim() ?? '',
-    style: { ...base, textDecoration: 'underline', display: 'inline-block' },
-  };
+  return withMobile(
+    {
+      type: 'Link',
+      href,
+      content: node.text?.trim() ?? '',
+      style: { ...base, textDecoration: 'underline', display: 'inline-block' },
+    },
+    mobileTextStyle(node)
+  );
 }
 
 /** Find the solid-fill shape inside a button component (prefer largest colored fill). */
@@ -486,20 +601,27 @@ function mapText(
 ): ReactEmailNode {
   const text = node.text ?? '';
   const style = textStyle(node, align);
+  const mobile = mobileTextStyle(node);
 
   if (isHeading(node)) {
-    return {
-      type: 'Heading',
-      content: text,
-      as: headingLevel(node),
-      style,
-    };
+    return withMobile(
+      {
+        type: 'Heading',
+        content: text,
+        as: headingLevel(node),
+        style,
+      },
+      mobile
+    );
   }
-  return {
-    type: 'Text',
-    content: text,
-    style,
-  };
+  return withMobile(
+    {
+      type: 'Text',
+      content: text,
+      style,
+    },
+    mobile
+  );
 }
 
 const BULLET_LINE = /^\s*([•·●▪‣◦∙*\-–—])\s+(.*\S.*)$/;
@@ -522,16 +644,130 @@ function mapBulletItem(
   align?: CSSProperties['textAlign']
 ): ReactEmailNode {
   const base = textStyle(node, align);
-  return {
-    type: 'Text',
-    content: `•  ${item}`,
-    style: {
-      ...base,
-      textAlign: 'left',
-      paddingLeft: '1.2em',
-      textIndent: '-1.2em',
+  return withMobile(
+    {
+      type: 'Text',
+      content: `•  ${item}`,
+      style: {
+        ...base,
+        textAlign: 'left',
+        paddingLeft: '1.2em',
+        textIndent: '-1.2em',
+      },
     },
-  };
+    mobileTextStyle(node)
+  );
+}
+
+// ─── rich inline runs → email-safe HTML ─────────────────────────────────────
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escapeAttr(s: string): string {
+  return escapeHtml(s).replace(/"/g, '&quot;');
+}
+
+function isSafeHref(href: string): boolean {
+  return /^(https?:|mailto:|tel:|#|\/)/i.test(href.trim());
+}
+
+/**
+ * Serialize inline runs to email-safe HTML. Links inherit the paragraph color
+ * (disclaimers use white underlined links, not browser-blue) and keep their
+ * underline; non-link runs only emit a <span> when they diverge from the
+ * paragraph base color or carry an underline — so the markup stays minimal.
+ */
+function runsToHtml(runs: FigmaTextRun[], baseColor?: string): string {
+  return runs
+    .map((run) => {
+      const inner = escapeHtml(run.text);
+      if (run.href && isSafeHref(run.href)) {
+        const deco = run.underline === false ? 'none' : 'underline';
+        return `<a href="${escapeAttr(run.href)}" style="color:inherit;text-decoration:${deco}">${inner}</a>`;
+      }
+      const styles: string[] = [];
+      if (run.underline) styles.push('text-decoration:underline');
+      if (run.color && run.color !== baseColor) styles.push(`color:${run.color}`);
+      return styles.length ? `<span style="${styles.join(';')}">${inner}</span>` : inner;
+    })
+    .join('');
+}
+
+const RUN_ZERO_WIDTH = /[\u200b\u200c\u200d\ufeff]/g;
+
+/** Split runs at hard line breaks into per-paragraph run arrays (empty = blank line). */
+function splitRunsIntoParagraphs(runs: FigmaTextRun[]): FigmaTextRun[][] {
+  const paras: FigmaTextRun[][] = [];
+  let current: FigmaTextRun[] = [];
+  for (const run of runs) {
+    const parts = run.text.replace(RUN_ZERO_WIDTH, '').split('\n');
+    for (let i = 0; i < parts.length; i++) {
+      if (i > 0) {
+        paras.push(current);
+        current = [];
+      }
+      if (parts[i] !== '') current.push({ ...run, text: parts[i] });
+    }
+  }
+  paras.push(current);
+  return paras;
+}
+
+const plainFromRuns = (runs: FigmaTextRun[]): string => runs.map((r) => r.text).join('');
+
+/**
+ * Map a text node that carries inline links/underlines to one rich <Text> per
+ * paragraph. Reuses Figma's `paragraphSpacing` for inter-paragraph gaps (and an
+ * extra line-height per blank line), exactly like `mapParagraphs`, but preserves
+ * the inline formatting as sanitized HTML on each block.
+ */
+function mapRichParagraphs(
+  node: ParsedFigmaNode,
+  align?: CSSProperties['textAlign']
+): ReactEmailNode[] {
+  const runs = node.runs ?? [];
+  const baseColor = node.color;
+  const paragraphs = splitRunsIntoParagraphs(runs);
+
+  type Block = { runs: FigmaTextRun[]; extraBlanks: number };
+  const blocks: Block[] = [];
+  let pendingBlanks = 0;
+  for (const para of paragraphs) {
+    const hasContent = para.some((r) => r.text.trim() !== '');
+    if (!hasContent) {
+      if (blocks.length > 0) pendingBlanks += 1;
+      continue;
+    }
+    if (pendingBlanks > 0 && blocks.length > 0) {
+      blocks[blocks.length - 1].extraBlanks += pendingBlanks;
+    }
+    pendingBlanks = 0;
+    blocks.push({ runs: para, extraBlanks: 0 });
+  }
+
+  if (blocks.length === 0) return [mapText(node, align)];
+
+  const base = textStyle(node, align);
+  const fs = node.fontSize ?? 16;
+  const lh = node.lineHeight ?? Math.round(fs * 1.4);
+  const gap = node.paragraphSpacing != null ? node.paragraphSpacing : 0;
+  const mobile = mobileTextStyle(node);
+
+  return blocks.map((block, i) => {
+    const isLast = i === blocks.length - 1;
+    const marginBottom = (isLast ? 0 : gap) + block.extraBlanks * lh;
+    return withMobile(
+      {
+        type: 'Text',
+        content: plainFromRuns(block.runs),
+        html: runsToHtml(block.runs, baseColor),
+        style: { ...base, margin: 0, marginBottom },
+      } as Extract<ReactEmailNode, { type: 'Text' }>,
+      mobile
+    );
+  });
 }
 
 const ZERO_WIDTH = /[\u200b\u200c\u200d\ufeff]/g;
@@ -580,19 +816,35 @@ function mapParagraphs(
   const fs = node.fontSize ?? 16;
   const lh = node.lineHeight ?? Math.round(fs * 1.4);
   const gap = node.paragraphSpacing != null ? node.paragraphSpacing : 0;
+  const mobile = mobileTextStyle(node);
 
   return blocks.map((block, i) => {
     const isLast = i === blocks.length - 1;
     const marginBottom = (isLast ? 0 : gap) + block.extraBlanks * lh;
-    return {
-      type: 'Text',
-      content: block.content,
-      style: { ...base, margin: 0, marginBottom },
-    } as ReactEmailNode;
+    return withMobile(
+      {
+        type: 'Text',
+        content: block.content,
+        style: { ...base, margin: 0, marginBottom },
+      } as Extract<ReactEmailNode, { type: 'Text' }>,
+      mobile
+    );
   });
 }
 
 function mapTextNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): ReactEmailNode[] {
+  // Inline formatting from Figma (hyperlinks / underlines) → rich HTML paragraphs.
+  // This must run first: a disclaimer's embedded links live mid-sentence and
+  // would otherwise be flattened to plain text by the paragraph/link paths below.
+  if (
+    node.type === 'TEXT' &&
+    node.text?.trim() &&
+    !isHeading(node) &&
+    node.runs?.some((r) => r.href || r.underline)
+  ) {
+    return mapRichParagraphs(node, align);
+  }
+
   if (node.type === 'TEXT' && node.text?.trim()) {
     const link = detectLink(node);
     if (link) return [mapLink(node, link.href, align)];
@@ -698,10 +950,13 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
   const hPad = (pl || pr) > 0 ? Math.min(pl || pr, 48) : 24;
   const verticalPad = `${vPad}px ${hPad}px`;
 
+  const mobileBtn = primaryText ? mobileTextStyle(primaryText) : undefined;
+
   return {
     type: 'Button',
     href: '#',
     label,
+    ...(mobileBtn ? { mobileStyle: mobileBtn } : {}),
     containerStyle: {
       textAlign,
       width: '100%',
@@ -776,7 +1031,11 @@ function boxStyle(node: ParsedFigmaNode): CSSProperties | undefined {
   const stroke = normalizeColor(node.strokeColor);
   const strokeWeight = node.strokeWeight ?? 0;
   const hasBorder = !!stroke && strokeWeight > 0;
-  if (!bg && !hasBorder) return undefined;
+  const pad = formatPadding(node);
+  // A transparent frame that still carries auto-layout padding must keep it:
+  // designers put the section's side/vertical gutters on such wrapper frames
+  // (e.g. a footer's 40px inset), and dropping them collapses copy edge-to-edge.
+  if (!bg && !hasBorder && !pad) return undefined;
 
   // Icon-sized container (e.g. a small dark circle): keep it at its intrinsic
   // small size and centered — NOT width:100% with default padding, which would
@@ -806,8 +1065,13 @@ function boxStyle(node: ParsedFigmaNode): CSSProperties | undefined {
   if (align) style.textAlign = align;
   if (bg) style.backgroundColor = bg;
   if (hasBorder) style.border = `${Math.max(1, Math.round(strokeWeight))}px solid ${stroke}`;
-  // Colored / bordered blocks need breathing room even when Figma padding is 0.
-  style.padding = formatPadding(node) ?? '12px 16px';
+  // Colored / bordered blocks need breathing room even when Figma padding is 0;
+  // transparent frames only get padding when the design actually specified it.
+  if (bg || hasBorder) {
+    style.padding = pad ?? '12px 16px';
+  } else if (pad) {
+    style.padding = pad;
+  }
   if (node.cornerRadius && node.cornerRadius > 0) style.borderRadius = node.cornerRadius;
   return style;
 }
@@ -875,6 +1139,95 @@ function columnsAreSymmetricGrid(kids: ParsedFigmaNode[], parentWidth: number): 
   if (kids.every(columnLooksLikeIconUnit)) return false;
 
   return kids.every((k) => hasImageDescendant(k) && hasTextDescendant(k));
+}
+
+/**
+ * A direct child that spans (essentially) the full frame width while the frame
+ * itself carries horizontal padding — a deliberately full-bleed element such as
+ * edge-to-edge hero art or a banner strip. In email this must render at the full
+ * section width, NOT be confined to the padded content box (which shrinks it and
+ * invents side gutters the design never had).
+ */
+function isFullBleedChild(parent: ParsedFigmaNode, child: ParsedFigmaNode): boolean {
+  const px = (parent.paddingLeft ?? 0) + (parent.paddingRight ?? 0);
+  if (px <= 0) return false; // no padding → nothing to break out of
+  const pw = parent.width;
+  const cw = child.width;
+  if (!pw || !cw) return false;
+  // Reaches (near) the full frame width → it overflows the padded content box.
+  return cw >= pw - 2;
+}
+
+/**
+ * Flag full-bleed Img nodes so the renderer drops their bottom margin and lets
+ * them span the full section width. A single top-level Img is flagged directly;
+ * an Img wrapped in a bleed Section is flagged in place.
+ */
+function markFullBleed(node: ReactEmailNode): ReactEmailNode {
+  if (node.type === 'Img') return { ...node, fullBleed: true };
+  return node;
+}
+
+/**
+ * Wrap a vertical stack's mapped children in the frame's box — but when the frame
+ * mixes full-bleed children (edge-to-edge art) with normally-inset content, split
+ * the horizontal padding: the outer Section keeps background + vertical padding,
+ * full-bleed children render flush to the edges, and contiguous runs of inset
+ * content receive the frame's side padding via an inner wrapper. Falls back to
+ * the plain wrapBox when there is no full-bleed child (unchanged behavior).
+ */
+function wrapBoxSplittingBleed(
+  node: ParsedFigmaNode,
+  childData: { child: ParsedFigmaNode; group: ReactEmailNode[] }[]
+): ReactEmailNode[] {
+  const nonEmpty = childData.filter((d) => d.group.length > 0);
+  const bleed = nonEmpty.map((d) => isFullBleedChild(node, d.child));
+  const style = boxStyle(node);
+  const pl = node.paddingLeft ?? 0;
+  const pr = node.paddingRight ?? 0;
+
+  // Nothing to break out of (no box, no horizontal padding, or no full-bleed
+  // child) → normal behavior.
+  if (!style || (pl === 0 && pr === 0) || !bleed.some(Boolean)) {
+    return wrapBox(node, interleaveChildGaps(nonEmpty.map((d) => d.group), node.gap));
+  }
+
+  const pt = node.paddingTop ?? 0;
+  const pb = node.paddingBottom ?? 0;
+
+  // Outer keeps bg / border + vertical padding only; horizontal inset moves inward.
+  const outerStyle: CSSProperties = { ...style };
+  if (pt || pb) outerStyle.padding = `${pt}px 0px ${pb}px 0px`;
+  else delete outerStyle.padding;
+
+  const gap = node.gap && node.gap > 0 ? node.gap : 0;
+  const out: ReactEmailNode[] = [];
+  let emitted = false;
+  let i = 0;
+  while (i < nonEmpty.length) {
+    if (gap && emitted) out.push({ type: 'Spacer', height: gap });
+    if (bleed[i]) {
+      out.push(...nonEmpty[i].group.map(markFullBleed));
+      emitted = true;
+      i++;
+      continue;
+    }
+    // Collect a contiguous run of inset (non-bleed) children and inset the run.
+    const run: ReactEmailNode[][] = [];
+    while (i < nonEmpty.length && !bleed[i]) {
+      run.push(nonEmpty[i].group);
+      i++;
+    }
+    const inner = interleaveChildGaps(run, gap);
+    out.push({
+      type: 'Section',
+      style: { width: '100%', paddingLeft: pl, paddingRight: pr },
+      children: inner,
+    });
+    emitted = true;
+  }
+
+  return [{ type: 'Section', style: outerStyle, children: out }];
 }
 
 // ─── ordered walk (core algorithm) ──────────────────────────────────────────
@@ -950,11 +1303,12 @@ function mapNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): Rea
     }
   }
 
-  // 6. Layout group — flatten children in Figma order (preserving any box)
+  // 6. Layout group — flatten children in Figma order (preserving any box).
+  // Full-bleed children (edge-to-edge art) break out of the frame's side padding.
   if (isLayoutGroup(node)) {
     const kids = getContentChildren(node);
-    const groups = kids.map((child) => mapNode(child, effectiveAlign));
-    return wrapBox(node, interleaveChildGaps(groups, node.gap));
+    const childData = kids.map((child) => ({ child, group: mapNode(child, effectiveAlign) }));
+    return wrapBoxSplittingBleed(node, childData);
   }
 
   // 7. Horizontal row
@@ -1008,11 +1362,12 @@ function mapNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): Rea
     }
   }
 
-  // 8. Recurse into children (preserving any box)
+  // 8. Recurse into children (preserving any box). Full-bleed children break out
+  // of the frame's side padding so edge-to-edge art isn't inset/shrunk.
   const kids = getContentChildren(node);
   if (kids.length > 0) {
-    const groups = kids.map((child) => mapNode(child, effectiveAlign));
-    return wrapBox(node, interleaveChildGaps(groups, node.gap));
+    const childData = kids.map((child) => ({ child, group: mapNode(child, effectiveAlign) }));
+    return wrapBoxSplittingBleed(node, childData);
   }
 
   return [];
@@ -1027,6 +1382,25 @@ function isFullSection(child: ParsedFigmaNode): boolean {
 
 // ─── public entry ─────────────────────────────────────────────────────────────
 
+/**
+ * Pair a desktop child with its mobile counterpart. Matches by layer name first
+ * (Figma mobile frames are usually name-for-name copies); for TEXT nodes, falls
+ * back to identical trimmed copy so typography still transfers when a designer
+ * renamed the mobile layer.
+ */
+function matchMobileChild(
+  child: ParsedFigmaNode,
+  mobChildren: ParsedFigmaNode[]
+): ParsedFigmaNode | undefined {
+  const byName = mobChildren.find((c) => c.name === child.name);
+  if (byName) return byName;
+  if (child.type === 'TEXT' && child.text) {
+    const target = child.text.trim();
+    return mobChildren.find((c) => c.type === 'TEXT' && c.text?.trim() === target);
+  }
+  return undefined;
+}
+
 function applyMobileLayout(desktop: ParsedFigmaNode, mobile: ParsedFigmaNode): ParsedFigmaNode {
   function walk(desk: ParsedFigmaNode, mob: ParsedFigmaNode | undefined): ParsedFigmaNode {
     if (!mob) return desk;
@@ -1040,17 +1414,23 @@ function applyMobileLayout(desktop: ParsedFigmaNode, mobile: ParsedFigmaNode): P
         mob.layoutMode === 'HORIZONTAL' && getContentChildren(mob).length > 1;
     }
 
+    // Capture the mobile frame's own typography for TEXT nodes so the generated
+    // email can shrink font size / line height on small screens via a media
+    // query, instead of rendering desktop type on mobile.
+    const isText = desk.type === 'TEXT';
     return {
       ...desk,
-      paddingTop: mob.paddingTop ?? desk.paddingTop,
-      paddingRight: mob.paddingRight ?? desk.paddingRight,
-      paddingBottom: mob.paddingBottom ?? desk.paddingBottom,
-      paddingLeft: mob.paddingLeft ?? desk.paddingLeft,
-      gap: mob.gap ?? desk.gap,
-      backgroundColor: resolveEffectiveBackground(mob) ?? resolveEffectiveBackground(desk),
+      // Desktop keeps its OWN padding / gap / background — the mobile frame must
+      // not overwrite the desktop render (that made a desktop header inherit the
+      // mobile frame's tighter padding). Mobile-specific typography still flows
+      // to `mobileStyle` media queries below, and column behavior via
+      // `keepColumnsOnMobile`.
       keepColumnsOnMobile,
+      mobileFontSize: isText ? mob.fontSize ?? desk.mobileFontSize : desk.mobileFontSize,
+      mobileLineHeight: isText ? mob.lineHeight ?? desk.mobileLineHeight : desk.mobileLineHeight,
+      mobileLetterSpacing: isText ? mob.letterSpacing ?? desk.mobileLetterSpacing : desk.mobileLetterSpacing,
       children: desk.children.map((child) => {
-        const mc = mob.children.find((c) => c.name === child.name);
+        const mc = matchMobileChild(child, mob.children);
         return walk(child, mc);
       }),
     };
@@ -1139,9 +1519,19 @@ export function buildPrimitivesFromFigma(
     }
   } else {
     // Single hero block — map ALL top-level children (content frame + CTA buttons)
-    const children = mapNode(root, nodeTextAlign(root));
-    const style = sectionStyle(root);
+    let children = mapNode(root, nodeTextAlign(root));
+    let style = sectionStyle(root);
     if (!style.backgroundColor && rootBg) style.backgroundColor = rootBg;
+
+    // mapNode already wrapped the root in its own box Section (same bg/padding as
+    // sectionStyle here). Collapse that duplicate instead of nesting two identical
+    // boxes — otherwise the root's padding/background is applied twice (e.g. a
+    // header logo ends up double-padded and shrunken).
+    if (children.length === 1 && children[0].type === 'Section') {
+      const inner = children[0];
+      style = { ...style, ...inner.style };
+      children = inner.children;
+    }
 
     sectionNodes.push({
       type: 'Section',

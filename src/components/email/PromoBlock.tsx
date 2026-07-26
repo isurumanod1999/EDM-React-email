@@ -146,18 +146,24 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                     <Img
                       src={imgSrc}
                       width={imgWidth}
+                      height={imgHeight}
                       alt={altText}
                       className={EDM_CLASS.imgFluid}
-                      style={fluidImgStyle(imgWidth)}
+                      style={fluidImgStyle(imgWidth, {
+                        height: imgHeight ? `${imgHeight}px` : 'auto',
+                      })}
                     />
                   </Link>
                 ) : (
                   <Img
                     src={imgSrc}
                     width={imgWidth}
+                    height={imgHeight}
                     alt={altText}
                     className={EDM_CLASS.imgFluid}
-                    style={fluidImgStyle(imgWidth)}
+                    style={fluidImgStyle(imgWidth, {
+                      height: imgHeight ? `${imgHeight}px` : 'auto',
+                    })}
                   />
                 )}
               </td>

@@ -91,8 +91,9 @@ export function HomePage() {
   return (
     <div className="home">
       <nav className="home-nav">
-        <Link href="/" className="home-nav-brand">
-          React Email Builder
+        <Link href="/" className="home-brand">
+          <span className="home-brand-mark" aria-hidden />
+          Email Studio
         </Link>
         <div className="home-nav-links">
           <Link href="/builder" className="home-nav-link">
@@ -108,60 +109,24 @@ export function HomePage() {
       </nav>
 
       <section className="home-hero">
-        <span className="home-hero-badge">Visual Email Template Builder</span>
-        <h1>Build beautiful emails with drag &amp; drop</h1>
-        <p>
-          Compose cross-client compatible HTML emails using reusable React Email blocks.
-          Preview live, configure every prop, export HTML, and send test emails via the
-          React Email preview app (create-email + Resend CLI).
+        <span className="home-badge">Visual Email Builder</span>
+        <h1>
+          Design emails that render <span className="accent">everywhere</span>
+        </h1>
+        <p className="home-hero-sub">
+          Compose cross-client HTML emails from reusable React Email blocks. Import from
+          Figma, fine-tune every element on canvas, send test emails with Resend, and export
+          production-ready HTML.
         </p>
         <div className="home-hero-actions">
           <Link href="/builder" className="btn btn-primary">
             Create Template
           </Link>
-          <a
-            href="http://localhost:3005"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-secondary"
-          >
-            Send with React Email
-          </a>
-          <Link href="/builder/seed-nissan-promo" className="btn btn-secondary">
-            Edit Seed Template
+          <Link href="/builder" className="btn btn-secondary">
+            Browse Templates
           </Link>
         </div>
       </section>
-
-      {/* <section className="home-section home-send">
-        <div className="home-section-header">
-          <div>
-            <h2>Send emails</h2>
-            <p>
-              Powered by Resend through the React Email CLI — scaffolded with{' '}
-              <code>npx create-email@latest</code> in <code>.email-starter/</code>
-            </p>
-          </div>
-        </div>
-        <ol className="home-send-steps">
-          <li>
-            <code>npm run email:install</code> — install the create-email workspace
-          </li>
-          <li>
-            <code>npm run email:resend:setup</code> — link your Resend API key (CLI stores it locally)
-          </li>
-          <li>
-            <code>npm run email:dev</code> — open{' '}
-            <a href="http://localhost:3005" target="_blank" rel="noopener noreferrer">
-              localhost:3005
-            </a>
-            , pick a template, click <strong>Send</strong> in the toolbar
-          </li>
-        </ol>
-        <p className="home-send-note">
-          Includes starter templates plus <code>nissan-more</code>. No Resend SDK in the Next.js app.
-        </p>
-      </section> */}
 
       <section className="home-section">
         <div className="home-stats">
@@ -266,7 +231,7 @@ export function HomePage() {
       </section>
 
       <footer className="home-footer">
-        React Email + Next.js · Built with @react-email/components
+        Email Studio · Built with React Email, Next.js &amp; Resend
       </footer>
     </div>
   );

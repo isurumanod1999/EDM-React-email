@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Html, Body, Container, Preview } from '@react-email/components';
 import { EmailResponsiveHead } from '@/components/email/EmailResponsiveHead';
+import { buildFigmaResponsiveCss } from '@/components/email/FigmaReactEmailBlock';
 import { EDM_CLASS } from '@/lib/email/responsive';
 import type { EmailTemplateMeta, TemplateBlock } from '@/lib/schema/template';
 import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
 import { getComponentDefinition } from '@/lib/registry';
+import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
 
 export interface DynamicEmailTemplateProps {
   meta?: Partial<EmailTemplateMeta>;
@@ -29,9 +31,19 @@ export function DynamicEmailTemplate({
     ...meta,
   };
 
+  // Collect every Figma block's responsive CSS up front and hoist it into the
+  // single document <head>. Emitting a <style> per block inside <body> is
+  // unreliable — many email clients drop it — which broke mobile font scaling
+  // AND column stacking. Namespacing by block.id keeps the rules collision-free.
+  const figmaResponsiveCss = blocks
+    .filter((b) => b.componentId === FIGMA_BLOCK_ID)
+    .map((b) => buildFigmaResponsiveCss((b.props as { tree?: ReactEmailNode }).tree ?? ({} as ReactEmailNode), b.id))
+    .filter((css) => css.trim().length > 0)
+    .join('\n');
+
   return (
     <Html>
-      <EmailResponsiveHead />
+      <EmailResponsiveHead extraCss={figmaResponsiveCss || undefined} />
       <Preview>{resolvedMeta.previewText}</Preview>
       <Body
         style={{
@@ -71,14 +83,18 @@ export function DynamicEmailTemplate({
 
             const Component = definition.component;
 
-            // Figma blocks render per-node selection attrs internally.
-            if (editable && block.componentId === FIGMA_BLOCK_ID) {
+            // Figma blocks always receive their blockId so responsive class
+            // names are namespaced per block (preventing cross-block media-rule
+            // collisions). The `editable` flag additionally turns on per-node
+            // selection attributes for the live preview.
+            if (block.componentId === FIGMA_BLOCK_ID) {
               return (
                 <Component
                   key={block.id}
                   {...(block.props as object)}
-                  editable
+                  editable={Boolean(editable)}
                   blockId={block.id}
+                  emitResponsiveStyles={false}
                 />
               );
             }

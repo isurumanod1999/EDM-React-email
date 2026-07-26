@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { AiImportModal } from '@/builder/components/AiImportModal';
 import { FigmaBuildModal } from '@/builder/components/FigmaBuildModal';
 import { FigmaFetchModal } from '@/builder/components/FigmaFetchModal';
+import { SendTestModal } from '@/builder/components/SendTestModal';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { downloadBlob } from '@/builder/utils/download';
 import { sanitizeExportName } from '@/lib/export/sanitizeName';
@@ -28,6 +29,7 @@ export function BuilderToolbar() {
   const [aiImportOpen, setAiImportOpen] = useState(false);
   const [figmaFetchOpen, setFigmaFetchOpen] = useState(false);
   const [figmaBuildOpen, setFigmaBuildOpen] = useState(false);
+  const [sendOpen, setSendOpen] = useState(false);
 
   const handleDuplicate = async () => {
     if (!template) return;
@@ -160,15 +162,19 @@ export function BuilderToolbar() {
         >
           Screenshot Upload
         </button>
-        <a
-          href="http://localhost:3005"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
           className="btn btn-secondary btn-sm"
-          title="Run npm run email:dev and npm run email:resend:setup first"
+          onClick={() => setSendOpen(true)}
+          disabled={!template || template.blocks.length === 0}
+          title={
+            template && template.blocks.length === 0
+              ? 'Add components to the canvas first'
+              : 'Send a test email via Resend'
+          }
         >
           Send email
-        </a>
+        </button>
         <button
           type="button"
           className="btn btn-secondary btn-sm"
@@ -209,6 +215,7 @@ export function BuilderToolbar() {
         }}
       />
       <AiImportModal open={aiImportOpen} onClose={() => setAiImportOpen(false)} />
+      <SendTestModal open={sendOpen} onClose={() => setSendOpen(false)} />
     </header>
   );
 }

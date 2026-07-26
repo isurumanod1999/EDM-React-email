@@ -9,6 +9,7 @@
 import type { FigmaNodeDocument, FigmaVariable } from '../src/lib/figma/client';
 import { parseFigmaNode } from '../src/lib/figma/parseFigmaNode';
 import { buildPrimitivesFromFigma } from '../src/lib/figma/figmaPrimitives';
+import { nodeMobileStyle } from '../src/components/email/FigmaReactEmailBlock';
 import type { ReactEmailNode } from '../src/lib/figma/types/reactEmailAst';
 
 type Btn = Extract<ReactEmailNode, { type: 'Button' }>;
@@ -492,6 +493,313 @@ const RED = { r: 195 / 255, g: 0, b: 47 / 255 };
   check('I. border keeps the Figma stroke color (white)', String(bs[0]?.style?.border ?? '').includes('#ffffff'), `border=${bs[0]?.style?.border}`);
   check('I. outline CTA still uses the design width (290px)', bs[0]?.style?.width === '290px', `w=${bs[0]?.style?.width}`);
   check('I. textCase UPPER applied to outline label', bs[0]?.style?.textTransform === 'uppercase', `tt=${bs[0]?.style?.textTransform}`);
+}
+
+// ── Scenario J: transparent dark-hero → reconstruct the dark section bg ──────
+// The Nissan MORE "1-up" component is fully transparent (its dark navy comes
+// from an ancestor page frame we don't import). All surface copy is white and
+// the CTA is an inverted white pill with a dark navy label (#131722). The
+// section must be given that dark background back — otherwise white text lands
+// on white and the whole block looks washed out.
+{
+  const WHITE = { r: 1, g: 1, b: 1 };
+  const NAVY = { r: 19 / 255, g: 23 / 255, b: 34 / 255 }; // #131722
+  const doc: FigmaNodeDocument = {
+    id: '10:1',
+    name: '1-up',
+    type: 'INSTANCE',
+    visible: true,
+    layoutMode: 'VERTICAL',
+    itemSpacing: 16,
+    paddingTop: 40,
+    paddingBottom: 40,
+    paddingLeft: 40,
+    paddingRight: 40,
+    absoluteBoundingBox: { x: 0, y: 0, width: 600, height: 500 },
+    backgroundColor: { r: 0, g: 0, b: 0, a: 0 }, // transparent
+    children: [
+      {
+        id: '10:2',
+        name: 'Frame',
+        type: 'FRAME',
+        visible: true,
+        layoutMode: 'VERTICAL',
+        itemSpacing: 12,
+        absoluteBoundingBox: { x: 40, y: 40, width: 520, height: 200 },
+        backgroundColor: { r: 0, g: 0, b: 0, a: 0 },
+        children: [
+          text('10:3', 'Heading', 'Now, with the new Nissan MORE Plan:', { fontSize: 28, fontWeight: 700, textAlignHorizontal: 'CENTER' }, WHITE, 520, 60),
+          text('10:4', 'Body', 'When you service with Nissan during your 5-year warranty period, you’ll earn an additional year of coverage.', { fontSize: 16, fontWeight: 400, textAlignHorizontal: 'CENTER' }, WHITE, 520, 80),
+        ],
+      },
+      {
+        id: '10:5',
+        name: 'CTA',
+        type: 'INSTANCE',
+        visible: true,
+        layoutMode: 'HORIZONTAL',
+        cornerRadius: 24,
+        paddingLeft: 24,
+        paddingRight: 24,
+        absoluteBoundingBox: { x: 155, y: 400, width: 290, height: 48 },
+        fills: [SOLID(WHITE.r, WHITE.g, WHITE.b)], // white pill
+        children: [
+          text('10:6', 'Label', 'See how it works', { fontSize: 14, fontWeight: 700, textAlignHorizontal: 'CENTER' }, NAVY, 180, 24),
+        ],
+      },
+    ],
+  };
+
+  const tree = build(doc);
+  const root = tree as { style?: Record<string, unknown> };
+  const bg = String(root.style?.backgroundColor ?? '');
+  check('J. transparent dark hero gets a dark section background (not washed out)', bg === '#131722', `bg=${bg || '-'}`);
+  const ts = texts(tree);
+  check('J. surface copy stays white', ts.every((t) => t.style?.color === '#ffffff'), `colors=${ts.map((t) => t.style?.color).join(',')}`);
+  const bs = buttons(tree);
+  check('J. inverted CTA keeps its white pill + navy label', bs[0]?.style?.backgroundColor === '#ffffff' && bs[0]?.style?.color === '#131722', `bg=${bs[0]?.style?.backgroundColor}, color=${bs[0]?.style?.color}`);
+}
+
+// ── Scenario K: footer disclaimer — character-level links/underlines + padding ─
+// A disclaimer is one TEXT node whose BASE fill is a dark token but whose every
+// character is overridden to white, with inline underlined hyperlinks living in
+// characterStyleOverrides/styleOverrideTable. It sits in transparent wrapper
+// frames that carry the 40px section padding. This exercises: (1) dominant-run
+// colour beats the dark base fill, (2) dark background is reconstructed, (3)
+// inline links/underlines survive as rich HTML, (4) transparent-frame padding
+// is preserved.
+{
+  const WHITE = { r: 1, g: 1, b: 1 };
+  const chars = 'See terms at Nissan.co.nz/warranty. Click here to unsubscribe.';
+  const linkStart = chars.indexOf('Nissan.co.nz/warranty');
+  const linkEnd = linkStart + 'Nissan.co.nz/warranty'.length;
+  const hereStart = chars.indexOf('here');
+  const hereEnd = hereStart + 'here'.length;
+  const overrides = Array.from({ length: chars.length }, (_, i) => {
+    if (i >= linkStart && i < linkEnd) return 2;
+    if (i >= hereStart && i < hereEnd) return 3;
+    return 1;
+  });
+
+  const disclaimer: FigmaNodeDocument = {
+    id: '11:3',
+    name: 'Disclaimer',
+    type: 'TEXT',
+    visible: true,
+    characters: chars,
+    // Dark base fill (a token) — must be overridden by the white character runs.
+    style: { fontSize: 11, fontWeight: 400, paragraphSpacing: 8, lineHeightPx: 14 },
+    fills: [SOLID(0.239, 0.239, 0.239)],
+    characterStyleOverrides: overrides,
+    styleOverrideTable: {
+      '1': { fills: [SOLID(WHITE.r, WHITE.g, WHITE.b)] },
+      '2': {
+        fills: [SOLID(WHITE.r, WHITE.g, WHITE.b)],
+        textDecoration: 'UNDERLINE',
+        hyperlink: { type: 'URL', url: 'https://www.nissan.co.nz/warranty' },
+      },
+      '3': { fills: [SOLID(WHITE.r, WHITE.g, WHITE.b)], textDecoration: 'UNDERLINE' },
+    },
+    absoluteBoundingBox: { width: 520, height: 120 },
+  };
+
+  const doc: FigmaNodeDocument = {
+    id: '11:0',
+    name: 'Footer',
+    type: 'INSTANCE',
+    visible: true,
+    layoutMode: 'VERTICAL',
+    backgroundColor: { r: 0, g: 0, b: 0, a: 0 },
+    absoluteBoundingBox: { x: 0, y: 0, width: 600, height: 300 },
+    children: [
+      {
+        id: '11:1',
+        name: 'Outer',
+        type: 'FRAME',
+        visible: true,
+        layoutMode: 'VERTICAL',
+        paddingLeft: 40,
+        paddingRight: 40,
+        backgroundColor: { r: 0, g: 0, b: 0, a: 0 },
+        absoluteBoundingBox: { x: 0, y: 0, width: 600, height: 300 },
+        children: [
+          {
+            id: '11:2',
+            name: 'Inner',
+            type: 'FRAME',
+            visible: true,
+            layoutMode: 'VERTICAL',
+            paddingTop: 40,
+            paddingBottom: 40,
+            itemSpacing: 16,
+            backgroundColor: { r: 0, g: 0, b: 0, a: 0 },
+            absoluteBoundingBox: { x: 40, y: 0, width: 520, height: 300 },
+            children: [
+              disclaimer,
+              text('11:4', 'Address', 'Nissan New Zealand Limited', { fontSize: 11 }, WHITE, 520, 20),
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  const tree = build(doc);
+  const flat = JSON.stringify(tree);
+  const rootBg = String((tree as { style?: Record<string, unknown> }).style?.backgroundColor ?? '');
+  const rich = texts(tree).find((t) => typeof (t as { html?: string }).html === 'string') as
+    | (Txt & { html?: string })
+    | undefined;
+
+  check('K. disclaimer text is white (dominant run beats dark base fill)', rich?.style?.color === '#ffffff', `color=${rich?.style?.color}`);
+  check('K. dark section background reconstructed', /^#(0|1)/.test(rootBg), `bg=${rootBg || '-'}`);
+  check('K. transparent wrapper padding preserved (40px)', flat.includes('40px'), 'no 40px padding found');
+  check('K. inline hyperlink emitted as anchor', (rich?.html ?? '').includes('<a href="https://www.nissan.co.nz/warranty"'), `html=${(rich?.html ?? '').slice(0, 120)}`);
+  check('K. link + label are underlined', (flat.match(/text-decoration:underline/g)?.length ?? 0) >= 2, 'underlines missing');
+}
+
+// ── Scenario L: mobile frame typography drives ≤600px font-size/line-height ───
+// A desktop frame with a large heading + body, paired with a mobile frame whose
+// matching layers use smaller type. The build must (1) keep desktop sizes in the
+// inline style and (2) attach a mobileStyle carrying ONLY the mobile font size /
+// line height for a media-query override.
+{
+  const deskFrame: FigmaNodeDocument = {
+    id: '12:0',
+    name: 'Hero',
+    type: 'FRAME',
+    visible: true,
+    layoutMode: 'VERTICAL',
+    itemSpacing: 16,
+    absoluteBoundingBox: { width: 600, height: 400 },
+    fills: [SOLID(1, 1, 1)],
+    children: [
+      text('12:1', 'Header', 'Ten Years of Warranty', { fontSize: 40, fontWeight: 700, lineHeightPx: 48 }, { r: 0, g: 0, b: 0 }, 520, 50),
+      text('12:2', 'Body', 'Peace of mind for a decade.', { fontSize: 16, fontWeight: 400, lineHeightPx: 24 }, { r: 0.1, g: 0.1, b: 0.1 }, 520, 40),
+    ],
+  };
+  const mobFrame: FigmaNodeDocument = {
+    id: '12:10',
+    name: 'Hero',
+    type: 'FRAME',
+    visible: true,
+    layoutMode: 'VERTICAL',
+    itemSpacing: 12,
+    absoluteBoundingBox: { width: 375, height: 320 },
+    fills: [SOLID(1, 1, 1)],
+    children: [
+      text('12:11', 'Header', 'Ten Years of Warranty', { fontSize: 26, fontWeight: 700, lineHeightPx: 30 }, { r: 0, g: 0, b: 0 }, 320, 34),
+      text('12:12', 'Body', 'Peace of mind for a decade.', { fontSize: 14, fontWeight: 400, lineHeightPx: 20 }, { r: 0.1, g: 0.1, b: 0.1 }, 320, 34),
+    ],
+  };
+
+  const tree = buildPrimitivesFromFigma(parseFigmaNode(deskFrame), parseFigmaNode(mobFrame), []);
+  const head = headings(tree)[0] as (Head & { mobileStyle?: Record<string, unknown> }) | undefined;
+  const body = texts(tree).find((t) => t.content.includes('Peace of mind')) as
+    | (Txt & { mobileStyle?: Record<string, unknown> })
+    | undefined;
+
+  check('L. heading keeps desktop 40px inline', String(head?.style?.fontSize) === '40px', `fs=${head?.style?.fontSize}`);
+  check('L. heading gets mobile 26px override', head?.mobileStyle?.fontSize === '26px', `mob=${JSON.stringify(head?.mobileStyle)}`);
+  check('L. heading mobile line-height 30px', head?.mobileStyle?.lineHeight === '30px', `mob=${JSON.stringify(head?.mobileStyle)}`);
+  check('L. body gets mobile 14px / 20px override', body?.mobileStyle?.fontSize === '14px' && body?.mobileStyle?.lineHeight === '20px', `mob=${JSON.stringify(body?.mobileStyle)}`);
+}
+
+// ── Scenario M: desktop-only import → proportional mobile auto-scaling ─────────
+// Most campaign components are imported WITHOUT a mobile frame, so mobile would
+// otherwise show desktop type. Oversized headings must shrink on mobile while
+// small legal/body copy is left alone, and desktop inline sizes stay intact.
+{
+  const deskFrame: FigmaNodeDocument = {
+    id: '13:0',
+    name: 'CallOut',
+    type: 'FRAME',
+    visible: true,
+    layoutMode: 'VERTICAL',
+    itemSpacing: 16,
+    absoluteBoundingBox: { width: 600, height: 400 },
+    fills: [SOLID(1, 1, 1)],
+    children: [
+      text('13:1', 'Header', 'The Nissan New Car Warranty', { fontSize: 28, fontWeight: 400, lineHeightPx: 36 }, { r: 0, g: 0, b: 0 }, 520, 40),
+      text('13:2', 'Legal', 'Terms and conditions apply to this offer.', { fontSize: 12, fontWeight: 400, lineHeightPx: 16 }, { r: 0.2, g: 0.2, b: 0.2 }, 520, 20),
+    ],
+  };
+
+  const tree = buildPrimitivesFromFigma(parseFigmaNode(deskFrame), undefined, []);
+  const head = headings(tree)[0];
+  const legal = texts(tree).find((t) => t.content.includes('Terms and conditions'));
+  // Auto-scaling is applied at RENDER time (so it also fixes already-built,
+  // desktop-only campaigns), so we assert via the renderer's nodeMobileStyle.
+  const headMob = head ? nodeMobileStyle(head) : undefined;
+  const legalMob = legal ? nodeMobileStyle(legal) : undefined;
+
+  check('M. desktop heading keeps 28px inline', String(head?.style?.fontSize) === '28px', `fs=${head?.style?.fontSize}`);
+  check('M. desktop-only heading auto-scales down on mobile (<28px)', (() => {
+    const mfs = parseInt(String(headMob?.fontSize ?? '99'), 10);
+    return mfs > 0 && mfs < 28;
+  })(), `mob=${JSON.stringify(headMob)}`);
+  check('M. mobile heading line-height scales proportionally', headMob?.lineHeight != null, `mob=${JSON.stringify(headMob)}`);
+  check('M. small legal copy (12px) is NOT scaled on mobile', !legalMob, `mob=${JSON.stringify(legalMob)}`);
+}
+
+// ── Scenario N: full-bleed hero art breaks out of the frame's side padding ────
+// A padded hero frame (32px pt + 32px px) stacks a small logo, a heading, and a
+// full-width photo (width == frame width). The photo is a deliberate full-bleed
+// element and must render edge-to-edge — NOT confined to the padded content box
+// (which shrank it and invented side gutters). The logo/heading stay inset.
+{
+  const heroFrame: FigmaNodeDocument = {
+    id: '14:0',
+    name: 'Hero',
+    type: 'FRAME',
+    visible: true,
+    layoutMode: 'VERTICAL',
+    itemSpacing: 16,
+    paddingTop: 32,
+    paddingRight: 32,
+    paddingBottom: 0,
+    paddingLeft: 32,
+    absoluteBoundingBox: { width: 600, height: 800 },
+    fills: [SOLID(1, 0.98, 0.9)],
+    children: [
+      {
+        id: '14:1',
+        name: 'Logo',
+        type: 'RECTANGLE',
+        visible: true,
+        fills: [{ type: 'IMAGE', imageRef: 'logo-ref' }],
+        absoluteBoundingBox: { width: 92, height: 40 },
+      },
+      text('14:2', 'Header', 'Pair Spring with a Spritz', { fontSize: 96, fontWeight: 700, lineHeightPx: 96 }, { r: 1, g: 0.33, b: 0 }, 536, 200),
+      {
+        id: '14:3',
+        name: 'shave 1',
+        type: 'RECTANGLE',
+        visible: true,
+        fills: [{ type: 'IMAGE', imageRef: 'shave-ref' }],
+        absoluteBoundingBox: { width: 600, height: 572 },
+      },
+    ],
+  };
+
+  const tree = buildPrimitivesFromFigma(parseFigmaNode(heroFrame), undefined, []);
+  type Img = Extract<ReactEmailNode, { type: 'Img' }>;
+  type Sec = Extract<ReactEmailNode, { type: 'Section' }>;
+  const imgs = collect(tree).filter((n): n is Img => n.type === 'Img');
+  const heroImg = imgs.find((i) => i.alt === 'shave 1');
+  const logoImg = imgs.find((i) => i.alt === 'Logo');
+  const outer = tree as Sec;
+  const outerPad = String(outer.style?.padding ?? '');
+  // The inner wrapper holds the inset content (logo + heading) with side padding.
+  const insetWrapper = (outer.children ?? []).find(
+    (n): n is Sec => n.type === 'Section' && n.style?.paddingLeft != null
+  );
+
+  check('N. full-bleed hero art flagged fullBleed', heroImg?.fullBleed === true, `fullBleed=${heroImg?.fullBleed}`);
+  check('N. logo (inset) is NOT full-bleed', !logoImg?.fullBleed, `fullBleed=${logoImg?.fullBleed}`);
+  check('N. outer section drops horizontal padding', /^32px 0px/.test(outerPad), `pad=${outerPad || '-'}`);
+  check('N. inset content keeps the 32px side padding', insetWrapper?.style?.paddingLeft === 32 && insetWrapper?.style?.paddingRight === 32, `padL=${insetWrapper?.style?.paddingLeft}`);
+  check('N. hero art is a direct child of the outer section (not inside the inset wrapper)', (outer.children ?? []).some((n) => n.type === 'Img' && (n as Img).alt === 'shave 1'), 'hero image not at section root');
 }
 
 console.log(pass ? '\nALL FIDELITY CHECKS PASSED' : '\nSOME FIDELITY CHECKS FAILED');

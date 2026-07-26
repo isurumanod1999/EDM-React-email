@@ -7,8 +7,9 @@ import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
  * Nodes are addressed by an INDEX PATH (array of child indices from the root),
  * serialised as a dotted string (e.g. `"0.2.1"`). The empty path `[]` (`""`)
  * refers to the root node. This needs no schema change and stays valid for
- * already-saved templates, since editing only mutates a node's content/style
- * (never adds/removes/reorders nodes).
+ * already-saved templates. Structural edits (duplicate/remove) rewrite the
+ * children arrays immutably, so paths of later siblings shift accordingly —
+ * callers should use the `newPath` returned by `duplicateNodeAtPath`.
  */
 
 export type NodePath = number[];
@@ -83,6 +84,60 @@ export function updateNodeAtPath(
   );
 
   return { ...(tree as ContainerNode), children: nextChildren };
+}
+
+/** Deep, structural clone of a node subtree (plain data — no functions). */
+export function cloneNode(node: ReactEmailNode): ReactEmailNode {
+  return structuredClone(node);
+}
+
+/**
+ * Insert a deep copy of the node at `path` immediately after it (as a sibling).
+ * The root (`[]`) has no parent and can't be duplicated — the tree is returned
+ * unchanged with the original path. Returns the new tree plus the path of the
+ * inserted copy so the caller can keep it selected.
+ */
+export function duplicateNodeAtPath(
+  tree: ReactEmailNode,
+  path: NodePath
+): { tree: ReactEmailNode; newPath: NodePath } {
+  if (path.length === 0) return { tree, newPath: path };
+
+  const parentPath = path.slice(0, -1);
+  const index = path[path.length - 1];
+  let insertedAt = index;
+
+  const nextTree = updateNodeAtPath(tree, parentPath, (parent) => {
+    const children = nodeChildren(parent);
+    if (!children || index < 0 || index >= children.length) return parent;
+    const copy = cloneNode(children[index]);
+    insertedAt = index + 1;
+    const nextChildren = [
+      ...children.slice(0, index + 1),
+      copy,
+      ...children.slice(index + 1),
+    ];
+    return { ...(parent as ContainerNode), children: nextChildren };
+  });
+
+  return { tree: nextTree, newPath: [...parentPath, insertedAt] };
+}
+
+/**
+ * Remove the node at `path`. The root (`[]`) can't be removed — the tree is
+ * returned unchanged.
+ */
+export function removeNodeAtPath(tree: ReactEmailNode, path: NodePath): ReactEmailNode {
+  if (path.length === 0) return tree;
+
+  const parentPath = path.slice(0, -1);
+  const index = path[path.length - 1];
+
+  return updateNodeAtPath(tree, parentPath, (parent) => {
+    const children = nodeChildren(parent);
+    if (!children || index < 0 || index >= children.length) return parent;
+    return { ...(parent as ContainerNode), children: children.filter((_, i) => i !== index) };
+  });
 }
 
 /** Depth-first walk, invoking `cb` with each node and its index path. */

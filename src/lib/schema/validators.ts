@@ -51,6 +51,17 @@ export const exportTemplateRequestSchema = z.object({
   templateId: z.string().min(1).optional(),
 });
 
+export const sendTestRequestSchema = z.object({
+  /** One or more recipient email addresses. */
+  to: z.array(z.string().email()).min(1, 'Add at least one recipient'),
+  subject: z.string().min(1).optional(),
+  name: z.string().min(1).optional(),
+  meta: emailTemplateMetaSchema.optional(),
+  blocks: z.array(templateBlockSchema).optional(),
+  templateId: z.string().min(1).optional(),
+});
+
 export type RenderTemplateRequest = z.infer<typeof renderTemplateRequestSchema>;
 export type ExportTemplateRequest = z.infer<typeof exportTemplateRequestSchema>;
+export type SendTestRequest = z.infer<typeof sendTestRequestSchema>;
 export type EmailTemplateDocumentInput = z.infer<typeof emailTemplateDocumentSchema>;

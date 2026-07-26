@@ -14,7 +14,6 @@ import {
 } from '@/builder/lib/treeEdit';
 import {
   TextControl,
-  TextAreaControl,
   ColorControl,
   NumberControl,
   SelectControl,
@@ -25,6 +24,10 @@ import {
   toPx,
   type BoxSides,
 } from './customizer/controls';
+import { RichTextEditor } from './customizer/RichTextEditor';
+import { hasRichFormatting } from '@/builder/lib/sanitizeHtml';
+import { autoMobileStyle } from '@/components/email/FigmaReactEmailBlock';
+import type { StyleTarget } from '@/builder/store/builderStore';
 
 const FIGMA_BLOCK_ID = 'figma-react-email';
 
@@ -61,6 +64,10 @@ export function ComponentCustomizer() {
   const selectBlock = useBuilderStore((s) => s.selectBlock);
   const updateNodeStyle = useBuilderStore((s) => s.updateNodeStyle);
   const updateNodeContent = useBuilderStore((s) => s.updateNodeContent);
+  const duplicateNode = useBuilderStore((s) => s.duplicateNode);
+  const removeNode = useBuilderStore((s) => s.removeNode);
+  const viewMode = useBuilderStore((s) => s.viewMode);
+  const setViewMode = useBuilderStore((s) => s.setViewMode);
 
   const block = template?.blocks.find((b) => b.id === selectedBlockId);
   const isFigma = block?.componentId === FIGMA_BLOCK_ID;
@@ -77,6 +84,23 @@ export function ComponentCustomizer() {
 
   const selectedNode =
     selectedNodePath != null ? getNodeAtPath(tree, parsePath(selectedNodePath)) : undefined;
+
+  const isMobile = viewMode === 'mobile';
+  // Style edits target the desktop `style` bag on Desktop, or the ≤600px
+  // `mobileStyle` override on Mobile — so the two viewports are edited
+  // independently. Button/container alignment stays shared (`containerStyle`).
+  const styleTarget: StyleTarget = isMobile ? 'mobileStyle' : 'style';
+
+  // The values shown in the controls: on Mobile we merge desktop → auto-scaled
+  // typography → explicit mobile overrides, so the numbers match what actually
+  // renders on a phone (and editing writes only the changed keys to mobileStyle).
+  const styleView: CSSProperties = (() => {
+    if (!selectedNode || !('style' in selectedNode)) return {};
+    const base = (selectedNode.style as CSSProperties | undefined) ?? {};
+    if (!isMobile) return base;
+    const mob = (selectedNode as { mobileStyle?: CSSProperties }).mobileStyle ?? {};
+    return { ...base, ...autoMobileStyle(base), ...mob };
+  })();
 
   return (
     <aside className="fc-drawer">
@@ -103,18 +127,42 @@ export function ComponentCustomizer() {
               const key = pathToString(path);
               const active = key === selectedNodePath;
               const summary = nodeSummary(node);
+              const isRoot = path.length === 0;
               return (
-                <button
-                  key={key || 'root'}
-                  type="button"
-                  className={`fc-layer ${active ? 'active' : ''}`}
-                  style={{ paddingLeft: 8 + path.length * 14 }}
-                  onClick={() => selectNode(block.id, key)}
-                  title={summary}
-                >
-                  <span className="fc-layer-type">{node.type}</span>
-                  {summary && <span className="fc-layer-summary">{summary}</span>}
-                </button>
+                <div key={key || 'root'} className={`fc-layer ${active ? 'active' : ''}`}>
+                  <button
+                    type="button"
+                    className="fc-layer-main"
+                    style={{ paddingLeft: path.length * 14 }}
+                    onClick={() => selectNode(block.id, key)}
+                    title={summary}
+                  >
+                    <span className="fc-layer-type">{node.type}</span>
+                    {summary && <span className="fc-layer-summary">{summary}</span>}
+                  </button>
+                  {!isRoot && (
+                    <span className="fc-layer-actions">
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm"
+                        onClick={() => duplicateNode(block.id, key)}
+                        title="Duplicate element"
+                        aria-label="Duplicate element"
+                      >
+                        ⧉
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm btn-danger"
+                        onClick={() => removeNode(block.id, key)}
+                        title="Delete element"
+                        aria-label="Delete element"
+                      >
+                        ✕
+                      </button>
+                    </span>
+                  )}
+                </div>
               );
             })}
           </div>
@@ -124,11 +172,42 @@ export function ComponentCustomizer() {
           <div className="fc-section-title">
             {selectedNode ? `Edit ${selectedNode.type}` : 'Inspector'}
           </div>
+
+          <div className="fc-viewport-toggle">
+            <button
+              type="button"
+              className={`btn btn-secondary btn-sm btn-toggle ${!isMobile ? 'active' : ''}`}
+              onClick={() => setViewMode('desktop')}
+            >
+              Desktop
+            </button>
+            <button
+              type="button"
+              className={`btn btn-secondary btn-sm btn-toggle ${isMobile ? 'active' : ''}`}
+              onClick={() => setViewMode('mobile')}
+            >
+              Mobile
+            </button>
+          </div>
+          <p className="fc-hint" style={{ marginTop: 6 }}>
+            {isMobile
+              ? 'Editing MOBILE styles (≤600px). Changes here apply only to the mobile view; text and links are shared with desktop.'
+              : 'Editing DESKTOP styles. Switch to Mobile to override sizes, colors or spacing just for phones.'}
+          </p>
+
           {selectedNode && selectedNodePath != null ? (
             <NodeInspector
+              key={`${selectedNodePath}-${viewMode}`}
               node={selectedNode}
+              styleView={styleView}
+              isMobile={isMobile}
               onStyle={(patch, target) =>
-                updateNodeStyle(block.id, selectedNodePath, patch, target)
+                updateNodeStyle(
+                  block.id,
+                  selectedNodePath,
+                  patch,
+                  target === 'containerStyle' ? 'containerStyle' : styleTarget
+                )
               }
               onContent={(patch) => updateNodeContent(block.id, selectedNodePath, patch)}
             />
@@ -146,12 +225,16 @@ export function ComponentCustomizer() {
 
 interface InspectorProps {
   node: ReactEmailNode;
+  /** Effective style values to display for the active viewport. */
+  styleView: CSSProperties;
+  /** True when the Mobile viewport is active (edits target mobileStyle). */
+  isMobile: boolean;
   onStyle: (patch: CSSProperties, target?: 'style' | 'containerStyle') => void;
   onContent: (patch: Record<string, unknown>) => void;
 }
 
-function NodeInspector({ node, onStyle, onContent }: InspectorProps) {
-  const style: CSSProperties = ('style' in node ? node.style : undefined) ?? {};
+function NodeInspector({ node, styleView, isMobile, onStyle, onContent }: InspectorProps) {
+  const style: CSSProperties = styleView;
 
   const TypographyControls = (
     <div className="field-group">
@@ -228,12 +311,21 @@ function NodeInspector({ node, onStyle, onContent }: InspectorProps) {
     case 'Link': {
       return (
         <>
+          {!isMobile && (
           <div className="field-group">
             <div className="field-group-title">Content</div>
-            <TextAreaControl
-              label={node.type === 'Link' ? 'Link text' : 'Text'}
-              value={node.content}
-              onChange={(v) => onContent({ content: v })}
+            <RichTextEditor
+              value={node.html ?? ''}
+              plainFallback={node.content}
+              allowBlocks={node.type !== 'Link'}
+              placeholder={node.type === 'Link' ? 'Link text' : 'Type text…'}
+              onChange={(html, plain) =>
+                onContent(
+                  hasRichFormatting(html)
+                    ? { content: plain, html }
+                    : { content: plain, html: undefined }
+                )
+              }
             />
             {node.type === 'Heading' && (
               <SelectControl
@@ -260,6 +352,7 @@ function NodeInspector({ node, onStyle, onContent }: InspectorProps) {
               />
             )}
           </div>
+          )}
           {TypographyControls}
           {ColorControls(true)}
           {PaddingControl}
@@ -271,6 +364,7 @@ function NodeInspector({ node, onStyle, onContent }: InspectorProps) {
       const containerStyle: CSSProperties = node.containerStyle ?? {};
       return (
         <>
+          {!isMobile && (
           <div className="field-group">
             <div className="field-group-title">Content</div>
             <TextControl label="Label" value={node.label} onChange={(v) => onContent({ label: v })} />
@@ -281,6 +375,7 @@ function NodeInspector({ node, onStyle, onContent }: InspectorProps) {
               onChange={(v) => onContent({ href: v })}
             />
           </div>
+          )}
           <div className="field-group">
             <div className="field-group-title">Colors</div>
             <ColorControl
@@ -323,6 +418,14 @@ function NodeInspector({ node, onStyle, onContent }: InspectorProps) {
     }
 
     case 'Img': {
+      if (isMobile) {
+        return (
+          <p className="fc-hint">
+            Image source, size and link are shared across viewports. Switch to Desktop to edit
+            them.
+          </p>
+        );
+      }
       return (
         <div className="field-group">
           <div className="field-group-title">Image</div>

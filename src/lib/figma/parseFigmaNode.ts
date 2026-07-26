@@ -3,9 +3,23 @@ import type { FigmaNodeDocument, FigmaVariable } from './client';
 import {
   extractBackgroundColor,
   extractImageRef,
+  extractSolidFromPaints,
   extractStrokeColor,
   extractTextColor,
 } from './resolveFigmaColor';
+
+/**
+ * One styled span of a text node — the reconstruction of Figma's character-level
+ * formatting (inline hyperlinks, underlines, and per-run color) that the flat
+ * `characters` string throws away. Consecutive characters sharing the same
+ * formatting are merged into a single run.
+ */
+export interface FigmaTextRun {
+  text: string;
+  underline?: boolean;
+  href?: string;
+  color?: string;
+}
 
 export interface ParsedFigmaNode {
   id: string;
@@ -40,6 +54,12 @@ export interface ParsedFigmaNode {
   imageRef?: string;
   /** PNG export from Figma /images API — pixel-accurate render of this node */
   exportUrl?: string;
+  /**
+   * Character-level styled spans (inline links / underlines / colors). Present
+   * only when the text actually carries such formatting; plain text leaves this
+   * undefined so the simple text path is used.
+   */
+  runs?: FigmaTextRun[];
   componentId?: string;
   nodeId?: string;
   /**
@@ -48,6 +68,15 @@ export interface ParsedFigmaNode {
    * multi-column row. Controls whether the generated columns stack on mobile.
    */
   keepColumnsOnMobile?: boolean;
+  /**
+   * Transient build-time typography copied from the matched mobile Figma frame
+   * during the mobile-layout merge. Drives per-node `@media (max-width:600px)`
+   * overrides so mobile keeps the design's own font size / line height instead
+   * of inheriting the (often much larger) desktop values.
+   */
+  mobileFontSize?: number;
+  mobileLineHeight?: number;
+  mobileLetterSpacing?: number;
   children: ParsedFigmaNode[];
 }
 
@@ -112,12 +141,121 @@ function extractTextStyle(
   };
 }
 
+/** Merge neighbouring runs whose formatting is identical (keeps output compact). */
+function mergeRuns(runs: FigmaTextRun[]): FigmaTextRun[] {
+  const out: FigmaTextRun[] = [];
+  for (const run of runs) {
+    const prev = out[out.length - 1];
+    if (
+      prev &&
+      prev.underline === run.underline &&
+      prev.href === run.href &&
+      prev.color === run.color
+    ) {
+      prev.text += run.text;
+    } else {
+      out.push({ ...run });
+    }
+  }
+  return out;
+}
+
+/**
+ * Reconstruct a text node's inline formatting from Figma's character override
+ * tables. Figma stores hyperlinks, underlines and per-word color NOT on the base
+ * text style but per-character: `characterStyleOverrides[i]` indexes into
+ * `styleOverrideTable`. A disclaimer that reads as dark base text with white,
+ * underlined links is the norm — so this is the only faithful source of truth.
+ *
+ * Returns undefined when there is no inline formatting worth preserving (no
+ * override table and no base link/underline), so ordinary copy stays on the
+ * simple text path.
+ */
+function extractTextRuns(
+  node: FigmaNodeDocument,
+  variables?: Record<string, FigmaVariable>
+): FigmaTextRun[] | undefined {
+  const chars = node.characters;
+  if (!chars) return undefined;
+
+  const style = node.style as
+    | { textDecoration?: string; hyperlink?: { url?: string } }
+    | undefined;
+  const baseColor = extractTextColor(node, variables);
+  const baseUnderline = style?.textDecoration === 'UNDERLINE';
+  const baseHref = style?.hyperlink?.url;
+
+  const overrides = node.characterStyleOverrides;
+  const table = node.styleOverrideTable;
+
+  if (!overrides?.length || !table) {
+    // No per-character data: only interesting if the WHOLE node is a link/underline.
+    if (baseHref || baseUnderline) {
+      return [{ text: chars, color: baseColor, underline: baseUnderline || undefined, href: baseHref || undefined }];
+    }
+    return undefined;
+  }
+
+  const runFor = (id: number, start: number, end: number): FigmaTextRun | null => {
+    const text = chars.slice(start, end);
+    if (text === '') return null;
+    const ov = id !== 0 ? table[String(id)] : undefined;
+    const color = ov?.fills ? extractSolidFromPaints(ov.fills, 1, variables) ?? baseColor : baseColor;
+    const underline = ov?.textDecoration ? ov.textDecoration === 'UNDERLINE' : baseUnderline;
+    const href = ov?.hyperlink?.url ?? baseHref;
+    return { text, color, underline: underline || undefined, href: href || undefined };
+  };
+
+  const runs: FigmaTextRun[] = [];
+  let runStart = 0;
+  let runId = overrides[0] ?? 0;
+  for (let i = 1; i <= chars.length; i++) {
+    const id = i < chars.length ? overrides[i] ?? 0 : -1; // sentinel flushes last run
+    if (id !== runId) {
+      const run = runFor(runId, runStart, i);
+      if (run) runs.push(run);
+      runStart = i;
+      runId = id;
+    }
+  }
+
+  const merged = mergeRuns(runs);
+  // Only worth keeping if some run actually carries inline formatting.
+  const hasFormatting = merged.some((r) => r.href || r.underline);
+  const colors = new Set(merged.map((r) => r.color ?? ''));
+  if (!hasFormatting && colors.size <= 1) return undefined;
+  return merged;
+}
+
+/** Dominant run color, weighted by character count — the node's effective color. */
+function dominantRunColor(runs: FigmaTextRun[]): string | undefined {
+  const weight = new Map<string, number>();
+  for (const run of runs) {
+    if (!run.color) continue;
+    weight.set(run.color, (weight.get(run.color) ?? 0) + run.text.length);
+  }
+  let best: string | undefined;
+  let bestN = -1;
+  for (const [color, n] of weight) {
+    if (n > bestN) {
+      best = color;
+      bestN = n;
+    }
+  }
+  return best;
+}
+
 export function parseFigmaNode(
   node: FigmaNodeDocument,
   variables?: Record<string, FigmaVariable>
 ): ParsedFigmaNode {
   const box = node.absoluteBoundingBox;
   const textStyle = node.type === 'TEXT' ? extractTextStyle(node, variables) : {};
+  const runs = node.type === 'TEXT' ? extractTextRuns(node, variables) : undefined;
+  // When character overrides exist, the real color is the dominant run color —
+  // NOT the base fill (designers routinely leave a dark base fill and override
+  // every character to white, which otherwise renders as unreadable dark text).
+  const dominantColor = runs ? dominantRunColor(runs) : undefined;
   const cornerRadius =
     typeof node.cornerRadius === 'number'
       ? node.cornerRadius
@@ -148,7 +286,8 @@ export function parseFigmaNode(
     paragraphSpacing: textStyle.paragraphSpacing,
     textAlign: textStyle.textAlign,
     textCase: textStyle.textCase,
-    color: textStyle.color,
+    color: dominantColor ?? textStyle.color,
+    runs,
     backgroundColor: extractBackgroundColor(node, variables),
     paddingTop: node.paddingTop,
     paddingRight: node.paddingRight,

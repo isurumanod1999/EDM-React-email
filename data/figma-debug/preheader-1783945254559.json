@@ -1,0 +1,379 @@
+{
+  "label": "preheader",
+  "rawNodeDoc": {
+    "id": "8687:5546",
+    "name": "preheader",
+    "type": "INSTANCE",
+    "scrollBehavior": "SCROLLS",
+    "boundVariables": {
+      "paddingTop": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:0eaa6f78573173f8e8ef221faebb7934a7fce501/199:673"
+      },
+      "fills": [
+        {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:4720:119"
+        }
+      ]
+    },
+    "explicitVariableModes": {
+      "VariableCollectionId:0192a43e2f0baa40137238b1d377237b041b1193/199:483": "36:0"
+    },
+    "componentId": "6720:1185",
+    "componentProperties": {
+      "size": {
+        "value": "desktop",
+        "type": "VARIANT",
+        "boundVariables": {}
+      },
+      "preheader": {
+        "value": "preheader",
+        "type": "VARIANT",
+        "boundVariables": {}
+      }
+    },
+    "overrides": [
+      {
+        "id": "8687:5546",
+        "overriddenFields": [
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5546;6720:1186",
+        "overriddenFields": [
+          "characterStyleOverrides",
+          "characters",
+          "fills",
+          "lineIndentations",
+          "lineTypes",
+          "styleOverrideTable"
+        ]
+      }
+    ],
+    "children": [
+      {
+        "id": "I8687:5546;6720:1186",
+        "name": "Can’t see this email? Click here to view online",
+        "type": "TEXT",
+        "scrollBehavior": "SCROLLS",
+        "boundVariables": {
+          "fills": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:4710:635"
+            }
+          ],
+          "lineHeight": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:54c8a93d4924ba81eab93a1b6c90868fcb36265b/199:590"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:fd9b85298e0a45394e15e76ffb649ebe44d6e6d1/199:326"
+            }
+          ],
+          "fontSize": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:56fdb78d6ce1524a16b5bd8d190f61423a301274/199:582"
+            }
+          ],
+          "paragraphSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:3956d881f5e84b5f18572e53cf20d2e7f956d733/199:215"
+            }
+          ],
+          "textRangeFills": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:4710:635"
+            }
+          ]
+        },
+        "blendMode": "PASS_THROUGH",
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            },
+            "boundVariables": {
+              "color": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:4710:635"
+              }
+            }
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 0.3883785903453827,
+        "strokeAlign": "OUTSIDE",
+        "absoluteBoundingBox": {
+          "x": 10700,
+          "y": -2748,
+          "width": 490,
+          "height": 16
+        },
+        "absoluteRenderBounds": {
+          "x": 10808.248046875,
+          "y": -2743.2919921875,
+          "width": 273.5400390625,
+          "height": 10.39208984375
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "layoutAlign": "INHERIT",
+        "layoutGrow": 1,
+        "layoutSizingHorizontal": "FILL",
+        "layoutSizingVertical": "HUG",
+        "characters": "Can’t see this email? Click here to view online",
+        "characterStyleOverrides": [
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          66,
+          66,
+          66,
+          66,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67,
+          67
+        ],
+        "styleOverrideTable": {
+          "66": {
+            "fontFamily": "Nissan Brand",
+            "fontPostScriptName": "NissanBrand-Regular",
+            "fontStyle": "Regular",
+            "fontWeight": 400,
+            "textDecoration": "UNDERLINE",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ]
+          },
+          "67": {
+            "fontFamily": "Nissan Brand",
+            "fontPostScriptName": "NissanBrand-Regular",
+            "fontStyle": "Regular",
+            "fontWeight": 400
+          }
+        },
+        "lineTypes": [
+          "NONE"
+        ],
+        "lineIndentations": [
+          0
+        ],
+        "style": {
+          "fontFamily": "Arial",
+          "fontPostScriptName": "ArialMT",
+          "fontStyle": "Regular",
+          "fontWeight": 400,
+          "paragraphSpacing": 8,
+          "textAutoResize": "HEIGHT",
+          "fontSize": 12,
+          "textAlignHorizontal": "CENTER",
+          "textAlignVertical": "TOP",
+          "letterSpacing": 0.25,
+          "lineHeightPx": 16,
+          "lineHeightPercent": 115.95187377929688,
+          "lineHeightPercentFontSize": 133.3333282470703,
+          "lineHeightUnit": "PIXELS"
+        },
+        "layoutVersion": 4,
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      }
+    ],
+    "blendMode": "PASS_THROUGH",
+    "clipsContent": false,
+    "background": [
+      {
+        "blendMode": "NORMAL",
+        "type": "SOLID",
+        "color": {
+          "r": 0.07450980693101883,
+          "g": 0.09019608050584793,
+          "b": 0.13333334028720856,
+          "a": 1
+        },
+        "boundVariables": {
+          "color": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:4720:119"
+          }
+        }
+      }
+    ],
+    "fills": [
+      {
+        "blendMode": "NORMAL",
+        "type": "SOLID",
+        "color": {
+          "r": 0.07450980693101883,
+          "g": 0.09019608050584793,
+          "b": 0.13333334028720856,
+          "a": 1
+        },
+        "boundVariables": {
+          "color": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:4720:119"
+          }
+        }
+      }
+    ],
+    "strokes": [],
+    "strokeWeight": 1,
+    "strokeAlign": "INSIDE",
+    "backgroundColor": {
+      "r": 0.07450980693101883,
+      "g": 0.09019608050584793,
+      "b": 0.13333334028720856,
+      "a": 1
+    },
+    "layoutMode": "HORIZONTAL",
+    "primaryAxisSizingMode": "FIXED",
+    "counterAxisAlignItems": "CENTER",
+    "primaryAxisAlignItems": "CENTER",
+    "paddingLeft": 55,
+    "paddingRight": 55,
+    "paddingTop": 24,
+    "itemSpacing": 10,
+    "layoutWrap": "NO_WRAP",
+    "absoluteBoundingBox": {
+      "x": 10645,
+      "y": -2772,
+      "width": 600,
+      "height": 40
+    },
+    "absoluteRenderBounds": {
+      "x": 10645,
+      "y": -2772,
+      "width": 600,
+      "height": 40
+    },
+    "constraints": {
+      "vertical": "TOP",
+      "horizontal": "LEFT"
+    },
+    "layoutAlign": "STRETCH",
+    "layoutGrow": 0,
+    "layoutSizingHorizontal": "FILL",
+    "layoutSizingVertical": "HUG",
+    "effects": [],
+    "interactions": [],
+    "complexStrokeProperties": {
+      "strokeType": "BASIC"
+    }
+  },
+  "parsed": {
+    "id": "8687:5546",
+    "type": "INSTANCE",
+    "name": "preheader",
+    "width": 600,
+    "height": 40,
+    "visible": true,
+    "backgroundColor": "#131722",
+    "paddingTop": 24,
+    "paddingRight": 55,
+    "paddingLeft": 55,
+    "gap": 10,
+    "layoutMode": "HORIZONTAL",
+    "primaryAxisAlign": "CENTER",
+    "counterAxisAlign": "CENTER",
+    "strokeWeight": 1,
+    "componentId": "6720:1185",
+    "nodeId": "8687:5546",
+    "children": [
+      {
+        "id": "I8687:5546;6720:1186",
+        "type": "TEXT",
+        "name": "Can’t see this email? Click here to view online",
+        "width": 490,
+        "height": 16,
+        "visible": true,
+        "text": "Can’t see this email? Click here to view online",
+        "fontSize": 12,
+        "fontWeight": 400,
+        "fontFamily": "Arial",
+        "lineHeight": 16,
+        "letterSpacing": 0.25,
+        "paragraphSpacing": 8,
+        "textAlign": "center",
+        "color": "#ffffff",
+        "backgroundColor": "#ffffff",
+        "strokeWeight": 0.3883785903453827,
+        "nodeId": "I8687:5546;6720:1186",
+        "children": []
+      }
+    ],
+    "exportUrl": "/images/uploads/figma-desk-3aa31e67-76b7-4a23-a718-c4b679603a81.png"
+  }
+}

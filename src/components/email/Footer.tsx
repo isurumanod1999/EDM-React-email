@@ -157,13 +157,14 @@ export const Footer: React.FC<FooterProps> = ({
     <Img
       src={logoSrc}
       width={logoWidth}
+      height={logoHeight}
       alt={logoAlt}
       className={EDM_CLASS.imgFluid}
       style={{
         display: 'block',
         width: `${logoWidth}px`,
         maxWidth: '100%',
-        height: 'auto',
+        height: logoHeight ? `${logoHeight}px` : 'auto',
       }}
     />
   ) : null;

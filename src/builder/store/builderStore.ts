@@ -5,11 +5,17 @@ import type { ComponentRegistryEntry } from '@/lib/registry/types';
 import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
 import { generateId } from '@/lib/utils/id';
 import { setNestedValue } from '@/builder/utils/props';
-import { updateNodeAtPath, parsePath } from '@/builder/lib/treeEdit';
+import {
+  updateNodeAtPath,
+  duplicateNodeAtPath,
+  removeNodeAtPath,
+  parsePath,
+  pathToString,
+} from '@/builder/lib/treeEdit';
 import type { FigmaSession } from '@/builder/types/figmaSession';
 
 /** Which CSSProperties bag on a node an edit targets. */
-export type StyleTarget = 'style' | 'containerStyle';
+export type StyleTarget = 'style' | 'containerStyle' | 'mobileStyle';
 
 interface BuilderState {
   template: EmailTemplateDocument | null;
@@ -46,6 +52,8 @@ interface BuilderState {
     nodePath: string,
     patch: Record<string, unknown>
   ) => void;
+  duplicateNode: (blockId: string, nodePath: string) => void;
+  removeNode: (blockId: string, nodePath: string) => void;
   addBlock: (componentId: string, index?: number) => void;
   addBlocksFromAi: (blocks: { componentId: string; props: Record<string, unknown>; label?: string }[]) => void;
   removeBlock: (id: string) => void;
@@ -195,6 +203,36 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     });
 
     get().updateBlockProp(blockId, 'tree', nextTree);
+  },
+
+  duplicateNode: (blockId, nodePath) => {
+    const { template } = get();
+    if (!template) return;
+
+    const block = template.blocks.find((b) => b.id === blockId);
+    const tree = block?.props?.tree as ReactEmailNode | undefined;
+    if (!tree) return;
+
+    const { tree: nextTree, newPath } = duplicateNodeAtPath(tree, parsePath(nodePath));
+    if (nextTree === tree) return; // root or invalid path — nothing to duplicate
+
+    get().updateBlockProp(blockId, 'tree', nextTree);
+    set({ selectedBlockId: blockId, selectedNodePath: pathToString(newPath) });
+  },
+
+  removeNode: (blockId, nodePath) => {
+    const { template } = get();
+    if (!template) return;
+
+    const block = template.blocks.find((b) => b.id === blockId);
+    const tree = block?.props?.tree as ReactEmailNode | undefined;
+    if (!tree) return;
+
+    const nextTree = removeNodeAtPath(tree, parsePath(nodePath));
+    if (nextTree === tree) return; // root or invalid path — nothing to remove
+
+    get().updateBlockProp(blockId, 'tree', nextTree);
+    set({ selectedNodePath: null });
   },
 
   addBlock: (componentId, index) => {

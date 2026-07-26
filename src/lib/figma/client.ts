@@ -26,6 +26,20 @@ export interface FigmaPaint {
   scaleMode?: string;
 }
 
+/**
+ * A per-character style override entry (Figma `styleOverrideTable` value). Holds
+ * the fields that make disclaimer/footer copy faithful: inline hyperlinks,
+ * underlines, and per-run color — none of which live on the base text style.
+ */
+export interface FigmaTypeStyleOverride {
+  fills?: FigmaPaint[];
+  /** 'UNDERLINE' | 'STRIKETHROUGH' | 'NONE' */
+  textDecoration?: string;
+  hyperlink?: { type?: string; url?: string; nodeID?: string };
+  fontWeight?: number;
+  fontSize?: number;
+}
+
 export interface FigmaNodeDocument {
   id: string;
   name: string;
@@ -34,6 +48,13 @@ export interface FigmaNodeDocument {
   opacity?: number;
   characters?: string;
   style?: Record<string, unknown>;
+  /**
+   * Per-character index into `styleOverrideTable` (0 = base style). Length
+   * matches `characters`; trailing characters may be omitted (treated as 0).
+   */
+  characterStyleOverrides?: number[];
+  /** Map of override id → the style applied to characters carrying that id. */
+  styleOverrideTable?: Record<string, FigmaTypeStyleOverride>;
   fills?: FigmaPaint[];
   strokes?: FigmaPaint[];
   background?: FigmaPaint[];

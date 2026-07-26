@@ -3,8 +3,8 @@ import './globals.css';
 import '@/builder/builder.css';
 
 export const metadata: Metadata = {
-  title: 'React Email Builder',
-  description: 'Build and preview email templates with React Email and Next.js',
+  title: 'Email Studio — Visual Email Builder',
+  description: 'Design, customize, and export cross-client HTML emails with React Email, Figma import, and Resend.',
 };
 
 export default function RootLayout({
