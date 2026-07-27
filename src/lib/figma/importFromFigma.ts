@@ -13,13 +13,23 @@ import {
   collectImageRefs,
   parseFigmaNode,
   resolveExportUrls,
+  resolveForcedExportUrls,
   resolveImageRefsInTree,
   type ParsedFigmaNode,
 } from './parseFigmaNode';
+import { detectImageNodeIds } from './detectImageNodes';
 import { parseFigmaUrl } from './parseUrl';
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'uploads');
 const DEBUG_DIR = path.join(process.cwd(), 'data', 'figma-debug');
+
+/**
+ * All Figma renders (whole-frame "flatten to image" exports AND individual
+ * exported assets in the tree) are rendered at 2× so they stay crisp on retina
+ * / high-DPI displays. The image is displayed at its 1× layout width, so a 2×
+ * source is downscaled — the standard email retina-image technique.
+ */
+const FIGMA_EXPORT_SCALE = 2;
 
 /**
  * Dump the exact data we got from Figma (raw API node document + the parsed
@@ -160,19 +170,35 @@ async function safeDownloadToUploads(
   }
 }
 
+/** Used by build routes to fetch 2× PNGs for AI/explicit forced nodes. */
+export { safeDownloadToUploads as downloadForcedExportToUploads };
+
 async function resolveTreeAssets(
   fileKey: string,
   node: ParsedFigmaNode
 ): Promise<ParsedFigmaNode> {
   const imageRefs = [...new Set(collectImageRefs(node))];
-  const exportNodeIds = [...new Set(collectExportNodeIds(node))];
+
+  // The heuristic export set drives the DEFAULT build (attached to `exportUrl`).
+  const heuristicIds = [...new Set(collectExportNodeIds(node))];
+  const heuristicSet = new Set(heuristicIds);
+
+  // Mixed-mode candidates: icon/SVG/vector clusters at any depth. We download
+  // their 2× PNGs up front (single component builds re-use the parsed tree at
+  // build time and can't re-fetch), but attach them to `forcedExportUrl` so the
+  // default build output is completely unchanged — they're only rasterized when
+  // the caller forces them via `forceImageIds`.
+  const detectedIds = detectImageNodeIds(node).filter((id) => !heuristicSet.has(id));
+
+  // One /images call for the union (heuristic ∪ detected) at 2× (retina-crisp).
+  const exportNodeIds = collectExportNodeIds(node, detectedIds);
 
   const [fileImages, renderImages] = await Promise.all([
     imageRefs.length > 0
       ? getFigmaFileImages(fileKey)
       : Promise.resolve({} as Record<string, string | null>),
     exportNodeIds.length > 0
-      ? getFigmaImages(fileKey, exportNodeIds, 2)
+      ? getFigmaImages(fileKey, exportNodeIds, FIGMA_EXPORT_SCALE)
       : Promise.resolve({} as Record<string, string | null>),
   ]);
 
@@ -187,16 +213,28 @@ async function resolveTreeAssets(
 
   let resolved = resolveImageRefsInTree(node, localRefMap);
 
+  // Heuristic renders → exportUrl (unchanged default behavior).
   const localExportMap: Record<string, string> = {};
-  for (const nodeId of exportNodeIds) {
+  for (const nodeId of heuristicIds) {
     const remoteUrl = renderImages[nodeId];
     if (remoteUrl) {
       const local = await safeDownloadToUploads(remoteUrl, 'figma-export');
       if (local) localExportMap[nodeId] = local;
     }
   }
-
   resolved = resolveExportUrls(resolved, localExportMap);
+
+  // Detected mixed-mode renders → forcedExportUrl (opt-in raster, gated at build).
+  const localForcedMap: Record<string, string> = {};
+  for (const nodeId of detectedIds) {
+    const remoteUrl = renderImages[nodeId];
+    if (remoteUrl) {
+      const local = await safeDownloadToUploads(remoteUrl, 'figma-icon');
+      if (local) localForcedMap[nodeId] = local;
+    }
+  }
+  resolved = resolveForcedExportUrls(resolved, localForcedMap);
+
   return resolved;
 }
 
@@ -245,7 +283,7 @@ export async function importFromFigma(input: FigmaImportInput): Promise<FigmaImp
       console.warn('Figma variables fetch failed (non-fatal):', err);
       return undefined;
     }),
-    getFigmaImages(desktop.fileKey, nodeIds, 2).catch((err) => {
+    getFigmaImages(desktop.fileKey, nodeIds, FIGMA_EXPORT_SCALE).catch((err) => {
       console.warn('Figma frame render fetch failed (non-fatal):', err);
       return {} as Record<string, string | null>;
     }),

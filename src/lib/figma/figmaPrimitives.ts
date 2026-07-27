@@ -28,6 +28,29 @@ const SKIP_TYPES = new Set([
 const CONTAINER_TYPES = new Set(['FRAME', 'COMPONENT', 'INSTANCE', 'GROUP']);
 
 /**
+ * Mixed-mode image export: the set of Figma nodeIds the caller forced to render
+ * as a flat 2× PNG (icons / SVGs / vector art) instead of structured HTML. Set
+ * once at the start of each `buildPrimitivesFromFigma` call. The whole build is
+ * synchronous (no awaits), so this module-level state can't interleave between
+ * concurrent requests. Empty by default → behavior is identical to before.
+ */
+let FORCE_IMAGE_IDS: Set<string> = new Set();
+
+/**
+ * When a node is in the forced set, return the 2× PNG to rasterize its subtree.
+ * Prefers `exportUrl` (present when the node was also in the heuristic export
+ * set) and falls back to `forcedExportUrl` (downloaded specifically for detected
+ * icon/vector clusters). Returns undefined when nothing is forced or no render
+ * is available, so the node falls through to the normal structured path.
+ */
+function forcedImageSrc(node: ParsedFigmaNode): string | undefined {
+  if (FORCE_IMAGE_IDS.size === 0) return undefined;
+  const id = node.nodeId ?? node.id;
+  if (!id || !FORCE_IMAGE_IDS.has(id)) return undefined;
+  return node.exportUrl ?? node.forcedExportUrl;
+}
+
+/**
  * Fallback mobile behavior for a two-column Row when there is NO mobile Figma
  * frame AND the content-aware heuristic (columnsAreSymmetricGrid) can't decide
  * (e.g. unknown widths). Symmetric image+text card grids stay 2-up regardless;
@@ -38,7 +61,7 @@ const CONTAINER_TYPES = new Set(['FRAME', 'COMPONENT', 'INSTANCE', 'GROUP']);
 const STACK_COLUMNS_ON_MOBILE_BY_DEFAULT = true;
 
 /** Icons (small circular/square containers) are at most this wide/tall. */
-const ICON_MAX_DIMENSION = 80;
+const ICON_MAX_DIMENSION = 96;
 
 /**
  * A node that is small AND roughly square — an icon / icon-container, not a
@@ -114,6 +137,41 @@ function isDarkColor(color?: string): boolean {
 }
 
 /**
+ * Light by perceived luminance. Unlike `isLightColor` (an exact white/near-white
+ * match tuned for text fills), this catches off-white graphic fills like #efefef
+ * that a logo's vectors carry — the signal that a logo bar was drawn light to sit
+ * on a dark background.
+ */
+function isLightByLuma(color?: string): boolean {
+  const lum = colorLuminance(color);
+  return lum != null && lum >= 200;
+}
+
+/** Vector/graphic shape types — the paths that make up a logo or icon. */
+const GRAPHIC_SHAPE_TYPES = new Set([
+  'VECTOR',
+  'ELLIPSE',
+  'STAR',
+  'POLYGON',
+  'BOOLEAN_OPERATION',
+  'LINE',
+  'REGULAR_POLYGON',
+]);
+
+/**
+ * Collect the solid fill colors of vector/graphic leaf shapes (a logo's or
+ * icon's paths). Used to reconstruct a background for a logo-only frame that
+ * carries no text, so the text-color heuristic can't decide it.
+ */
+function collectGraphicColors(node: ParsedFigmaNode, acc: string[]): void {
+  if (GRAPHIC_SHAPE_TYPES.has(node.type)) {
+    const c = normalizeColor(node.backgroundColor);
+    if (c) acc.push(c);
+  }
+  for (const child of node.children) collectGraphicColors(child, acc);
+}
+
+/**
  * Collect text colors split by whether the text sits directly on the section
  * surface or inside a button/CTA pill. Button labels are inverted (e.g. dark
  * text on a light pill sitting on a dark section), so they must NOT count toward
@@ -142,19 +200,47 @@ function partitionTextColors(
  * button's dark label is almost always the section's dark brand color. Falls
  * back to a dark neutral when there's no such signal.
  */
+/**
+ * The background color a section wrapper should carry for this frame: the frame's
+ * own effective fill, else an inferred hero background (light surface / dark
+ * label heuristic). Exposed so "flatten to image" blocks can paint the same
+ * background behind a transparent PNG export (Figma renders frames whose fill
+ * lives on a parent as transparent).
+ */
+export function resolveSectionBackground(node: ParsedFigmaNode): string | undefined {
+  return resolveEffectiveBackground(node) ?? inferHeroBackground(node);
+}
+
 function inferHeroBackground(node: ParsedFigmaNode): string | undefined {
   const acc: { surface: string[]; button: string[] } = { surface: [], button: [] };
   partitionTextColors(node, false, acc);
 
   const pool = acc.surface.length > 0 ? acc.surface : acc.button;
-  if (pool.length === 0) return undefined;
-  if (!pool.every((c) => isLightColor(c))) return undefined;
+  if (pool.length > 0) {
+    if (!pool.every((c) => isLightColor(c))) return undefined;
 
-  const darkLabel = acc.button
-    .filter((c) => isDarkColor(c))
-    .sort((a, b) => (colorLuminance(a) ?? 0) - (colorLuminance(b) ?? 0))[0];
+    const darkLabel = acc.button
+      .filter((c) => isDarkColor(c))
+      .sort((a, b) => (colorLuminance(a) ?? 0) - (colorLuminance(b) ?? 0))[0];
 
-  return darkLabel ?? '#111318';
+    return darkLabel ?? '#111318';
+  }
+
+  // No text anywhere — a logo/icon-only frame (e.g. a header logo bar). Its dark
+  // background usually lives on an ancestor page frame we don't import, so Figma
+  // renders the frame transparent with light/white logo art that would vanish on
+  // the email's white body. This runs only after resolveEffectiveBackground found
+  // no own fill, so when the frame's vector/icon art is uniformly light, give it a
+  // dark background back so the logo stays visible. Dark-on-transparent logos are
+  // left alone (they read fine on white), and frames with no vector art (raster-
+  // only logos) can't be judged here and are also left untouched.
+  const graphic: string[] = [];
+  collectGraphicColors(node, graphic);
+  if (graphic.length > 0 && graphic.every((c) => isLightByLuma(c))) {
+    return '#111318';
+  }
+
+  return undefined;
 }
 
 function sectionStyle(node: ParsedFigmaNode): CSSProperties {
@@ -1234,6 +1320,34 @@ function wrapBoxSplittingBleed(
 
 function mapNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): ReactEmailNode[] {
   if (!node.visible) return [];
+
+  // Mixed-mode image export (highest priority). The caller forced this subtree to
+  // a flat 2× raster because it's an icon / SVG / vector cluster that email
+  // clients render inconsistently. Emit ONE centered Img (the retina PNG shown at
+  // its 1× layout width) and DO NOT recurse — its child shapes are baked into the
+  // render. This runs BEFORE the SKIP_TYPES drop so a standalone VECTOR/GROUP the
+  // user forced is never silently dropped.
+  const forceKey = node.nodeId ?? node.id;
+  if (forceKey && FORCE_IMAGE_IDS.has(forceKey)) {
+    const forcedSrc = forcedImageSrc(node);
+    if (forcedSrc) {
+      return [
+        {
+          type: 'Img',
+          src: forcedSrc,
+          width: node.width != null ? Math.min(node.width, 600) : undefined,
+          alt: node.name,
+          align: 'center',
+          className: `figma-img-${forceKey.replace(/[:;]/g, '-')}`,
+          isIcon: isIconSized(node) || undefined,
+        },
+      ];
+    }
+    // Forced but no 2× PNG available — skip the subtree instead of emitting
+    // broken empty vector shells or duplicate partial layout.
+    return [];
+  }
+
   if (SKIP_TYPES.has(node.type)) return [];
 
   const effectiveAlign = nodeTextAlign(node) ?? align;
@@ -1483,8 +1597,13 @@ function mergeMobileImages(
 export function buildPrimitivesFromFigma(
   desktopNode: ParsedFigmaNode,
   mobileNode: ParsedFigmaNode | undefined,
-  warnings: string[]
+  warnings: string[],
+  forceImageIds?: Set<string>
 ): ReactEmailNode {
+  // Set the mixed-mode forced-image set for this (synchronous) build. Reset each
+  // call so an empty/absent set restores identical default behavior.
+  FORCE_IMAGE_IDS = forceImageIds ?? new Set();
+
   let root =
     mobileNode != null ? applyMobileLayout(desktopNode, mobileNode) : desktopNode;
 
@@ -1588,6 +1707,28 @@ export function buildPrimitivesFromFigma(
   }
 
   warnings.push('Built React Email Heading, Text, and Button components from Figma layer order.');
+  if (FORCE_IMAGE_IDS.size > 0) {
+    let rasterized = 0;
+    let missingRender = 0;
+    const countForced = (n: ParsedFigmaNode) => {
+      const key = n.nodeId ?? n.id;
+      if (key && FORCE_IMAGE_IDS.has(key)) {
+        if (n.exportUrl || n.forcedExportUrl) rasterized++;
+        else missingRender++;
+        return;
+      }
+      n.children.forEach(countForced);
+    };
+    countForced(desktopNode);
+    warnings.push(
+      `Mixed-mode: rasterized ${rasterized} icon/SVG/vector subtree(s) to 2× PNG(s); text & layout kept structured.`
+    );
+    if (missingRender > 0) {
+      warnings.push(
+        `${missingRender} layer(s) were marked for image export but had no 2× PNG — re-fetch the frame or narrow your selection.`
+      );
+    }
+  }
   return mergeMobileImages(tree, desktopNode, mobileNode, warnings);
 }
 

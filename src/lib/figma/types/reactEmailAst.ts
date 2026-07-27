@@ -24,6 +24,16 @@ export type ReactEmailNode =
        * clients that strip markup).
        */
       html?: string;
+      /**
+       * Optional phone-only content override (≤600px). When distinct from the
+       * desktop `content`/`html`, the renderer emits BOTH a desktop and a mobile
+       * variant and swaps them with a media query (see `mobileContent`/`mobileHtml`
+       * handling in FigmaReactEmailBlock). `mobileContent` is the plain-text form;
+       * `mobileHtml` the sanitized rich-text form (rendered in preference). Leave
+       * both undefined to share the desktop text on mobile.
+       */
+      mobileContent?: string;
+      mobileHtml?: string;
       href?: string;
       style?: CSSProperties;
       /**
@@ -37,6 +47,9 @@ export type ReactEmailNode =
       type: 'Heading';
       content: string;
       html?: string;
+      /** Phone-only content override (≤600px). See `Text.mobileContent`. */
+      mobileContent?: string;
+      mobileHtml?: string;
       as?: 'h1' | 'h2' | 'h3';
       href?: string;
       style?: CSSProperties;
@@ -68,6 +81,9 @@ export type ReactEmailNode =
       href: string;
       content: string;
       html?: string;
+      /** Phone-only content override (≤600px). See `Text.mobileContent`. */
+      mobileContent?: string;
+      mobileHtml?: string;
       style?: CSSProperties;
       mobileStyle?: CSSProperties;
     }
@@ -75,6 +91,12 @@ export type ReactEmailNode =
       type: 'Button';
       href: string;
       label: string;
+      /**
+       * Phone-only button text (≤600px). When distinct from `label`, the renderer
+       * emits both a desktop and a mobile button and swaps them with a media
+       * query. Leave undefined to share the desktop label on mobile.
+       */
+      mobileLabel?: string;
       style?: CSSProperties;
       containerStyle?: CSSProperties;
       mobileStyle?: CSSProperties;

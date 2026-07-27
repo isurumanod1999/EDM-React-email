@@ -10,6 +10,8 @@ export interface FigmaSession {
   nodeName: string;
   fileKey: string;
   hint?: string;
+  /** Chosen at fetch time: 'design' = structured, 'image' = flatten to one PNG. */
+  buildAs?: 'design' | 'image';
   fetchedAt: number;
 }
 

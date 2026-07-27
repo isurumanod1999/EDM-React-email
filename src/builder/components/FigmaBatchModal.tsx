@@ -9,6 +9,7 @@ interface FigmaBatchModalProps {
 }
 
 type RowStatus = 'idle' | 'importing' | 'done' | 'error';
+type BuildAs = 'design' | 'image';
 
 interface BatchBlock {
   componentId: string;
@@ -21,17 +22,34 @@ interface BatchRow {
   label: string;
   desktopUrl: string;
   mobileUrl: string;
+  buildAs: BuildAs;
+  /** Mixed-mode: auto-detect icons/SVGs → 2× images (default ON). */
+  autoDetectImages: boolean;
+  /** Mixed-mode: free-form guidance for the AI image classifier (optional). */
+  imageInstructions: string;
   status: RowStatus;
   error?: string;
   nodeName?: string;
   block?: BatchBlock;
 }
 
+/**
+ * Max number of components imported at the same time. Each import is heavy
+ * (multiple Figma API calls + 2× image downloads + build + render), so we cap
+ * concurrency to avoid overwhelming the dev server — firing all at once made 5+
+ * component batches crash/reload the page. 3 keeps a strong parallel speedup
+ * while staying safely under that threshold.
+ */
+const BATCH_CONCURRENCY = 3;
+
 const newRow = (): BatchRow => ({
   id: crypto.randomUUID(),
   label: '',
   desktopUrl: '',
   mobileUrl: '',
+  buildAs: 'design',
+  autoDetectImages: true,
+  imageInstructions: '',
   status: 'idle',
 });
 
@@ -80,6 +98,10 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
         figmaUrl: row.desktopUrl.trim(),
         mobileFigmaUrl: row.mobileUrl.trim() || undefined,
         label: row.label.trim() || undefined,
+        buildAs: row.buildAs,
+        // Mixed-mode image export (ignored server-side when buildAs='image').
+        autoDetectImages: row.autoDetectImages,
+        imageInstructions: row.imageInstructions.trim() || undefined,
       }),
     });
     const data = (await res.json()) as {
@@ -103,10 +125,18 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
       prev.map((r) => (r.desktopUrl.trim() ? { ...r, status: 'importing', error: undefined } : r))
     );
 
-    // Fire every import in parallel — the whole batch takes about as long as the
-    // single slowest component instead of the sum of all of them.
-    await Promise.all(
-      targets.map(async (row) => {
+    // Import with BOUNDED concurrency (a worker pool), NOT all at once. Each
+    // import triggers several Figma API calls, multiple 2× image downloads, a
+    // tree build and a render — firing 5+ simultaneously overwhelmed the dev
+    // server (it would stall/crash, the HMR socket would reconnect, and the
+    // browser did a full page reload — dropping the modal and all progress).
+    // A small pool keeps most of the parallel speedup while staying well under
+    // that threshold. Rows still show live per-row status as they complete.
+    const queue = [...targets];
+    const runWorker = async () => {
+      for (;;) {
+        const row = queue.shift();
+        if (!row) return;
         try {
           const block = await importRow(row);
           patchRow(row.id, { status: 'done', block, nodeName: block.label, error: undefined });
@@ -116,8 +146,10 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
             error: e instanceof Error ? e.message : 'Import failed',
           });
         }
-      })
-    );
+      }
+    };
+    const poolSize = Math.min(BATCH_CONCURRENCY, targets.length);
+    await Promise.all(Array.from({ length: poolSize }, runWorker));
 
     setIsRunning(false);
     setHasRun(true);
@@ -189,6 +221,16 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
                       onChange={(e) => patchRow(row.id, { label: e.target.value })}
                       disabled={isRunning}
                     />
+                    <select
+                      className="import-modal-input figma-batch-mode"
+                      value={row.buildAs}
+                      onChange={(e) => patchRow(row.id, { buildAs: e.target.value as BuildAs })}
+                      disabled={isRunning}
+                      title="Design = structured HTML/CSS. Image = flatten the whole component to one PNG (best for CSS-heavy components)."
+                    >
+                      <option value="design">Design (structured)</option>
+                      <option value="image">Image (flatten)</option>
+                    </select>
                     {st.text && <span className={`figma-batch-status ${st.cls}`}>{st.text}</span>}
                     <button
                       type="button"
@@ -218,6 +260,34 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
                       disabled={isRunning}
                     />
                   </div>
+                  {row.buildAs === 'design' && (
+                    <div className="figma-batch-smart-image">
+                      <label
+                        className="figma-batch-smart-check"
+                        title="Export icons/SVGs/vector art as crisp 2× PNGs; keep text & layout structured."
+                      >
+                        <input
+                          type="checkbox"
+                          checked={row.autoDetectImages}
+                          onChange={(e) =>
+                            patchRow(row.id, { autoDetectImages: e.target.checked })
+                          }
+                          disabled={isRunning}
+                        />
+                        Auto-detect icons → 2× images
+                      </label>
+                      <input
+                        type="text"
+                        className="import-modal-input figma-batch-instructions"
+                        placeholder="Image instructions (optional) — e.g. badges & social icons as images"
+                        value={row.imageInstructions}
+                        onChange={(e) =>
+                          patchRow(row.id, { imageInstructions: e.target.value })
+                        }
+                        disabled={isRunning}
+                      />
+                    </div>
+                  )}
                 </div>
               );
             })}

@@ -1143,6 +1143,13 @@
   flex: 1;
 }
 
+.figma-batch-mode {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 6px 8px;
+  font-size: 0.78rem;
+}
+
 .figma-batch-status {
   flex: 0 0 auto;
   font-size: 0.72rem;
@@ -1184,6 +1191,134 @@
 
 .figma-batch-add {
   align-self: flex-start;
+}
+
+/* ── Mixed-mode "smart image export" (batch, per row) ─────────────────────── */
+.figma-batch-smart-image {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.figma-batch-smart-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.figma-batch-smart-check input {
+  margin: 0;
+}
+
+.figma-batch-instructions {
+  flex: 1 1 220px;
+  min-width: 180px;
+  padding: 6px 8px;
+  font-size: 0.78rem;
+}
+
+/* ── Mixed-mode "smart image export" (single build modal) ─────────────────── */
+.import-modal-error {
+  margin-top: 12px;
+}
+
+.import-modal-building {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--accent-muted, rgba(99, 102, 241, 0.12));
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.figma-smart-image {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.figma-smart-image-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.figma-smart-image-check input {
+  margin: 0;
+}
+
+.figma-smart-image-instructions {
+  resize: vertical;
+  min-height: 44px;
+  font-size: 0.82rem;
+}
+
+.figma-smart-image-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.figma-smart-image-error {
+  color: var(--warning, #b26a00);
+}
+
+.figma-smart-image-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.figma-smart-image-list-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.figma-smart-image-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.figma-smart-image-item input {
+  margin: 0;
+}
+
+.figma-smart-image-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.figma-smart-image-meta {
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
 }
 
 .figma-batch-summary {

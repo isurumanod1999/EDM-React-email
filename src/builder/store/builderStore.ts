@@ -32,6 +32,8 @@ interface BuilderState {
   viewMode: 'desktop' | 'mobile';
   saveError: string | null;
   saveMessage: string | null;
+  /** Survives toolbar remounts / fast refresh while a Figma build is in progress. */
+  figmaBuildModalOpen: boolean;
 
   setTemplate: (template: EmailTemplateDocument) => void;
   setFigmaSession: (session: FigmaSession | null) => void;
@@ -66,6 +68,7 @@ interface BuilderState {
   ) => void;
   setShowAdvanced: (show: boolean) => void;
   setViewMode: (mode: 'desktop' | 'mobile') => void;
+  setFigmaBuildModalOpen: (open: boolean) => void;
   save: () => Promise<boolean>;
   resetDirty: () => void;
 }
@@ -98,6 +101,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   viewMode: 'desktop',
   saveError: null,
   saveMessage: null,
+  figmaBuildModalOpen: false,
 
   setTemplate: (template) =>
     set({
@@ -369,6 +373,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
 
   setShowAdvanced: (show) => set({ showAdvanced: show }),
   setViewMode: (mode) => set({ viewMode: mode }),
+  setFigmaBuildModalOpen: (open) => set({ figmaBuildModalOpen: open }),
   resetDirty: () => set({ isDirty: false }),
 
   save: async () => {

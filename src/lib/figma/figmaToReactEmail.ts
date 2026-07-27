@@ -1096,7 +1096,17 @@ export type FigmaToReactEmailMode = 'fidelity' | 'primitives';
 export function figmaToReactEmailTree(
   desktopNode: ParsedFigmaNode,
   mobileNode?: ParsedFigmaNode,
-  options?: { desktopUrl?: string; mobileUrl?: string; mode?: FigmaToReactEmailMode }
+  options?: {
+    desktopUrl?: string;
+    mobileUrl?: string;
+    mode?: FigmaToReactEmailMode;
+    /**
+     * Mixed-mode image export: Figma nodeIds whose subtree should be flattened to
+     * a single 2× PNG (icons / SVGs / vector art) instead of structured HTML.
+     * Only applies to 'primitives' mode. Empty/absent → default behavior.
+     */
+    forceImageIds?: string[];
+  }
 ): FigmaToReactEmailResult {
   const warnings: string[] = [];
   const mode = options?.mode ?? 'primitives';
@@ -1112,7 +1122,11 @@ export function figmaToReactEmailTree(
   }
 
   if (mode === 'primitives') {
-    const tree = buildPrimitivesFromFigma(desktop, mobile, warnings);
+    const forceImageIds =
+      options?.forceImageIds && options.forceImageIds.length > 0
+        ? new Set(options.forceImageIds)
+        : undefined;
+    const tree = buildPrimitivesFromFigma(desktop, mobile, warnings, forceImageIds);
     return {
       tree,
       warnings,

@@ -24,12 +24,13 @@ export function BuilderToolbar() {
   const setShowAdvanced = useBuilderStore((s) => s.setShowAdvanced);
   const save = useBuilderStore((s) => s.save);
   const figmaSession = useBuilderStore((s) => s.figmaSession);
+  const figmaBuildOpen = useBuilderStore((s) => s.figmaBuildModalOpen);
+  const setFigmaBuildOpen = useBuilderStore((s) => s.setFigmaBuildModalOpen);
 
   const [isExporting, setIsExporting] = useState(false);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
   const [aiImportOpen, setAiImportOpen] = useState(false);
   const [figmaFetchOpen, setFigmaFetchOpen] = useState(false);
-  const [figmaBuildOpen, setFigmaBuildOpen] = useState(false);
   const [figmaBatchOpen, setFigmaBatchOpen] = useState(false);
   const [sendOpen, setSendOpen] = useState(false);
 

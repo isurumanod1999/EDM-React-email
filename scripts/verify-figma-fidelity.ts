@@ -7,9 +7,11 @@
  * ANY design, not one specific template.
  */
 import type { FigmaNodeDocument, FigmaVariable } from '../src/lib/figma/client';
-import { parseFigmaNode } from '../src/lib/figma/parseFigmaNode';
+import { parseFigmaNode, type ParsedFigmaNode } from '../src/lib/figma/parseFigmaNode';
 import { buildPrimitivesFromFigma } from '../src/lib/figma/figmaPrimitives';
-import { nodeMobileStyle } from '../src/components/email/FigmaReactEmailBlock';
+import { detectImageNodeIds } from '../src/lib/figma/detectImageNodes';
+import { findNodeIdsFromDesignHints } from '../src/lib/figma/designContextImageHints';
+import { nodeMobileStyle, buildFigmaResponsiveCss } from '../src/components/email/FigmaReactEmailBlock';
 import type { ReactEmailNode } from '../src/lib/figma/types/reactEmailAst';
 
 type Btn = Extract<ReactEmailNode, { type: 'Button' }>;
@@ -800,6 +802,187 @@ const RED = { r: 195 / 255, g: 0, b: 47 / 255 };
   check('N. outer section drops horizontal padding', /^32px 0px/.test(outerPad), `pad=${outerPad || '-'}`);
   check('N. inset content keeps the 32px side padding', insetWrapper?.style?.paddingLeft === 32 && insetWrapper?.style?.paddingRight === 32, `padL=${insetWrapper?.style?.paddingLeft}`);
   check('N. hero art is a direct child of the outer section (not inside the inset wrapper)', (outer.children ?? []).some((n) => n.type === 'Img' && (n as Img).alt === 'shave 1'), 'hero image not at section root');
+}
+
+// ── Scenario O: separate mobile TEXT content swaps desktop↔mobile at ≤600px ───
+// A Text/Heading carrying a distinct `mobileContent`/`mobileHtml` must emit BOTH
+// a `-desk` and a `-mob` variant class plus the show/hide media query (the same
+// mechanism as responsive image swaps). A node with no mobile override stays a
+// single element (no swap CSS) — so existing campaigns don't regress.
+{
+  const withMobile: ReactEmailNode = {
+    type: 'Section',
+    children: [
+      { type: 'Heading', as: 'h1', content: 'Big Summer Sale', mobileContent: 'Summer Sale' },
+      { type: 'Text', content: 'Long desktop copy that overflows a phone.', mobileContent: 'Short mobile copy.' },
+    ],
+  };
+  const css = buildFigmaResponsiveCss(withMobile, 'scenarioO');
+  check('O. mobile text override emits a -desk swap class', /figma-txt-scenarioO-[0-9-]+-desk/.test(css), '');
+  check('O. mobile text override emits a -mob swap class', /figma-txt-scenarioO-[0-9-]+-mob/.test(css), '');
+  check(
+    'O. swap hides -desk and shows -mob at ≤600px',
+    /@media only screen and \(max-width: ?600px\)/.test(css) &&
+      /figma-txt-scenarioO-[0-9-]+-desk\s*\{\s*display: none/.test(css) &&
+      /figma-txt-scenarioO-[0-9-]+-mob\s*\{\s*display: block/.test(css),
+    ''
+  );
+
+  const noMobile: ReactEmailNode = {
+    type: 'Section',
+    children: [{ type: 'Text', content: 'Shared everywhere.' }],
+  };
+  const cssNone = buildFigmaResponsiveCss(noMobile, 'scenarioO2');
+  check('O. node without a mobile override emits no text-swap CSS (no regression)', !/figma-txt-/.test(cssNone), `css=${cssNone.trim().slice(0, 40)}`);
+}
+
+// ── Scenario P: mixed-mode forced icon → Img, sibling text stays Text ───────
+{
+  const iconGroup: ParsedFigmaNode = {
+    id: '1:2',
+    nodeId: '1:2',
+    type: 'GROUP',
+    name: 'Award icon',
+    width: 48,
+    height: 48,
+    visible: true,
+    forcedExportUrl: '/images/uploads/test-icon.png',
+    children: [
+      { id: '1:3', nodeId: '1:3', type: 'VECTOR', name: 'Star', width: 48, height: 48, visible: true, children: [] },
+    ],
+  };
+  const copy: ParsedFigmaNode = {
+    id: '1:4',
+    nodeId: '1:4',
+    type: 'TEXT',
+    name: 'Headline',
+    width: 400,
+    height: 32,
+    visible: true,
+    text: 'Drive away today',
+    fontSize: 28,
+    children: [],
+  };
+  const root: ParsedFigmaNode = {
+    id: '1:1',
+    nodeId: '1:1',
+    type: 'FRAME',
+    name: 'Intro',
+    width: 600,
+    height: 200,
+    visible: true,
+    layoutMode: 'VERTICAL',
+    children: [iconGroup, copy],
+  };
+  const tree = buildPrimitivesFromFigma(root, undefined, [], new Set(['1:2']));
+  const all = collect(tree);
+  const imgs = all.filter((n): n is Extract<ReactEmailNode, { type: 'Img' }> => n.type === 'Img');
+  const texts = all.filter(
+    (n): n is Extract<ReactEmailNode, { type: 'Text' } | { type: 'Heading' }> =>
+      n.type === 'Text' || n.type === 'Heading'
+  );
+  check('P. forced icon subtree becomes an Img', imgs.length === 1 && imgs[0].src === '/images/uploads/test-icon.png', `imgs=${imgs.length}`);
+  check('P. sibling copy stays structured Text/Heading', texts.some((t) => 'content' in t && t.content?.includes('Drive away')), `texts=${texts.length}`);
+}
+
+// ── Scenario Q: 56×56 badge frame — one export root, not inner 22×22 vectors ─
+{
+  const badge: ParsedFigmaNode = {
+    id: '2:1',
+    nodeId: '2:1',
+    type: 'FRAME',
+    name: 'Icon badge',
+    width: 56,
+    height: 56,
+    visible: true,
+    children: [
+      {
+        id: '2:2',
+        nodeId: '2:2',
+        type: 'VECTOR',
+        name: 'Vector',
+        width: 22,
+        height: 22,
+        visible: true,
+        children: [],
+      },
+      {
+        id: '2:3',
+        nodeId: '2:3',
+        type: 'VECTOR',
+        name: 'Vector',
+        width: 10,
+        height: 8,
+        visible: true,
+        children: [],
+      },
+    ],
+  };
+  const root: ParsedFigmaNode = {
+    id: '2:0',
+    nodeId: '2:0',
+    type: 'FRAME',
+    name: 'Benefit column',
+    width: 200,
+    height: 120,
+    visible: true,
+    layoutMode: 'VERTICAL',
+    children: [
+      badge,
+      {
+        id: '2:9',
+        nodeId: '2:9',
+        type: 'TEXT',
+        name: 'Copy',
+        width: 180,
+        height: 40,
+        visible: true,
+        text: 'Up to 10 years warranty',
+        children: [],
+      },
+    ],
+  };
+  const ids = detectImageNodeIds(root);
+  check('Q. detects the 56×56 badge frame once', ids.length === 1 && ids[0] === '2:1', `ids=${ids.join(',')}`);
+}
+
+// ── Scenario R: design-context line matches INSTANCE Icon-badge ─────────────
+{
+  const badge: ParsedFigmaNode = {
+    id: '3:1',
+    nodeId: '3:1',
+    type: 'INSTANCE',
+    name: 'Icon-badge',
+    width: 56,
+    height: 56,
+    visible: true,
+    children: [
+      {
+        id: '3:2',
+        nodeId: '3:2',
+        type: 'VECTOR',
+        name: 'Vector',
+        width: 12,
+        height: 12,
+        visible: true,
+        children: [],
+      },
+    ],
+  };
+  const root: ParsedFigmaNode = {
+    id: '3:0',
+    nodeId: '3:0',
+    type: 'FRAME',
+    name: 'Benefits',
+    width: 600,
+    height: 200,
+    visible: true,
+    children: [badge],
+  };
+  const ctx =
+    'Structure:\n  - INSTANCE "Icon-badge" 56×56px bg=#22252f layout=HORIZONTAL gap=11.25';
+  const hintIds = findNodeIdsFromDesignHints(root, ctx);
+  check('R. design context line resolves Icon-badge instance', hintIds[0] === '3:1', `ids=${hintIds.join(',')}`);
 }
 
 console.log(pass ? '\nALL FIDELITY CHECKS PASSED' : '\nSOME FIDELITY CHECKS FAILED');

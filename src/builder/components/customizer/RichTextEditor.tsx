@@ -85,6 +85,14 @@ export function RichTextEditor({
     });
   };
 
+  const insertBreak = () => {
+    ref.current?.focus();
+    // insertHTML is the most reliable cross-browser way to drop a single <br>
+    // at the caret (insertLineBreak isn't supported everywhere).
+    document.execCommand('insertHTML', false, '<br>');
+    emit();
+  };
+
   const setLink = () => {
     const url = window.prompt('Link URL (leave blank to remove):', 'https://');
     if (url == null) return;
@@ -128,6 +136,15 @@ export function RichTextEditor({
         </button>
         <button type="button" className="fc-rte-btn" onMouseDown={hold} onClick={() => exec('strikeThrough')} title="Strikethrough" aria-label="Strikethrough">
           <s>S</s>
+        </button>
+        <button type="button" className="fc-rte-btn" onMouseDown={hold} onClick={() => exec('superscript')} title="Superscript" aria-label="Superscript">
+          x<sup>2</sup>
+        </button>
+        <button type="button" className="fc-rte-btn" onMouseDown={hold} onClick={() => exec('subscript')} title="Subscript" aria-label="Subscript">
+          x<sub>2</sub>
+        </button>
+        <button type="button" className="fc-rte-btn" onMouseDown={hold} onClick={insertBreak} title="Line break" aria-label="Insert line break">
+          ↵
         </button>
 
         <span className="fc-rte-sep" />

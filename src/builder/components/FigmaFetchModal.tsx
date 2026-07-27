@@ -20,6 +20,7 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
   const [step, setStep] = useState<Step>('connect');
   const [figmaUrl, setFigmaUrl] = useState('');
   const [mobileFigmaUrl, setMobileFigmaUrl] = useState('');
+  const [buildAs, setBuildAs] = useState<'design' | 'image'>('design');
   const [hint, setHint] = useState('');
   const [previewSession, setPreviewSession] = useState<ReturnType<typeof toFigmaSession> | null>(
     null
@@ -31,6 +32,7 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
     setStep('connect');
     setFigmaUrl('');
     setMobileFigmaUrl('');
+    setBuildAs('design');
     setHint('');
     setPreviewSession(null);
     setError(null);
@@ -90,7 +92,7 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
       },
       hint
     );
-    setFigmaSession(session);
+    setFigmaSession({ ...session, buildAs });
     reset();
     onClose();
     onFetchComplete?.();
@@ -127,12 +129,33 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
 
         <div className="import-modal-body">
           {step === 'connect' && (
-            <FigmaConnectForm
-              figmaUrl={figmaUrl}
-              mobileFigmaUrl={mobileFigmaUrl}
-              onFigmaUrlChange={setFigmaUrl}
-              onMobileFigmaUrlChange={setMobileFigmaUrl}
-            />
+            <>
+              <FigmaConnectForm
+                figmaUrl={figmaUrl}
+                mobileFigmaUrl={mobileFigmaUrl}
+                onFigmaUrlChange={setFigmaUrl}
+                onMobileFigmaUrlChange={setMobileFigmaUrl}
+              />
+              <div className="import-modal-field">
+                <label className="import-field-label" htmlFor="figma-fetch-build-as">
+                  Build as
+                </label>
+                <select
+                  id="figma-fetch-build-as"
+                  className="import-modal-input"
+                  value={buildAs}
+                  onChange={(e) => setBuildAs(e.target.value as 'design' | 'image')}
+                >
+                  <option value="design">Design — structured HTML/CSS (editable)</option>
+                  <option value="image">Image — flatten whole component to one PNG</option>
+                </select>
+                <p className="import-field-hint">
+                  {buildAs === 'image'
+                    ? 'Renders the entire component as a single full-frame image — no design context or CSS. Best for CSS-heavy components (custom fonts, gradients, overlap) email clients render inconsistently. You can still change this in the next step.'
+                    : 'Builds editable Heading, Text, and Button primitives from the Figma tree. You can switch to Image in the next step.'}
+                </p>
+              </div>
+            </>
           )}
 
           {step === 'review' && previewSession && (

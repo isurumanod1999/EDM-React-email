@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "6dbd84ba-801f-4432-b7c4-32b701cd4a9a",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "93be4ce5-d830-487a-b6cc-f63577f6bb4c",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-da43599b-2854-4a55-8106-2e05bbf87b94.png",
+              "mobileSrc": "/images/uploads/figma-mob-1120024f-0f36-4269-97c1-58df82098d19.png",
+              "width": 600,
+              "height": 160,
+              "alt": "header",
+              "align": "center",
+              "fullBleed": true,
+              "className": "figma-frame-img-76a06249-eb4d-4b2a-a891-ab63bea2f811"
+            }
+          ]
+        },
+        "sourceFrame": "header",
+        "mobileFrame": "header"
+      },
+      "label": "header"
+    },
+    {
+      "id": "8bdce691-e498-4e64-b615-868a8095241b",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "textAlign": "center",
+            "padding": "24px 40px 0px 40px"
+          },
+          "children": [
+            {
+              "type": "Text",
+              "content": "Can’t see this email? Click here to view online",
+              "html": "Can’t see this email? Click <span style=\"text-decoration:underline\">here</span> to view online",
+              "style": {
+                "color": "#efefef",
+                "fontSize": "12px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "16px",
+                "whiteSpace": "pre-line",
+                "marginBottom": 0
+              },
+              "mobileStyle": {
+                "lineHeight": "14px"
+              }
+            }
+          ]
+        },
+        "sourceFrame": "preheader",
+        "mobileFrame": "preheader"
+      },
+      "label": "preheader"
+    }
+  ],
+  "createdAt": "2026-07-26T12:31:56.951Z",
+  "updatedAt": "2026-07-26T12:36:53.864Z"
+}

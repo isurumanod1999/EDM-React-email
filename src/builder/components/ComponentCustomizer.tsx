@@ -191,8 +191,8 @@ export function ComponentCustomizer() {
           </div>
           <p className="fc-hint" style={{ marginTop: 6 }}>
             {isMobile
-              ? 'Editing MOBILE styles (≤600px). Changes here apply only to the mobile view; text and links are shared with desktop.'
-              : 'Editing DESKTOP styles. Switch to Mobile to override sizes, colors or spacing just for phones.'}
+              ? 'Editing the MOBILE view (≤600px). Styles here apply only on phones. You can also give text a separate mobile version below — leave it empty to reuse the desktop text.'
+              : 'Editing DESKTOP styles. Switch to Mobile to override sizes, colors, spacing or content just for phones.'}
           </p>
 
           {selectedNode && selectedNodePath != null ? (
@@ -353,6 +353,38 @@ function NodeInspector({ node, styleView, isMobile, onStyle, onContent }: Inspec
             )}
           </div>
           )}
+          {isMobile && (
+          <div className="field-group">
+            <div className="field-group-title">Mobile content</div>
+            {/* Seed from any existing mobile override, else the desktop text — so
+                the editor starts from what actually shows and the user just
+                tweaks it. Writes mobile-only keys; desktop content is untouched. */}
+            <RichTextEditor
+              value={node.mobileHtml ?? node.html ?? ''}
+              plainFallback={node.mobileContent ?? node.content}
+              allowBlocks={node.type !== 'Link'}
+              placeholder={node.type === 'Link' ? 'Mobile link text' : 'Mobile text…'}
+              onChange={(html, plain) =>
+                onContent(
+                  hasRichFormatting(html)
+                    ? { mobileContent: plain, mobileHtml: html }
+                    : { mobileContent: plain, mobileHtml: undefined }
+                )
+              }
+            />
+            <p className="fc-hint" style={{ marginTop: 6 }}>
+              This text shows only on phones (≤600px). Desktop keeps its own content.
+              {node.type === 'Link' ? ' The link URL is shared with desktop.' : ''}
+            </p>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => onContent({ mobileContent: undefined, mobileHtml: undefined })}
+            >
+              Clear mobile override (use desktop text)
+            </button>
+          </div>
+          )}
           {TypographyControls}
           {ColorControls(true)}
           {PaddingControl}
@@ -374,6 +406,27 @@ function NodeInspector({ node, styleView, isMobile, onStyle, onContent }: Inspec
               placeholder="https://"
               onChange={(v) => onContent({ href: v })}
             />
+          </div>
+          )}
+          {isMobile && (
+          <div className="field-group">
+            <div className="field-group-title">Mobile content</div>
+            {/* Seed from the mobile label if set, else the desktop label. */}
+            <TextControl
+              label="Label"
+              value={node.mobileLabel ?? node.label}
+              onChange={(v) => onContent({ mobileLabel: v || undefined })}
+            />
+            <p className="fc-hint" style={{ marginTop: 6 }}>
+              Shown only on phones (≤600px). The link URL is shared with desktop.
+            </p>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => onContent({ mobileLabel: undefined })}
+            >
+              Clear mobile override (use desktop label)
+            </button>
           </div>
           )}
           <div className="field-group">

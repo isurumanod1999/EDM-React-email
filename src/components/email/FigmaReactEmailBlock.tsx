@@ -21,6 +21,23 @@ import {
 const EMAIL_FONT =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
+/**
+ * A solid background color safe to mirror onto a table's `bgcolor` attribute.
+ * Only opaque hex / named / fully-opaque rgb values qualify — transparent or
+ * semi-transparent fills are skipped (bgcolor can't express alpha and would
+ * paint an unwanted solid block).
+ */
+function emailBgColor(bg: React.CSSProperties['backgroundColor']): string | undefined {
+  if (typeof bg !== 'string') return undefined;
+  const c = bg.trim().toLowerCase();
+  if (!c || c === 'transparent') return undefined;
+  const rgba = c.match(/^rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(?:,\s*([\d.]+)\s*)?\)$/);
+  if (rgba) return rgba[1] !== undefined && parseFloat(rgba[1]) < 1 ? undefined : bg;
+  // Hex or named color — treat as opaque.
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/.test(c) || /^[a-z]+$/.test(c)) return bg;
+  return undefined;
+}
+
 /** Editor-only context threaded through the render so nodes can be selected. */
 interface RenderCtx {
   editable: boolean;
@@ -65,6 +82,46 @@ function linkWrap(href: string | undefined, content: React.ReactNode): React.Rea
 /** Deterministic class for a node, derived from its block namespace + render path. */
 function responsiveClass(ns: string, path: number[]): string {
   return `figma-rsp-${ns}-${path.length ? path.join('-') : 'root'}`;
+}
+
+/**
+ * Deterministic base class for a node that renders SEPARATE desktop/mobile
+ * variants (text content or a button label). The `-desk`/`-mob` suffixes are
+ * appended at render time and swapped by a media query — the exact same
+ * show/hide mechanism used for responsive `Img` (mobileSrc) swaps.
+ */
+function swapClass(prefix: 'txt' | 'btn', ns: string, path: number[]): string {
+  return `figma-${prefix}-${ns}-${path.length ? path.join('-') : 'root'}`;
+}
+
+/**
+ * The value a text-like node renders (rich HTML wins over plain content), used
+ * to decide whether a distinct mobile override exists.
+ */
+function textLikeRender(node: {
+  content?: string;
+  html?: string;
+}): string | undefined {
+  return node.html ?? node.content;
+}
+
+/**
+ * True when a Text/Heading/Link node carries phone-only content that actually
+ * differs from its desktop text — the only case where we pay for a dual render.
+ */
+function hasDistinctMobileContent(node: ReactEmailNode): boolean {
+  if (node.type !== 'Text' && node.type !== 'Heading' && node.type !== 'Link') return false;
+  const n = node as { content?: string; html?: string; mobileContent?: string; mobileHtml?: string };
+  const mob = n.mobileHtml ?? n.mobileContent;
+  if (mob == null || mob === '') return false;
+  return mob !== textLikeRender(n);
+}
+
+/** True when a Button carries a phone-only label distinct from its desktop label. */
+function hasDistinctMobileLabel(node: ReactEmailNode): boolean {
+  if (node.type !== 'Button') return false;
+  const n = node as { label: string; mobileLabel?: string };
+  return n.mobileLabel != null && n.mobileLabel !== '' && n.mobileLabel !== n.label;
 }
 
 /** Keep only class-safe characters so the namespace is a valid CSS identifier. */
@@ -143,6 +200,10 @@ function styleToCss(style: React.CSSProperties): string {
 
 interface ResponsiveInfo {
   imgClasses: Set<string>;
+  /** Base classes for text nodes that swap desktop/mobile CONTENT (block-level). */
+  textClasses: Set<string>;
+  /** Base classes for buttons that swap desktop/mobile LABEL (inline-block). */
+  btnClasses: Set<string>;
   hasStackColumns: boolean;
   mobileRules: string[];
 }
@@ -151,10 +212,25 @@ function collectResponsiveInfo(
   node: ReactEmailNode,
   ns: string,
   path: number[] = [],
-  info: ResponsiveInfo = { imgClasses: new Set(), hasStackColumns: false, mobileRules: [] }
+  info: ResponsiveInfo = {
+    imgClasses: new Set(),
+    textClasses: new Set(),
+    btnClasses: new Set(),
+    hasStackColumns: false,
+    mobileRules: [],
+  }
 ): ResponsiveInfo {
   if (node.type === 'Img' && node.mobileSrc && node.className) {
     info.imgClasses.add(node.className);
+  }
+  // Text/Heading/Link with a distinct phone-only override and Button with a
+  // distinct mobile label each render two variants; register their base class so
+  // the desktop/mobile show-hide media query is emitted below.
+  if (hasDistinctMobileContent(node)) {
+    info.textClasses.add(swapClass('txt', ns, path));
+  }
+  if (hasDistinctMobileLabel(node)) {
+    info.btnClasses.add(swapClass('btn', ns, path));
   }
   if (node.type === 'Column' && node.className === RESPONSIVE_COL_CLASS) {
     info.hasStackColumns = true;
@@ -176,20 +252,37 @@ function collectResponsiveInfo(
  */
 export function buildFigmaResponsiveCss(tree: ReactEmailNode, blockId?: string): string {
   const ns = sanitizeNs(blockId ?? `t${hashTree(tree)}`);
-  const { imgClasses, hasStackColumns, mobileRules } = collectResponsiveInfo(tree, ns);
-  if (imgClasses.size === 0 && !hasStackColumns && mobileRules.length === 0) return '';
+  const { imgClasses, textClasses, btnClasses, hasStackColumns, mobileRules } =
+    collectResponsiveInfo(tree, ns);
+  if (
+    imgClasses.size === 0 &&
+    textClasses.size === 0 &&
+    btnClasses.size === 0 &&
+    !hasStackColumns &&
+    mobileRules.length === 0
+  )
+    return '';
 
-  const imgRules = [...imgClasses]
-    .map(
-      (cls) => `
-    .${cls}-desk { display: block !important; }
+  // Show the `-desk` variant by default and hide `-mob`; flip at ≤600px. Setting
+  // `max-height:0; overflow:hidden` on the hidden variant defends against email
+  // clients that ignore `display:none`. `display` differs by element kind: block
+  // for images and text content, inline-block for buttons (so a swapped button
+  // keeps its pill shape and centering instead of stretching full-width).
+  const swapRule = (cls: string, display: string) => `
+    .${cls}-desk { display: ${display} !important; }
     .${cls}-mob { display: none !important; max-height: 0; overflow: hidden; }
     @media only screen and (max-width: 600px) {
       .${cls}-desk { display: none !important; max-height: 0; overflow: hidden; }
-      .${cls}-mob { display: block !important; max-height: none !important; }
-    }`
-    )
+      .${cls}-mob { display: ${display} !important; max-height: none !important; }
+    }`;
+
+  // Images + text content swap as block elements (same rules as before for imgs).
+  const imgRules = [...imgClasses, ...textClasses]
+    .map((cls) => swapRule(cls, 'block'))
     .join('\n');
+
+  // Buttons swap as inline-block so alignment/width are preserved.
+  const buttonRules = [...btnClasses].map((cls) => swapRule(cls, 'inline-block')).join('\n');
 
   // Stack React Email columns (rendered as <td>) on mobile.
   const columnRules = hasStackColumns
@@ -215,7 +308,7 @@ ${mobileRules.join('\n')}
     }`
     : '';
 
-  return `${imgRules}\n${columnRules}\n${typographyRules}`;
+  return `${imgRules}\n${buttonRules}\n${columnRules}\n${typographyRules}`;
 }
 
 /**
@@ -233,6 +326,90 @@ function ResponsiveStyles({ tree, ns }: { tree: ReactEmailNode; ns: string }) {
     <Head>
       <style>{css}</style>
     </Head>
+  );
+}
+
+type TextLikeNode = Extract<ReactEmailNode, { type: 'Text' | 'Heading' | 'Link' }>;
+
+/**
+ * Render ONE variant of a text-like node (Text/Heading/Link) with an explicit
+ * content/html pair and className. Shared by the single-element path and the
+ * desktop/mobile dual-render path so both stay pixel-identical apart from the
+ * text they carry and the `-desk`/`-mob` swap class.
+ */
+function renderTextLike(
+  node: TextLikeNode,
+  key: string,
+  sel: Record<string, string>,
+  className: string | undefined,
+  content: string,
+  html: string | undefined
+): React.ReactNode {
+  if (node.type === 'Link') {
+    const linkStyle: React.CSSProperties = {
+      fontFamily: EMAIL_FONT,
+      textDecoration: 'underline',
+      ...node.style,
+    };
+    if (html) {
+      return (
+        <a
+          key={key}
+          {...sel}
+          className={className}
+          href={node.href}
+          style={linkStyle}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      );
+    }
+    return (
+      <Link key={key} {...sel} className={className} href={node.href} style={linkStyle}>
+        {content}
+      </Link>
+    );
+  }
+
+  const base: React.CSSProperties = {
+    margin: 0,
+    padding: 0,
+    fontFamily: EMAIL_FONT,
+    ...node.style,
+  };
+  if (html) {
+    const richClass = ['fc-rich', className].filter(Boolean).join(' ');
+    // Rich text renders as a styled block element (Heading tag or <div>, never a
+    // <p>) so it can safely hold block content like bullet/numbered lists.
+    if (node.type === 'Heading') {
+      return React.createElement(node.as ?? 'h2', {
+        key,
+        ...sel,
+        className: richClass,
+        style: base,
+        dangerouslySetInnerHTML: { __html: html },
+      });
+    }
+    return (
+      <div
+        key={key}
+        {...sel}
+        className={richClass}
+        style={base}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    );
+  }
+  if (node.type === 'Heading') {
+    return (
+      <Heading key={key} {...sel} className={className} as={node.as ?? 'h2'} style={{ ...base, whiteSpace: 'pre-line' }}>
+        {linkWrap(node.href, content)}
+      </Heading>
+    );
+  }
+  return (
+    <Text key={key} {...sel} className={className} style={{ ...base, whiteSpace: 'pre-line' }}>
+      {linkWrap(node.href, content)}
+    </Text>
   );
 }
 
@@ -254,10 +431,16 @@ function renderNode(
       // 100% width, or they stretch into full-width bars/ovals.
       const hasFixedWidth =
         node.style?.width !== undefined && node.style.width !== '100%';
+      // Mirror the CSS background onto the table's `bgcolor` attribute — Outlook
+      // (Word engine) drops CSS `background-color` on tables, so without this a
+      // dark header/hero (and flatten-to-image blocks) render on white, hiding
+      // light logos/text.
+      const bgColor = emailBgColor(node.style?.backgroundColor);
       return (
         <Section
           key={key}
           {...sel}
+          {...(bgColor ? { bgcolor: bgColor } : {})}
           className={rspCls}
           style={{ ...(hasFixedWidth ? {} : { width: '100%' }), ...node.style }}
         >
@@ -266,11 +449,13 @@ function renderNode(
       );
     }
 
-    case 'Container':
+    case 'Container': {
+      const cBg = emailBgColor(node.style?.backgroundColor);
       return (
         <Container
           key={key}
           {...sel}
+          {...(cBg ? { bgcolor: cBg } : {})}
           className={rspCls}
           style={{
             maxWidth: 600,
@@ -282,6 +467,7 @@ function renderNode(
           {node.children.map((child, i) => renderNode(child, `${key}-ct-${i}`, [...path, i], ctx))}
         </Container>
       );
+    }
 
     case 'Row':
       return (
@@ -302,54 +488,37 @@ function renderNode(
         </Column>
       );
 
-    case 'Text': {
-      const base: React.CSSProperties = {
-        margin: 0,
-        padding: 0,
-        fontFamily: EMAIL_FONT,
-        ...node.style,
-      };
-      // Rich text renders as a styled <div> (not <p>) so it can safely hold
-      // block content like bullet/numbered lists.
-      if (node.html) {
-        return (
-          <div
-            key={key}
-            {...sel}
-            className={['fc-rich', rspCls].filter(Boolean).join(' ')}
-            style={base}
-            dangerouslySetInnerHTML={{ __html: node.html }}
-          />
+    case 'Text':
+    case 'Heading':
+    case 'Link': {
+      // Separate phone-only content: emit BOTH a desktop and a mobile variant and
+      // let the `-desk`/`-mob` media query (buildFigmaResponsiveCss) show exactly
+      // one — the same content-swap trick used for responsive images. Only pay for
+      // two elements when the mobile text actually differs; otherwise fall through
+      // to the single-element render below (no regression for existing nodes).
+      if (hasDistinctMobileContent(node)) {
+        const swap = swapClass('txt', ctx.ns, path);
+        const deskEl = renderTextLike(
+          node,
+          `${key}-desk`,
+          sel,
+          `${swap}-desk`,
+          node.content,
+          node.html
         );
+        // The mobile variant also carries the ≤600px typography class so it picks
+        // up the node's mobileStyle / auto-scaled type just like a single element.
+        const mobEl = renderTextLike(
+          node,
+          `${key}-mob`,
+          sel,
+          [`${swap}-mob`, rspCls].filter(Boolean).join(' ') || undefined,
+          node.mobileContent ?? node.content,
+          node.mobileHtml
+        );
+        return [deskEl, mobEl];
       }
-      return (
-        <Text key={key} {...sel} className={rspCls} style={{ ...base, whiteSpace: 'pre-line' }}>
-          {linkWrap(node.href, node.content)}
-        </Text>
-      );
-    }
-
-    case 'Heading': {
-      const base: React.CSSProperties = {
-        margin: 0,
-        padding: 0,
-        fontFamily: EMAIL_FONT,
-        ...node.style,
-      };
-      if (node.html) {
-        return React.createElement(node.as ?? 'h2', {
-          key,
-          ...sel,
-          className: ['fc-rich', rspCls].filter(Boolean).join(' '),
-          style: base,
-          dangerouslySetInnerHTML: { __html: node.html },
-        });
-      }
-      return (
-        <Heading key={key} {...sel} className={rspCls} as={node.as ?? 'h2'} style={{ ...base, whiteSpace: 'pre-line' }}>
-          {linkWrap(node.href, node.content)}
-        </Heading>
-      );
+      return renderTextLike(node, key, sel, rspCls, node.content, node.html);
     }
 
     case 'Img': {
@@ -444,34 +613,29 @@ function renderNode(
       return imgContent;
     }
 
-    case 'Link': {
-      const linkStyle: React.CSSProperties = {
-        fontFamily: EMAIL_FONT,
-        textDecoration: 'underline',
-        ...node.style,
-      };
-      if (node.html) {
-        return (
-          <a
-            key={key}
-            {...sel}
-            className={rspCls}
-            href={node.href}
-            style={linkStyle}
-            dangerouslySetInnerHTML={{ __html: node.html }}
-          />
-        );
-      }
-      return (
-        <Link key={key} {...sel} className={rspCls} href={node.href} style={linkStyle}>
-          {node.content}
-        </Link>
-      );
-    }
-
     case 'Button': {
       const { textAlign, marginTop, ...containerRest } = node.containerStyle ?? {};
-
+      const btnStyle: React.CSSProperties = {
+        margin: 0,
+        display: 'inline-block',
+        textDecoration: 'none',
+        textAlign: 'center' as const,
+        boxSizing: 'border-box',
+        maxWidth: '100%',
+        fontFamily: EMAIL_FONT,
+        ...node.style,
+      };
+      // Render one button, or — when a distinct mobile label exists — a desktop
+      // and a mobile button swapped by the inline-block `-desk`/`-mob` media
+      // query (mirrors the text-content swap, buttons kept inline-block so the
+      // pill keeps its shape/centering rather than stretching full-width).
+      const mkBtn = (label: string, k: string, cls: string | undefined) => (
+        <Button key={k} {...sel} className={cls} href={node.href} style={btnStyle}>
+          {label}
+        </Button>
+      );
+      const dualLabel = hasDistinctMobileLabel(node);
+      const swap = dualLabel ? swapClass('btn', ctx.ns, path) : undefined;
       return (
         <Section
           key={key}
@@ -482,23 +646,16 @@ function renderNode(
             ...containerRest,
           }}
         >
-            <Button
-              {...sel}
-              className={rspCls}
-              href={node.href}
-              style={{
-                margin: 0,
-                display: 'inline-block',
-                textDecoration: 'none',
-                textAlign: 'center' as const,
-                boxSizing: 'border-box',
-                maxWidth: '100%',
-                fontFamily: EMAIL_FONT,
-                ...node.style,
-              }}
-            >
-              {node.label}
-            </Button>
+          {dualLabel
+            ? [
+                mkBtn(node.label, `${key}-desk`, `${swap}-desk`),
+                mkBtn(
+                  node.mobileLabel as string,
+                  `${key}-mob`,
+                  [`${swap}-mob`, rspCls].filter(Boolean).join(' ') || undefined
+                ),
+              ]
+            : mkBtn(node.label, `${key}-btn`, rspCls)}
         </Section>
       );
     }

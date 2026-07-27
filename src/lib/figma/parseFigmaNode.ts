@@ -27,6 +27,9 @@ export interface ParsedFigmaNode {
   name: string;
   width?: number;
   height?: number;
+  /** Layout position from Figma (used to merge loose vector clusters into one PNG). */
+  x?: number;
+  y?: number;
   visible: boolean;
   text?: string;
   fontSize?: number;
@@ -54,6 +57,15 @@ export interface ParsedFigmaNode {
   imageRef?: string;
   /** PNG export from Figma /images API — pixel-accurate render of this node */
   exportUrl?: string;
+  /**
+   * A 2× PNG downloaded for a node that the mixed-mode image detector / user may
+   * FORCE to render as a flat raster (icons, SVGs, vector art). Kept SEPARATE
+   * from `exportUrl` on purpose: the default build never reads it, so importing
+   * these extra renders can't change existing output. The build only rasterizes
+   * such a subtree when its id is in the caller's `forceImageIds` set — see
+   * `figmaPrimitives.mapNode`.
+   */
+  forcedExportUrl?: string;
   /**
    * Character-level styled spans (inline links / underlines / colors). Present
    * only when the text actually carries such formatting; plain text leaves this
@@ -276,6 +288,8 @@ export function parseFigmaNode(
     name: node.name,
     width: box?.width != null ? Math.round(box.width) : undefined,
     height: box?.height != null ? Math.round(box.height) : undefined,
+    x: box?.x != null ? Math.round(box.x) : undefined,
+    y: box?.y != null ? Math.round(box.y) : undefined,
     visible: node.visible !== false,
     text: node.characters?.trim() || undefined,
     fontSize: textStyle.fontSize,
@@ -447,7 +461,10 @@ function nodeHasImageDescendant(node: ParsedFigmaNode): boolean {
   return node.children.some(nodeHasImageDescendant);
 }
 
-export function collectExportNodeIds(root: ParsedFigmaNode): string[] {
+export function collectExportNodeIds(
+  root: ParsedFigmaNode,
+  forceIds?: Iterable<string>
+): string[] {
   const ids = new Set<string>();
 
   function walk(node: ParsedFigmaNode, depth: number) {
@@ -494,6 +511,16 @@ export function collectExportNodeIds(root: ParsedFigmaNode): string[] {
   }
 
   walk(root, 0);
+
+  // Union any caller-forced IDs (mixed-mode image export) so their 2× PNGs are
+  // fetched even when the heuristics above would not have exported them (e.g. an
+  // icon/vector GROUP nested deeper than depth 1).
+  if (forceIds) {
+    for (const id of forceIds) {
+      if (id) ids.add(id);
+    }
+  }
+
   return [...ids];
 }
 
@@ -532,6 +559,25 @@ export function resolveExportUrls(
   };
 }
 
+/**
+ * Attach `forcedExportUrl` (the 2× PNG downloaded for mixed-mode image export) to
+ * nodes by nodeId. Deliberately parallel to — and independent of — `exportUrl`:
+ * this field is invisible to the default build, so populating it never changes
+ * existing output. The build reads it only for nodes the caller forced to image.
+ */
+export function resolveForcedExportUrls(
+  node: ParsedFigmaNode,
+  forcedMap: Record<string, string>
+): ParsedFigmaNode {
+  const id = node.nodeId ?? node.id;
+  const forcedExportUrl = id ? forcedMap[id] : undefined;
+  return {
+    ...node,
+    forcedExportUrl: forcedExportUrl ?? node.forcedExportUrl,
+    children: node.children.map((child) => resolveForcedExportUrls(child, forcedMap)),
+  };
+}
+
 export function findNodeByPath(
   node: ParsedFigmaNode,
   path: string[]
@@ -541,6 +587,19 @@ export function findNodeByPath(
   const child = node.children.find((c) => c.name === head);
   if (!child) return undefined;
   return findNodeByPath(child, rest);
+}
+
+export function findNodeByNodeId(
+  root: ParsedFigmaNode,
+  targetId: string
+): ParsedFigmaNode | undefined {
+  const key = root.nodeId ?? root.id;
+  if (key === targetId) return root;
+  for (const child of root.children) {
+    const found = findNodeByNodeId(child, targetId);
+    if (found) return found;
+  }
+  return undefined;
 }
 
 export function nodePath(node: ParsedFigmaNode, parentPath: string[] = []): string {

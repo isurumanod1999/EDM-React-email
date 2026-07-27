@@ -2,7 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverComponentsExternalPackages: ['@react-email/components', '@react-email/render'],
+    serverComponentsExternalPackages: [
+      '@react-email/components',
+      '@react-email/render',
+      'sharp',
+    ],
   },
   images: {
     remotePatterns: [

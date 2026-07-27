@@ -51,3 +51,18 @@ export function getVisionProvider(): VisionProvider {
 
   return createOllamaFromEnv();
 }
+
+/**
+ * Text-only classifier (no images). Prefers Gemini when a key is configured so
+ * "Suggest with AI" works even when AI_PROVIDER=ollama and Ollama isn't running.
+ */
+export function getTextClassifierProvider(): VisionProvider {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (geminiKey) {
+    return createGeminiProvider({
+      apiKey: geminiKey,
+      model: process.env.GEMINI_MODEL,
+    });
+  }
+  return getVisionProvider();
+}

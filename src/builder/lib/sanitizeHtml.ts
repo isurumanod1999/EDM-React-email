@@ -10,7 +10,7 @@
 
 const ALLOWED_TAGS = new Set([
   'p', 'div', 'br', 'span',
-  'b', 'strong', 'i', 'em', 'u', 's', 'strike', 'del',
+  'b', 'strong', 'i', 'em', 'u', 's', 'strike', 'del', 'sup', 'sub',
   'a', 'ul', 'ol', 'li',
 ]);
 
@@ -116,15 +116,24 @@ function sanitizeElement(el: Element): void {
 /** Sanitize editor HTML down to the email-safe allowlist. */
 export function sanitizeRichHtml(dirty: string): string {
   if (typeof window === 'undefined' || typeof DOMParser === 'undefined') return '';
-  const doc = new DOMParser().parseFromString(dirty, 'text/html');
-  sanitizeElement(doc.body);
-  return doc.body.innerHTML.trim();
+  const doc = new DOMParser().parseFromString(dirty ?? '', 'text/html');
+  const body = doc.body;
+  if (!body) return '';
+  // Sanitize the body's CHILDREN, not the <body> itself. `sanitizeElement`
+  // unwraps any non-allowlisted tag, and 'body' isn't allowlisted — running it
+  // on the body element removed the body entirely, so `body.innerHTML` below
+  // then threw "Cannot read properties of null", breaking every rich-text edit.
+  for (const child of Array.from(body.children)) {
+    sanitizeElement(child);
+  }
+  return body.innerHTML.trim();
 }
 
 /** Plain-text projection of HTML (for the node's `content` fallback + labels). */
 export function htmlToPlainText(html: string): string {
   if (typeof window === 'undefined' || typeof DOMParser === 'undefined') return '';
-  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const doc = new DOMParser().parseFromString(html ?? '', 'text/html');
+  if (!doc.body) return '';
   // Turn <br> and block boundaries into newlines so the fallback reads sanely.
   doc.body.querySelectorAll('br').forEach((br) => br.replaceWith('\n'));
   doc.body.querySelectorAll('p, div, li').forEach((el) => el.append('\n'));
@@ -133,7 +142,7 @@ export function htmlToPlainText(html: string): string {
 
 /** True when the HTML carries real formatting worth storing (not just plain text). */
 export function hasRichFormatting(html: string): boolean {
-  return /<(b|strong|i|em|u|s|strike|del|a|ul|ol|li|span|br)\b/i.test(html);
+  return /<(b|strong|i|em|u|s|strike|del|sup|sub|a|ul|ol|li|span|br)\b/i.test(html);
 }
 
 /** Escape plain text so it can seed the editor as HTML safely. */

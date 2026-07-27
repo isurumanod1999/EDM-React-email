@@ -8,7 +8,289 @@
     "backgroundColor": "#f4f4f4",
     "containerWidth": 600
   },
-  "blocks": [],
+  "blocks": [
+    {
+      "id": "831b86d4-cb12-4128-90c1-f004c8b4a48c",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "textAlign": "center",
+            "padding": "24px 40px 0px 40px",
+            "backgroundColor": "#150505"
+          },
+          "children": [
+            {
+              "type": "Text",
+              "content": "Can’t see this email? Click here to view online",
+              "html": "Can’t see this email? Click <span style=\"text-decoration:underline\">here</span> to view online",
+              "style": {
+                "color": "#efefef",
+                "fontSize": "12px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "16px",
+                "whiteSpace": "pre-line",
+                "marginBottom": 0
+              },
+              "mobileStyle": {
+                "lineHeight": "14px"
+              }
+            }
+          ]
+        },
+        "sourceFrame": "preheader",
+        "mobileFrame": "preheader"
+      },
+      "label": "preheader"
+    },
+    {
+      "id": "5ac52899-44ca-47f9-b224-188a2dd7a465",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto",
+            "backgroundColor": "#111318"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-e19d3cf8-3f9c-4730-9854-a14e3cb12e65.png",
+              "mobileSrc": "/images/uploads/figma-mob-f747864b-f32e-43bb-baa6-1fcc0817118b.png",
+              "width": 600,
+              "height": 160,
+              "alt": "header",
+              "align": "center",
+              "fullBleed": true,
+              "className": "figma-frame-img-420b31f7-c88e-48ad-ac1e-819f5b0d2408"
+            }
+          ]
+        },
+        "sourceFrame": "header",
+        "mobileFrame": "header"
+      },
+      "label": "header"
+    },
+    {
+      "id": "8614fddb-f4c3-4f33-8e00-09052aaa9160",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto",
+            "backgroundColor": "#ffffff"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-b97b89cf-53b3-4be9-a207-af261a9457ac.png",
+              "mobileSrc": "/images/uploads/figma-mob-3433f7a9-38c5-4889-90e6-4f2a5e12712c.png",
+              "width": 600,
+              "height": 720,
+              "alt": "Sep Retail GIF_2",
+              "align": "center",
+              "fullBleed": true,
+              "className": "figma-frame-img-da1823a1-82d4-4d40-b297-e674329ce6b5"
+            }
+          ]
+        },
+        "sourceFrame": "Sep Retail GIF_2",
+        "mobileFrame": "Sep Retail GIF_2"
+      },
+      "label": "Sep Retail GIF_2"
+    },
+    {
+      "id": "dc6d338d-86d4-4e06-82c5-f166422041d3",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "40px"
+          },
+          "children": [
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "textAlign": "center",
+                "padding": "0px 12px 0px 12px"
+              },
+              "children": [
+                {
+                  "type": "Heading",
+                  "content": "SMARTER DRIVING, GREATER SAVINGS",
+                  "as": "h1",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "40px",
+                    "fontWeight": 700,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "48px",
+                    "letterSpacing": "-1.2px",
+                    "whiteSpace": "pre-line"
+                  },
+                  "mobileStyle": {
+                    "fontSize": "28px",
+                    "lineHeight": "28px",
+                    "letterSpacing": "0px"
+                  }
+                },
+                {
+                  "type": "Spacer",
+                  "height": 32
+                },
+                {
+                  "type": "Text",
+                  "content": "<Name>, get HYBRID FOR THE PRICE OF PETROL in the",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 8
+                  },
+                  "mobileStyle": {
+                    "fontSize": "14px",
+                    "lineHeight": "20px"
+                  }
+                },
+                {
+                  "type": "Text",
+                  "content": "X-TRAIL e-POWER – it’s Hybrid reinvented.  Plus this month, \n\nsave with driveaway prices across other Nissan models. Also introducing two unmissable launch\n offers on the all-new, all-electric ARIYA. \n\n So hurry into a Nissan dealership before September ends!",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 0
+                  },
+                  "mobileStyle": {
+                    "fontSize": "16px",
+                    "lineHeight": "20px"
+                  },
+                  "html": "X-TRAIL e-POWER – it’s Hybrid reinvented.  Plus this month,&nbsp;<br><br>save with driveaway prices across other Nissan models. Also introducing two unmissable launch<br>&nbsp;offers on the all-new, all-electric ARIYA. <br><br> So hurry into a Nissan dealership before September ends!"
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 40
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "SEE ALL OFFERS",
+              "mobileStyle": {
+                "fontSize": "14px",
+                "lineHeight": "20px"
+              },
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 40px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "RESERVE YOURS ONLINE",
+              "mobileStyle": {
+                "fontSize": "14px",
+                "lineHeight": "20px"
+              },
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#ffffff",
+                "color": "#000000",
+                "borderRadius": 999,
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "Opening",
+        "mobileFrame": "Opening"
+      },
+      "label": "Opening"
+    }
+  ],
   "createdAt": "2026-07-26T11:14:51.775Z",
-  "updatedAt": "2026-07-26T11:14:51.775Z"
+  "updatedAt": "2026-07-27T00:59:57.207Z"
 }
