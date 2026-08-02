@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { CORRELATION_HEADER } from '@/lib/observability/correlation';
+import { AccessDeniedError } from '@/lib/auth/accessContext';
 
 /**
  * Uniform API error handling (Story 1.7 / AD-9).
@@ -67,6 +68,9 @@ export function handleRouteError(
   } = {}
 ): NextResponse {
   const { correlationId } = fallback;
+  if (error instanceof AccessDeniedError) {
+    return errorResponse(error.status, error.code, error.message, correlationId);
+  }
   if (error instanceof ApiError) {
     return errorResponse(error.status, error.code, error.message, correlationId);
   }

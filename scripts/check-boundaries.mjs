@@ -1,13 +1,10 @@
-// Boundary-discipline verification (Story 1.9 / AD-1).
+// Boundary-discipline verification (Stories 1.9, 2.2 / AD-1, AD-2).
 //
 // Fails (exit 1) when a layer reaches across an architectural boundary:
-//   1. API route handlers (src/app/**) must not import Node's fs/path directly
-//      — storage goes through services/ports/adapters, never raw filesystem.
-//   2. The ports layer (src/lib/ports/**) must stay a pure contract: no adapter
-//      implementations and no app/UI imports.
-//
-// This keeps the composition root (src/lib/container.ts) the single place that
-// binds implementations, so swapping a driver later stays a one-file change.
+//   1. API route handlers (src/app/**) must not import Node's fs/path directly.
+//   2. The ports layer must stay a pure contract.
+//   3. src/lib/** (except adapters) must not import fs — known legacy exceptions
+//      are allowlisted until refactored behind ports.
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
@@ -15,6 +12,17 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const SRC = join(ROOT, 'src');
+
+/** Pre-existing fs usage outside adapters — recorded exceptions (Story 1.9). */
+const LIB_FS_ALLOWLIST = new Set([
+  'lib/adapters/filesystem/templateRepository.ts',
+  'lib/adapters/local-assets/assetStore.ts',
+  'lib/figma/importFromFigma.ts',
+  'lib/figma/attachMissingForcedExports.ts',
+  'lib/ai/analyzeComponent.ts',
+  'lib/export/index.ts',
+  'lib/export/bundleImages.ts',
+]);
 
 /** @type {{file:string, rule:string, detail:string}[]} */
 const violations = [];
@@ -47,6 +55,10 @@ function toPosix(p) {
   return p.split(sep).join('/');
 }
 
+function isFsImport(spec) {
+  return /^(node:)?(fs|path)(\/|$)/.test(spec);
+}
+
 function checkFile(full) {
   const rel = toPosix(relative(SRC, full));
   const source = readFileSync(full, 'utf8');
@@ -54,13 +66,23 @@ function checkFile(full) {
 
   const isRoute = rel.startsWith('app/');
   const isPort = rel.startsWith('lib/ports/');
+  const isLibOutsideAdapters =
+    rel.startsWith('lib/') && !rel.startsWith('lib/adapters/') && !LIB_FS_ALLOWLIST.has(rel);
 
   for (const spec of specs) {
-    if (isRoute && /^(node:)?(fs|path)(\/|$)/.test(spec)) {
+    if (isRoute && isFsImport(spec)) {
       violations.push({
         file: rel,
         rule: 'route-no-fs',
         detail: `route handler imports "${spec}" — go through a service/port instead`,
+      });
+    }
+
+    if (isLibOutsideAdapters && isFsImport(spec)) {
+      violations.push({
+        file: rel,
+        rule: 'lib-no-fs',
+        detail: `lib module imports "${spec}" outside adapters — use a port or add a documented allowlist entry`,
       });
     }
 

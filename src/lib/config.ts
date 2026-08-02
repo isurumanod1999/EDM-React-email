@@ -30,6 +30,13 @@ const configSchema = z.object({
   // Access posture — enforced requires an identity adapter (Epic F4).
   authMode: z.enum(['open', 'enforced']).default('open'),
 
+  // Bind host used for exposure-gate checks (Story 2.7).
+  host: z.string().min(1).default('localhost'),
+
+  // Legacy static demo routes (/preview/*, /api/email/[template]) — on by default
+  // in development, off in production unless explicitly enabled (Story 2.4).
+  legacyDemosEnabled: booleanFromEnv(false),
+
   // Absolute base URL used to resolve image URLs in sent emails.
   baseUrl: z.string().url().optional(),
 
@@ -60,6 +67,10 @@ function loadConfig(): AppConfig {
     storageDriver: process.env.STORAGE_DRIVER,
     assetDriver: process.env.ASSET_DRIVER,
     authMode: process.env.AUTH_MODE,
+    host: process.env.HOST,
+    legacyDemosEnabled:
+      process.env.ENABLE_LEGACY_DEMOS ??
+      (process.env.NODE_ENV === 'development' ? 'true' : 'false'),
     baseUrl: process.env.PUBLIC_BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL,
     ai: {
       provider: process.env.AI_PROVIDER?.toLowerCase(),

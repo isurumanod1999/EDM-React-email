@@ -21,12 +21,12 @@ Last updated: 2026-08-02
 ## 2. Architectural rules being followed (do not violate)
 
 - **AD-1 / AR1:** Next.js route handlers only validate → call a service → shape response. No business logic or storage in handlers.
-- **AD-2 / AR2:** Persistence only through ports (`TemplateRepository`, `AssetStore`, `EventLog`, `JobQueue`). No `fs`/DB/SDK calls outside `src/lib/adapters/**`.
+- **AD-2 / AR2:** Persistence only through ports (`TemplateRepository`, `AssetStore`, `EventLog`, `JobQueue`). No `fs`/DB/SDK calls outside `src/lib/adapters/**` (legacy figma/export fs usage is allowlisted in `scripts/check-boundaries.mjs` until refactored).
 - **AD-3 / AR3:** One composition root — `src/lib/container.ts` — binds adapters by `STORAGE_DRIVER` / `ASSET_DRIVER`.
 - **AD-8:** Zod-validate input before any side effect.
 - **AD-9:** Uniform error envelope + correlation-id logging (see deviation note in §5).
-- **AD-10:** Reserved access-gate seam; `AUTH_MODE=open` now, `enforced` later (Epic F4).
-- **AD-11:** Secrets are server-only.
+- **AD-10:** Access gate in `src/middleware.ts` + `src/lib/auth/accessContext.ts`; `AUTH_MODE=open` now, `enforced` later (Epic F4).
+- **AD-11:** Secrets are server-only; verified by `npm run check:secrets`.
 - **Current phase binds ONLY** the filesystem template adapter and local-asset adapter. **No database, no S3, no worker.** Postgres/S3/worker/auth are deferred (Epics F1–F4) — do not build them unless the user asks.
 
 ---
@@ -35,32 +35,18 @@ Last updated: 2026-08-02
 
 ### Epic 1 — Consistent API & Storage Foundation — ✅ COMPLETE (Stories 1.1–1.9)
 
-- 1.1 `src/lib/config.ts` — typed, validated env config (Zod, fails fast).
-- 1.2 `src/lib/ports/*` — `TemplateRepository`, `AssetStore`, `EventLog`, `JobQueue` interfaces + barrel `index.ts`.
-- 1.3 `src/lib/adapters/filesystem/templateRepository.ts` — filesystem repo; `src/lib/templates/fileStorage.ts` delegates to it (public API unchanged).
-- 1.4 `src/lib/adapters/local-assets/assetStore.ts` — local asset store; `src/app/api/assets/upload/route.ts` uses it.
-- 1.5 `src/lib/container.ts` — composition root; fails fast on `postgres`/`s3` with "not available in this phase".
-- 1.6 `src/lib/templates/service.ts` — `TemplateService` over the repo port; template CRUD routes (`src/app/api/templates/**`) route through it.
-- 1.7 `src/lib/api/response.ts` — uniform error helper (`errorResponse`, `notFound`, `handleRouteError`, `ApiError`). Adopted across templates, email render/export/send, email/[template], assets/upload, ai/*, figma/* routes.
-- 1.8 `src/lib/observability/logger.ts` + `correlation.ts` + `src/middleware.ts` — structured logging + correlation id on every `/api/*` request/response; template routes log with it.
-- 1.9 `scripts/check-boundaries.mjs` — boundary check (routes must not import `fs`/`path`; ports must not import adapters/app). Wired as `npm run check:boundaries`. Currently PASSES.
+See git history / prior handoff entries for file map.
 
-### Epic 2 — Internal Hardening & External-Exposure Gate — 🚧 IN PROGRESS
+### Epic 2 — Internal Hardening & External-Exposure Gate — ✅ COMPLETE (Stories 2.1–2.8)
 
-- **2.1 Test/lint/format baseline — ~90% done, NEEDS FINAL VERIFY.**
-  - Installed dev deps: `vitest`, `prettier`, `eslint@^8.57.1`, `eslint-config-next@14.2.0` (ESLint pinned to 8 because Next 14 `next lint` is incompatible with ESLint 9).
-  - Added configs: `.eslintrc.json`, `.prettierrc.json`, `.prettierignore`, `vitest.config.mts`.
-  - Added scripts: `typecheck`, `test`, `test:watch`, `format`, `format:check`, `check:boundaries`, `verify`.
-  - Added first smoke test: `src/lib/templates/service.test.ts` (6 tests, PASS).
-  - Lint fixes applied: escaped apostrophes in `src/emails/TwoColDualCtaEmail.tsx` & `TwoColStackedEmail.tsx`; removed a stale `@typescript-eslint/no-explicit-any` disable comment in `src/lib/registry/types.ts`.
-  - ⚠️ The final `npm run lint` confirmation run was interrupted. **First action for the new agent: run `npm run verify` and confirm all green** (only a known non-blocking `react-hooks/exhaustive-deps` warning in `FigmaBuildModal.tsx` is expected). Fix anything that errors, then mark 2.1 done.
-- **2.2** Enforced import-boundary lint rule — pending (either an ESLint `no-restricted-imports` rule for `fs`/SDKs outside adapters, or wire `check:boundaries` into `verify`/CI as the enforcement — the script already exists from 1.9).
-- **2.3** Pass-through access gate in `AUTH_MODE=open` — pending (extend `src/middleware.ts`: stamp anonymous actor, cover `/builder/**` + `/api/**` except public endpoints; allow all in open mode).
-- **2.4** Legacy demo route lockdown — pending (`/preview/[template]`, `/api/email/[template]` disabled/protected outside local mode; opt-in locally).
-- **2.5** Request hardening — pending (upload content-type allowlist + size limit already partly in assets route; add body-size limits + basic rate limiting on render/export/figma/ai).
-- **2.6** Server-only secret verification — pending (verify no Figma/AI/Resend/infra secret in client bundle or responses; repeatable check).
-- **2.7** External-exposure gate — pending (refuse non-local bind when `AUTH_MODE=open`; fail closed).
-- **2.8** Dependency-upgrade maintenance track — pending (document Next 14→16 path + PostgreSQL version policy; likely a `docs/` markdown).
+- **2.1** Test/lint/format baseline — ESLint 8 + Prettier + Vitest; `npm run verify` green.
+- **2.2** Enforced import-boundary rule — ESLint `no-restricted-imports` on `src/app/**`; extended `scripts/check-boundaries.mjs` for lib/ fs usage with documented allowlist.
+- **2.3** Pass-through access gate — `src/lib/auth/accessContext.ts` + middleware stamps anonymous actor in `AUTH_MODE=open`; enforced mode fails closed (503) until Epic F4.
+- **2.4** Legacy demo route lockdown — `/preview/*` and `/api/email/[template]` blocked unless `ENABLE_LEGACY_DEMOS=true` or `NODE_ENV=development`.
+- **2.5** Request hardening — body-size limits (5MB/10MB) and in-process rate limiting (30/min) on expensive routes in middleware.
+- **2.6** Server-only secret verification — `scripts/check-secrets.mjs` wired into `verify`.
+- **2.7** External-exposure gate — `src/instrumentation.ts` + `src/lib/security/exposureGate.ts` refuse non-local bind with `AUTH_MODE=open`.
+- **2.8** Dependency-upgrade maintenance track — `docs/maintenance-upgrades.md`.
 
 ### Deferred — DO NOT build unless asked
 
@@ -71,25 +57,49 @@ Last updated: 2026-08-02
 ## 4. How to verify at any point
 
 ```bash
-npm run verify   # runs: typecheck + lint + check:boundaries + test
+npm run verify   # typecheck + lint + check:boundaries + check:secrets + test
+npm run build && npm run check:secrets   # also scan built static chunks
 ```
 
-Individually: `npm run typecheck`, `npm run lint`, `npm run check:boundaries`, `npm run test`.
+Individually: `npm run typecheck`, `npm run lint`, `npm run check:boundaries`, `npm run check:secrets`, `npm run test`.
 
-Environment note: this is a **Windows / PowerShell** machine. Python is invoked as `py -3` (not `python3`). BMad skills live in `.agents/skills/`.
+Environment note: **Windows / PowerShell**; Python is `py -3`.
+
+### Useful env vars
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `AUTH_MODE` | `open` | Access gate posture |
+| `HOST` | `localhost` | Bind address for exposure gate (Story 2.7) |
+| `ENABLE_LEGACY_DEMOS` | `true` in dev, `false` in prod | Legacy `/preview` and `/api/email/[template]` routes |
+| `STORAGE_DRIVER` | `filesystem` | Template storage adapter |
+| `ASSET_DRIVER` | `local` | Asset storage adapter |
 
 ---
 
 ## 5. Recorded deviations from the architecture (intentional)
 
-- **AD-9 error envelope shape:** The spine specifies `{ error: { code, message } }`. The existing client reads `data.error` as a **string** in ~10 call sites, so we kept a **flat, non-breaking** shape `{ error: <message>, code: <code> }` (plus optional `correlationId`). Full nested-shape migration + coordinated client update is deferred to preserve the working tool. See `src/lib/api/response.ts` header comment.
-- **ESLint 8 pin:** Required for Next 14 `next lint` compatibility (ESLint 9 flat-config is not supported by Next 14's lint CLI).
+- **AD-9 error envelope shape:** Flat `{ error: <string>, code }` for client compatibility (see `src/lib/api/response.ts`).
+- **ESLint 8 pin:** Required for Next 14 `next lint`.
+- **Legacy fs in lib/figma and lib/export:** Allowlisted in boundary check until moved behind ports.
 
 ---
 
-## 6. Working conventions
+## 6. Next steps (when user is ready)
 
-- After each story: run `npm run typecheck` (and `npm run verify` before marking a story done). Keep behavior identical unless the story says otherwise.
+Current-phase epics 1–2 are **done**. Next work is deferred epics only if the user requests:
+
+1. **Epic F1** — PostgreSQL `TemplateRepository` adapter
+2. **Epic F2** — S3 `AssetStore` adapter
+3. **Epic F3** — Background worker + `JobQueue`
+4. **Epic F4** — Authentication + flip `AUTH_MODE=enforced`
+
+Other optional hardening (not in epics): refactor figma/export fs usage behind `AssetStore`; migrate error envelope to nested shape + update client; upgrade Next.js per `docs/maintenance-upgrades.md`.
+
+---
+
+## 7. Working conventions
+
+- After each story: run `npm run verify`. Keep behavior identical unless the story says otherwise.
 - Do NOT commit unless the user explicitly asks.
-- Keep handlers thin; put logic in services; touch storage only through adapters via the container.
-- Update this HANDOFF file's status section as stories complete.
+- Update this HANDOFF file when starting new epics.
