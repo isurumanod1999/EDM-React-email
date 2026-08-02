@@ -9,6 +9,8 @@ import { FigmaBuildModal } from '@/builder/components/FigmaBuildModal';
 import { FigmaFetchModal } from '@/builder/components/FigmaFetchModal';
 import { SendTestModal } from '@/builder/components/SendTestModal';
 import { useBuilderStore } from '@/builder/store/builderStore';
+import { pushToast } from '@/builder/store/toastStore';
+import { confirmLeaveIfDirty } from '@/builder/hooks/useUnsavedChangesGuard';
 import { downloadBlob } from '@/builder/utils/download';
 import { sanitizeExportName } from '@/lib/export/sanitizeName';
 
@@ -17,8 +19,6 @@ export function BuilderToolbar() {
   const template = useBuilderStore((s) => s.template);
   const isDirty = useBuilderStore((s) => s.isDirty);
   const isSaving = useBuilderStore((s) => s.isSaving);
-  const saveError = useBuilderStore((s) => s.saveError);
-  const saveMessage = useBuilderStore((s) => s.saveMessage);
   const showAdvanced = useBuilderStore((s) => s.showAdvanced);
   const updateTemplateInfo = useBuilderStore((s) => s.updateTemplateInfo);
   const setShowAdvanced = useBuilderStore((s) => s.setShowAdvanced);
@@ -28,7 +28,6 @@ export function BuilderToolbar() {
   const setFigmaBuildOpen = useBuilderStore((s) => s.setFigmaBuildModalOpen);
 
   const [isExporting, setIsExporting] = useState(false);
-  const [exportMessage, setExportMessage] = useState<string | null>(null);
   const [aiImportOpen, setAiImportOpen] = useState(false);
   const [figmaFetchOpen, setFigmaFetchOpen] = useState(false);
   const [figmaBatchOpen, setFigmaBatchOpen] = useState(false);
@@ -36,23 +35,27 @@ export function BuilderToolbar() {
 
   const handleDuplicate = async () => {
     if (!template) return;
+    if (!confirmLeaveIfDirty()) return;
     const res = await fetch(`/api/templates/${template.id}/duplicate`, { method: 'POST' });
     if (res.ok) {
       const data = await res.json();
+      pushToast('Template duplicated', 'success');
       router.push(`/builder/${data.template.id}`);
+      return;
     }
+    const err = await res.json().catch(() => ({}));
+    pushToast(typeof err.error === 'string' ? err.error : 'Duplicate failed', 'error', 6000);
   };
 
   const handleExport = async () => {
     if (!template || isExporting) return;
 
     if (template.blocks.length === 0) {
-      alert('Add at least one component to the canvas before exporting.');
+      pushToast('Add at least one component to the canvas before exporting.', 'info');
       return;
     }
 
     setIsExporting(true);
-    setExportMessage(null);
 
     try {
       const res = await fetch('/api/email/export', {
@@ -91,11 +94,10 @@ export function BuilderToolbar() {
       const filename = match?.[1] ?? `${sanitizeExportName(template.name)}.zip`;
 
       downloadBlob(blob, filename);
-      setExportMessage('Exported');
-      window.setTimeout(() => setExportMessage(null), 3000);
+      pushToast(`Exported ${filename}`, 'success');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Export failed';
-      alert(message);
+      pushToast(message, 'error', 6000);
     } finally {
       setIsExporting(false);
     }
@@ -117,9 +119,6 @@ export function BuilderToolbar() {
           </div>
         )}
         {isDirty && <span className="status-badge dirty">Unsaved</span>}
-        {saveMessage && !isDirty && <span className="status-badge saved">{saveMessage}</span>}
-        {exportMessage && <span className="status-badge saved">{exportMessage}</span>}
-        {saveError && <span className="status-badge error">{saveError}</span>}
       </div>
 
       <div className="builder-toolbar-right">

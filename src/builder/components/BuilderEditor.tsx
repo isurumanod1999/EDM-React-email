@@ -13,7 +13,11 @@ import {
 } from '@dnd-kit/core';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { useAutoSave } from '@/builder/hooks/useAutoSave';
+import { useSaveFeedbackToasts } from '@/builder/hooks/useSaveFeedbackToasts';
+import { useUnsavedChangesGuard } from '@/builder/hooks/useUnsavedChangesGuard';
 import { BuilderToolbar } from './BuilderToolbar';
+import { BuilderToastContainer } from './BuilderToastContainer';
+import { BuilderMobileNav, type MobileDrawer } from './BuilderMobileNav';
 import { ComponentPalette } from './ComponentPalette';
 import { BlockCanvas } from './BlockCanvas';
 import { PropertyPanel } from './PropertyPanel';
@@ -36,8 +40,11 @@ export function BuilderEditor({ templateId }: BuilderEditorProps) {
 
   const [error, setError] = useState<string | null>(null);
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
+  const [mobileDrawer, setMobileDrawer] = useState<MobileDrawer>(null);
 
   useAutoSave(true, 45000);
+  useSaveFeedbackToasts();
+  useUnsavedChangesGuard(true);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
@@ -120,15 +127,35 @@ export function BuilderEditor({ templateId }: BuilderEditorProps) {
     >
       <div className="builder-root">
         <BuilderToolbar />
-        <div className="builder-body">
-          <ComponentPalette />
+        <div
+          className={`builder-body${mobileDrawer ? ' builder-body--drawer-open' : ''}`}
+        >
+          {mobileDrawer ? (
+            <button
+              type="button"
+              className="builder-mobile-backdrop"
+              aria-label="Close panel"
+              onClick={() => setMobileDrawer(null)}
+            />
+          ) : null}
+          <ComponentPalette
+            className={
+              mobileDrawer === 'components' ? 'builder-panel--mobile-open' : undefined
+            }
+          />
           <main className="builder-center">
             <BlockCanvas />
             <LivePreview />
           </main>
-          <PropertyPanel />
+          <PropertyPanel
+            className={
+              mobileDrawer === 'properties' ? 'builder-panel--mobile-open' : undefined
+            }
+          />
           <ComponentCustomizer />
         </div>
+        <BuilderMobileNav activeDrawer={mobileDrawer} onSelect={setMobileDrawer} />
+        <BuilderToastContainer />
       </div>
 
       <DragOverlay>

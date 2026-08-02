@@ -48,6 +48,22 @@ See git history / prior handoff entries for file map.
 - **2.7** External-exposure gate — `src/instrumentation.ts` + `src/lib/security/exposureGate.ts` refuse non-local bind with `AUTH_MODE=open`.
 - **2.8** Dependency-upgrade maintenance track — `docs/maintenance-upgrades.md`.
 
+### Builder Polish — Week 1 — ✅ COMPLETE (Stories #1, #2, #5, #10, #11)
+
+| Story | Deliverable |
+|-------|-------------|
+| #1 Mobile layout | `BuilderMobileNav.tsx`, slide-over drawers ≤900px |
+| #11 Toast system | `toastStore.ts`, `BuilderToastContainer.tsx`; export uses toasts not `alert()` |
+| #2 Unsaved guard | `useUnsavedChangesGuard.ts`, `beforeunload`, link intercept, auto-save toasts |
+| #10 Preview loading | `useTemplatePreview.ts` — stale overlay, spinner, retry in `LivePreview` |
+| #5 Gallery feedback | `BuilderGallery.tsx` — error banner + retry, action toasts, loading states |
+
+Details: [builder-polish.md](./builder-polish.md) · [docs/PHASE-HISTORY.md](../../docs/PHASE-HISTORY.md)
+
+### Builder Polish — Week 2 — 🚧 NEXT
+
+See [builder-polish.md §5 Week 2](./builder-polish.md#5-recommended-sequence-12-weeks-max-impact): import menu (#9), block delete confirm (#3), Figma lint + Ollama banner (#7), import progress (#8), modal a11y (#13), send test polish (#12).
+
 ### Deferred — DO NOT build unless asked
 
 - **Epic F1** PostgreSQL repository, **Epic F2** S3 asset store, **Epic F3** background worker/JobQueue, **Epic F4** authentication (`AUTH_MODE=enforced`).
@@ -87,12 +103,30 @@ Environment note: **Windows / PowerShell**; Python is `py -3`.
 
 ## 6. Next steps (when user is ready)
 
-Current-phase epics 1–2 are **done**. Next work is deferred epics only if the user requests:
+### Architecture baseline (locked)
 
-1. **Epic F1** — PostgreSQL `TemplateRepository` adapter
-2. **Epic F2** — S3 `AssetStore` adapter
-3. **Epic F3** — Background worker + `JobQueue`
-4. **Epic F4** — Authentication + flip `AUTH_MODE=enforced`
+**Epic 1** and **Epic 2** are the **FINAL baseline** — do not redesign ports, adapters, access gate, or verify pipeline unless the user explicitly requests it.
+
+### Deferred infrastructure (do not build unless asked)
+
+- **Epic F1** — PostgreSQL `TemplateRepository` adapter
+- **Epic F2** — S3 `AssetStore` adapter
+- **Epic F3** — Background worker + `JobQueue`
+- **Epic F4** — Authentication + flip `AUTH_MODE=enforced`
+
+### Next active phase: Builder Polish Week 2
+
+Week 1 is **complete**. Continue with Week 2 from **[builder-polish.md](./builder-polish.md)**:
+
+1. **#9 Import menu grouping** — toolbar Import dropdown
+2. **#3 Block delete confirm**
+3. **#7 FigmaBuildModal lint + wire `OllamaStatusBanner`**
+4. **#8 Long-running import progress UX**
+5. **#13 Modal accessibility**
+6. **#12 Send test modal polish**
+7. **#6 Gallery search/sort** (optional if time)
+
+User-facing docs: [docs/BUILDER.md](../../docs/BUILDER.md) · [docs/README.md](../../docs/README.md)
 
 Other optional hardening (not in epics): refactor figma/export fs usage behind `AssetStore`; migrate error envelope to nested shape + update client; upgrade Next.js per `docs/maintenance-upgrades.md`.
 

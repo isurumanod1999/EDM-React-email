@@ -35,13 +35,13 @@ function PaletteItem({ entry }: { entry: ComponentRegistryEntry }) {
   );
 }
 
-export function ComponentPalette() {
+export function ComponentPalette({ className }: { className?: string }) {
   const paletteByCategory = useBuilderStore((s) => s.paletteByCategory);
 
   const categories = Object.keys(paletteByCategory).sort();
 
   return (
-    <aside className="builder-panel">
+    <aside className={`builder-panel builder-panel--palette${className ? ` ${className}` : ''}`}>
       <div className="builder-panel-header">Components</div>
       <div className="builder-panel-body">
         {categories.length === 0 ? (

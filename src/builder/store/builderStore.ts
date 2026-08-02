@@ -69,7 +69,7 @@ interface BuilderState {
   setShowAdvanced: (show: boolean) => void;
   setViewMode: (mode: 'desktop' | 'mobile') => void;
   setFigmaBuildModalOpen: (open: boolean) => void;
-  save: () => Promise<boolean>;
+  save: (options?: { auto?: boolean }) => Promise<boolean>;
   resetDirty: () => void;
 }
 
@@ -376,7 +376,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   setFigmaBuildModalOpen: (open) => set({ figmaBuildModalOpen: open }),
   resetDirty: () => set({ isDirty: false }),
 
-  save: async () => {
+  save: async (options) => {
     const { template } = get();
     if (!template) return false;
 
@@ -399,7 +399,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
         template: data.template,
         isDirty: false,
         isSaving: false,
-        saveMessage: 'Saved successfully',
+        saveMessage: options?.auto ? 'Auto-saved' : 'Saved successfully',
       });
       return true;
     } catch (error) {

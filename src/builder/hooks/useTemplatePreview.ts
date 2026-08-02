@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { EmailTemplateDocument } from '@/lib/schema/template';
 
 export function useTemplatePreview(
@@ -10,7 +10,9 @@ export function useTemplatePreview(
 ) {
   const [html, setHtml] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState(0);
 
   const previewKey = useMemo(
     () =>
@@ -20,10 +22,16 @@ export function useTemplatePreview(
     [template, editable]
   );
 
+  const retry = useCallback(() => {
+    setRefreshToken((token) => token + 1);
+  }, []);
+
   useEffect(() => {
     if (!previewKey) {
       setHtml('');
       setError(null);
+      setLoading(false);
+      setIsPending(false);
       return;
     }
 
@@ -33,10 +41,13 @@ export function useTemplatePreview(
       editable: boolean;
     };
 
+    setIsPending(true);
+    setError(null);
+
     const controller = new AbortController();
-    const timer = setTimeout(async () => {
+    const timer = window.setTimeout(async () => {
+      setIsPending(false);
       setLoading(true);
-      setError(null);
 
       try {
         const res = await fetch('/api/email/render', {
@@ -52,7 +63,7 @@ export function useTemplatePreview(
         }
 
         const data = await res.json();
-        setHtml(data.html);
+        setHtml(data.html ?? '');
       } catch (err) {
         if ((err as Error).name !== 'AbortError') {
           setError(err instanceof Error ? err.message : 'Preview failed');
@@ -63,10 +74,13 @@ export function useTemplatePreview(
     }, debounceMs);
 
     return () => {
-      clearTimeout(timer);
+      window.clearTimeout(timer);
       controller.abort();
+      setIsPending(false);
     };
-  }, [previewKey, debounceMs]);
+  }, [previewKey, debounceMs, refreshToken]);
 
-  return { html, loading, error };
+  const isStale = isPending || (loading && html.length > 0);
+
+  return { html, loading, isPending, isStale, error, retry };
 }

@@ -13,7 +13,7 @@ const TEMPLATE_CATEGORIES: { value: TemplateCategory; label: string }[] = [
   { value: 'layout', label: 'Layout' },
 ];
 
-export function PropertyPanel() {
+export function PropertyPanel({ className }: { className?: string }) {
   const template = useBuilderStore((s) => s.template);
   const selectedBlockId = useBuilderStore((s) => s.selectedBlockId);
   const registry = useBuilderStore((s) => s.registry);
@@ -38,9 +38,11 @@ export function PropertyPanel() {
     }, {});
   }, [componentDef, showAdvanced]);
 
+  const panelClass = `builder-panel builder-panel--properties${className ? ` ${className}` : ''}`;
+
   if (!template) {
     return (
-      <aside className="builder-panel">
+      <aside className={panelClass}>
         <div className="builder-panel-header">Properties</div>
         <div className="props-empty">Loading...</div>
       </aside>
@@ -48,7 +50,7 @@ export function PropertyPanel() {
   }
 
   return (
-    <aside className="builder-panel">
+    <aside className={panelClass}>
       <div className="builder-panel-header">Properties</div>
       <div className="builder-panel-body">
         {/* Template settings when no block selected */}

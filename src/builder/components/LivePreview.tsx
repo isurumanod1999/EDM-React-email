@@ -14,13 +14,14 @@ export function LivePreview() {
   const selectedBlockId = useBuilderStore((s) => s.selectedBlockId);
   const selectedNodePath = useBuilderStore((s) => s.selectedNodePath);
 
-  // Editable preview: nodes carry data-node-path so clicks can map to AST nodes.
-  const { html, loading, error } = useTemplatePreview(template, 400, true);
+  const { html, loading, isPending, isStale, error, retry } = useTemplatePreview(
+    template,
+    400,
+    true
+  );
 
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
-  // Push the current selection into the iframe so the matching element is
-  // outlined. Re-run when selection changes or the iframe (re)loads.
   const pushHighlight = useCallback(() => {
     iframeRef.current?.contentWindow?.postMessage(
       {
@@ -33,7 +34,6 @@ export function LivePreview() {
     );
   }, [selectedBlockId, selectedNodePath]);
 
-  // Receive clicks from inside the preview iframe.
   useEffect(() => {
     function onMessage(e: MessageEvent) {
       const data = e.data as
@@ -44,7 +44,6 @@ export function LivePreview() {
       if (data.type === 'select' && data.blockId) {
         selectNode(data.blockId, data.nodePath ?? null);
       } else if (data.type === 'ready') {
-        // The iframe reloaded (srcDoc changed) — re-apply the active outline.
         pushHighlight();
       }
     }
@@ -53,7 +52,6 @@ export function LivePreview() {
     return () => window.removeEventListener('message', onMessage);
   }, [selectNode, pushHighlight]);
 
-  // Re-apply highlight whenever the selection or rendered html changes.
   useEffect(() => {
     pushHighlight();
   }, [pushHighlight, html]);
@@ -64,13 +62,17 @@ export function LivePreview() {
   const selectedBlock = template?.blocks.find((b) => b.id === selectedBlockId);
   const isFigmaBlock = selectedBlock?.componentId === FIGMA_BLOCK_ID;
   const hasBlocks = (template?.blocks.length ?? 0) > 0;
+  const showInitialLoad = (loading || isPending) && !html;
 
   return (
     <div className="builder-preview-section">
       <div className="builder-preview-toolbar">
         <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-          Live Preview {loading && '· Updating...'}
-          {hasBlocks && (
+          Live Preview
+          {isStale && (
+            <span className="builder-preview-stale-label">· Updating…</span>
+          )}
+          {hasBlocks && !isStale && (
             <span style={{ marginLeft: 8, color: 'var(--accent)', fontWeight: 500 }}>
               {isFigmaBlock
                 ? '· Click an element to customize'
@@ -97,23 +99,46 @@ export function LivePreview() {
       </div>
 
       <div className="builder-preview-frame-wrap">
-        {!template || template.blocks.length === 0 ? (
+        {!hasBlocks ? (
           <div className="canvas-empty" style={{ maxWidth: 400 }}>
             Add components to see a live preview
           </div>
-        ) : error ? (
-          <div className="error-state">{error}</div>
         ) : (
-          <div
-            className="builder-preview-frame"
-            style={{ width: frameWidth, maxWidth }}
-          >
-            <iframe
-              ref={iframeRef}
-              srcDoc={html}
-              title="Email Preview"
-              onLoad={pushHighlight}
-            />
+          <div className="builder-preview-stage">
+            {error ? (
+              <div className="builder-preview-error-banner" role="alert">
+                <span>{error}</span>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={retry}>
+                  Retry render
+                </button>
+              </div>
+            ) : null}
+
+            <div
+              className={`builder-preview-frame${isStale ? ' is-stale' : ''}`}
+              style={{ width: frameWidth, maxWidth }}
+            >
+              {showInitialLoad ? (
+                <div className="builder-preview-placeholder" aria-busy="true">
+                  <span className="builder-preview-spinner" aria-hidden="true" />
+                  <span>Rendering preview…</span>
+                </div>
+              ) : html ? (
+                <>
+                  <iframe
+                    ref={iframeRef}
+                    srcDoc={html}
+                    title="Email Preview"
+                    onLoad={pushHighlight}
+                  />
+                  {isStale ? (
+                    <div className="builder-preview-loading-overlay" aria-busy="true">
+                      <span className="builder-preview-spinner" aria-hidden="true" />
+                    </div>
+                  ) : null}
+                </>
+              ) : null}
+            </div>
           </div>
         )}
       </div>
