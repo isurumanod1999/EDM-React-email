@@ -12,6 +12,7 @@ import type { ParsedFigmaNode } from '@/lib/figma/parseFigmaNode';
 import { DynamicEmailTemplate } from '@/lib/render/DynamicEmailTemplate';
 import { generateId } from '@/lib/utils/id';
 import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
+import { errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
@@ -179,6 +180,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Figma build-email error:', error);
     const message = error instanceof Error ? error.message : 'React Email build failed';
-    return NextResponse.json({ error: message }, { status: 400 });
+    return errorResponse(400, 'figma_build_failed', message);
   }
 }

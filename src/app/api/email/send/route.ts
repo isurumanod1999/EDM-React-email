@@ -5,6 +5,7 @@ import { sendTestRequestSchema } from '@/lib/schema/validators';
 import { DynamicEmailTemplate } from '@/lib/render/DynamicEmailTemplate';
 import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
 import { getTemplate } from '@/lib/templates/fileStorage';
+import { handleRouteError, notFound, errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,12 +42,10 @@ export async function POST(request: Request) {
 
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      return NextResponse.json(
-        {
-          error:
-            'RESEND_API_KEY is not set. Add it to .env.local (get a key at https://resend.com/api-keys) and restart the dev server.',
-        },
-        { status: 400 }
+      return errorResponse(
+        400,
+        'resend_not_configured',
+        'RESEND_API_KEY is not set. Add it to .env.local (get a key at https://resend.com/api-keys) and restart the dev server.'
       );
     }
 
@@ -58,7 +57,7 @@ export async function POST(request: Request) {
     if ((!blocks || blocks.length === 0) && parsed.templateId) {
       const saved = await getTemplate(parsed.templateId);
       if (!saved) {
-        return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+        return notFound('Template not found');
       }
       meta = saved.meta;
       blocks = saved.blocks;
@@ -66,9 +65,10 @@ export async function POST(request: Request) {
     }
 
     if (!blocks || blocks.length === 0) {
-      return NextResponse.json(
-        { error: 'Add at least one component to the canvas before sending.' },
-        { status: 400 }
+      return errorResponse(
+        400,
+        'empty_canvas',
+        'Add at least one component to the canvas before sending.'
       );
     }
 
@@ -90,16 +90,16 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message || 'Resend rejected the request.' },
-        { status: 400 }
-      );
+      return errorResponse(400, 'send_rejected', error.message || 'Resend rejected the request.');
     }
 
     return NextResponse.json({ id: data?.id, to: parsed.to, from, subject });
   } catch (error) {
     console.error('Error sending test email:', error);
-    const message = error instanceof Error ? error.message : 'Failed to send email';
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleRouteError(error, {
+      status: 400,
+      code: 'send_failed',
+      message: 'Failed to send email',
+    });
   }
 }

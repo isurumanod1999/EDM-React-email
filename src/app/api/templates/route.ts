@@ -1,51 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { emailTemplateDocumentSchema } from '@/lib/schema/validators';
-import { createEmptyTemplate } from '@/lib/templates/factory';
-import {
-  createTemplate,
-  listTemplates,
-} from '@/lib/templates/fileStorage';
+import { getTemplateService } from '@/lib/templates/service';
+import { handleRouteError } from '@/lib/api/response';
+import { getCorrelationId } from '@/lib/observability/correlation';
+import { logger } from '@/lib/observability/logger';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const correlationId = getCorrelationId(request);
   try {
-    const templates = await listTemplates();
+    const templates = await getTemplateService().list();
     return NextResponse.json({ templates });
   } catch (error) {
-    console.error('Error listing templates:', error);
-    return NextResponse.json({ error: 'Failed to list templates' }, { status: 500 });
+    logger.error('templates.list failed', { correlationId, error: String(error) });
+    return handleRouteError(error, {
+      status: 500,
+      code: 'internal_error',
+      message: 'Failed to list templates',
+      correlationId,
+    });
   }
 }
 
 export async function POST(request: NextRequest) {
+  const correlationId = getCorrelationId(request);
   try {
     const body = await request.json();
-
-    if (body.useDefaults === true || !body.id) {
-      const template = createEmptyTemplate(
-        body.name ?? 'Untitled Template',
-        body.category ?? 'newsletter'
-      );
-
-      if (body.description) {
-        template.description = body.description;
-      }
-
-      if (Array.isArray(body.blocks)) {
-        template.blocks = body.blocks;
-      }
-
-      const saved = await createTemplate(template);
-      return NextResponse.json({ template: saved }, { status: 201 });
-    }
-
-    const validated = emailTemplateDocumentSchema.parse(body);
-    const saved = await createTemplate(validated);
+    const saved = await getTemplateService().create(body);
     return NextResponse.json({ template: saved }, { status: 201 });
   } catch (error) {
-    console.error('Error creating template:', error);
-    const message = error instanceof Error ? error.message : 'Failed to create template';
-    return NextResponse.json({ error: message }, { status: 400 });
+    logger.error('templates.create failed', { correlationId, error: String(error) });
+    return handleRouteError(error, {
+      status: 400,
+      code: 'bad_request',
+      message: 'Failed to create template',
+      correlationId,
+    });
   }
 }

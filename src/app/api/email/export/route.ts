@@ -5,6 +5,7 @@ import { DynamicEmailTemplate } from '@/lib/render/DynamicEmailTemplate';
 import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
 import { getTemplate } from '@/lib/templates/fileStorage';
 import { buildEmailExport } from '@/lib/export';
+import { handleRouteError, notFound, errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
     if ((!blocks || blocks.length === 0) && parsed.templateId) {
       const saved = await getTemplate(parsed.templateId);
       if (!saved) {
-        return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+        return notFound('Template not found');
       }
       templateName = saved.name;
       meta = saved.meta;
@@ -29,9 +30,10 @@ export async function POST(request: Request) {
     }
 
     if (!blocks || blocks.length === 0) {
-      return NextResponse.json(
-        { error: 'Add at least one component to the canvas before exporting.' },
-        { status: 400 }
+      return errorResponse(
+        400,
+        'empty_canvas',
+        'Add at least one component to the canvas before exporting.'
       );
     }
 
@@ -55,7 +57,10 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Error exporting email:', error);
-    const message = error instanceof Error ? error.message : 'Failed to export email';
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleRouteError(error, {
+      status: 400,
+      code: 'export_failed',
+      message: 'Failed to export email',
+    });
   }
 }

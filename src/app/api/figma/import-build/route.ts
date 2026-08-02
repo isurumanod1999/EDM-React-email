@@ -7,6 +7,7 @@ import { buildFrameImageTree } from '@/lib/figma/frameImageBlock';
 import { resolveForceImageIds } from '@/lib/figma/resolveForceImageIds';
 import { attachMissingForcedExports } from '@/lib/figma/attachMissingForcedExports';
 import { downloadForcedExportToUploads } from '@/lib/figma/importFromFigma';
+import { errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -124,7 +125,11 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Figma import-build error:', error);
     const message = error instanceof Error ? error.message : 'Figma import/build failed';
-    const status = message.includes('FIGMA_ACCESS_TOKEN') ? 503 : 400;
-    return NextResponse.json({ error: message }, { status });
+    const notConfigured = message.includes('FIGMA_ACCESS_TOKEN');
+    return errorResponse(
+      notConfigured ? 503 : 400,
+      notConfigured ? 'figma_not_configured' : 'figma_import_failed',
+      message
+    );
   }
 }

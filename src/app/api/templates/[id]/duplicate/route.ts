@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { duplicateTemplate } from '@/lib/templates/fileStorage';
+import { getTemplateService } from '@/lib/templates/service';
+import { notFound } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,10 +10,10 @@ interface RouteParams {
 
 export async function POST(_request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
-  const duplicate = await duplicateTemplate(id);
+  const duplicate = await getTemplateService().duplicate(id);
 
   if (!duplicate) {
-    return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+    return notFound('Template not found');
   }
 
   return NextResponse.json({ template: duplicate }, { status: 201 });

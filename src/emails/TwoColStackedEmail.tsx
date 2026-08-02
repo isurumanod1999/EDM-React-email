@@ -19,7 +19,7 @@ export const TwoColStackedEmail: React.FC = () => {
   return (
     <Html>
       <EmailResponsiveHead />
-      <Preview>Explore Nissan's Range - From AUD 89,900</Preview>
+      <Preview>Explore Nissan&apos;s Range - From AUD 89,900</Preview>
       <Body style={{ backgroundColor: '#f4f4f4', margin: 0, padding: '20px 0' }}>
         <Container style={{ maxWidth: '600px', margin: '0 auto' }}>
           

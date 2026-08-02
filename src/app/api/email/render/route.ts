@@ -4,6 +4,7 @@ import { renderTemplateRequestSchema } from '@/lib/schema/validators';
 import { DynamicEmailTemplate } from '@/lib/render/DynamicEmailTemplate';
 import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
 import { getTemplate } from '@/lib/templates/fileStorage';
+import { handleRouteError, notFound } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -104,7 +105,7 @@ export async function POST(request: Request) {
     if (body.templateId && typeof body.templateId === 'string') {
       const template = await getTemplate(body.templateId);
       if (!template) {
-        return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+        return notFound('Template not found');
       }
 
       const html = await render(
@@ -138,7 +139,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ html });
   } catch (error) {
     console.error('Error rendering dynamic email:', error);
-    const message = error instanceof Error ? error.message : 'Failed to render email';
-    return NextResponse.json({ error: message }, { status: 400 });
+    return handleRouteError(error, {
+      status: 400,
+      code: 'render_failed',
+      message: 'Failed to render email',
+    });
   }
 }

@@ -4,6 +4,7 @@ import { analyzeComponent, toTemplateBlocks } from '@/lib/ai/analyzeComponent';
 import { analyzeRequestSchema } from '@/lib/ai/schemas/analyzeResult';
 import { DynamicEmailTemplate } from '@/lib/render/DynamicEmailTemplate';
 import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
+import { errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,10 +38,12 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('AI analyze error:', error);
     const message = error instanceof Error ? error.message : 'Analysis failed';
-    const status =
-      message.includes('Ollama') || message.includes('GEMINI') || message.includes('quota')
-        ? 503
-        : 400;
-    return NextResponse.json({ error: message }, { status });
+    const providerDown =
+      message.includes('Ollama') || message.includes('GEMINI') || message.includes('quota');
+    return errorResponse(
+      providerDown ? 503 : 400,
+      providerDown ? 'ai_unavailable' : 'ai_failed',
+      message
+    );
   }
 }

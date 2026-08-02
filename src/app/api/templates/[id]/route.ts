@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { emailTemplateDocumentSchema } from '@/lib/schema/validators';
-import {
-  deleteTemplate,
-  getTemplate,
-  updateTemplate,
-} from '@/lib/templates/fileStorage';
+import { getTemplateService } from '@/lib/templates/service';
+import { handleRouteError, notFound } from '@/lib/api/response';
+import { getCorrelationId } from '@/lib/observability/correlation';
+import { logger } from '@/lib/observability/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,50 +10,48 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  const correlationId = getCorrelationId(request);
   const { id } = await params;
-  const template = await getTemplate(id);
+  const template = await getTemplateService().get(id);
 
   if (!template) {
-    return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+    return notFound('Template not found', correlationId);
   }
 
   return NextResponse.json({ template });
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  const correlationId = getCorrelationId(request);
   try {
     const { id } = await params;
     const body = await request.json();
-    const existing = await getTemplate(id);
+    const updated = await getTemplateService().update(id, body);
 
-    if (!existing) {
-      return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+    if (!updated) {
+      return notFound('Template not found', correlationId);
     }
 
-    const merged = emailTemplateDocumentSchema.parse({
-      ...existing,
-      ...body,
-      id: existing.id,
-      createdAt: existing.createdAt,
-      updatedAt: new Date().toISOString(),
-    });
-
-    const updated = await updateTemplate(id, merged);
     return NextResponse.json({ template: updated });
   } catch (error) {
-    console.error('Error updating template:', error);
-    const message = error instanceof Error ? error.message : 'Failed to update template';
-    return NextResponse.json({ error: message }, { status: 400 });
+    logger.error('templates.update failed', { correlationId, error: String(error) });
+    return handleRouteError(error, {
+      status: 400,
+      code: 'bad_request',
+      message: 'Failed to update template',
+      correlationId,
+    });
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  const correlationId = getCorrelationId(request);
   const { id } = await params;
-  const deleted = await deleteTemplate(id);
+  const deleted = await getTemplateService().remove(id);
 
   if (!deleted) {
-    return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+    return notFound('Template not found', correlationId);
   }
 
   return NextResponse.json({ success: true });

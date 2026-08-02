@@ -19,7 +19,7 @@ export const TwoColDualCtaEmail: React.FC = () => {
   return (
     <Html>
       <EmailResponsiveHead />
-      <Preview>Discover Nissan's Latest Models - Request a Quote Today!</Preview>
+      <Preview>Discover Nissan&apos;s Latest Models - Request a Quote Today!</Preview>
       <Body style={{ backgroundColor: '#f4f4f4', margin: 0, padding: '20px 0' }}>
         <Container style={{ maxWidth: '600px', margin: '0 auto' }}>
           
