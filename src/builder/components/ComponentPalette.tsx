@@ -26,8 +26,17 @@ function PaletteItem({ entry }: { entry: ComponentRegistryEntry }) {
       className="palette-item"
       {...listeners}
       {...attributes}
+      tabIndex={0}
+      role="button"
+      aria-label={`Add ${entry.name} to canvas`}
       onDoubleClick={() => addBlock(entry.id)}
-      title="Drag to canvas or double-click to add"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addBlock(entry.id);
+        }
+      }}
+      title="Drag to canvas, double-click, or press Enter to add"
     >
       <span className="palette-item-name">{entry.name}</span>
       <span className="palette-item-desc">{entry.description}</span>

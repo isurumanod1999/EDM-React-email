@@ -47,9 +47,21 @@ Last updated: 2026-08-02
 | #10 Preview loading | Spinner, stale overlay, retry in `LivePreview` |
 | #5 Gallery feedback | Error banner + retry, action toasts, loading states |
 
-### Week 2 (pending)
+## Builder Polish — Week 2 ✅
 
-See [builder-polish.md](../_bmad-output/planning-artifacts/builder-polish.md) — import menu, Figma lint/banner, import progress, block delete confirm, modal a11y, etc.
+| Story | Deliverable |
+|-------|-------------|
+| #9 Import menu | `ImportMenu.tsx` — grouped Import dropdown; quick Build when Figma session loaded |
+| #3 Block delete confirm | `BlockItem.tsx` — confirm before remove |
+| #7 Figma lint + Ollama | `FigmaBuildModal` deps fixed; `OllamaStatusBanner` in AI/Figma flows |
+| #8 Import progress | `ImportProgressBanner.tsx` — spinners, no dismiss while busy |
+| #13 Modal a11y | `useModalA11y.ts` — Escape, focus trap, aria-labels on modals |
+| #12 Send test polish | `SendTestModal` — `NEXT_PUBLIC_TEST_EMAIL_DEFAULT`, email validation |
+| #6 Gallery search/sort | Filter by name, sort by updated/name |
+| #4 Name editing | Toolbar-only rename; removed duplicate field from PropertyPanel |
+| #14 Keyboard/a11y | Block/palette aria-labels, Enter-to-add, focus rings |
+
+**Builder polish backlog is complete.** Optional next: Epics F1–F4 (only if requested).
 
 ---
 
@@ -64,4 +76,4 @@ See [builder-polish.md](../_bmad-output/planning-artifacts/builder-polish.md) �
 
 ## Git reference
 
-Branch `bmad-1` contains Epic 1–2 commits. Builder polish Week 1 may be uncommitted locally — run `git status` before handoff.
+Branch `bmad-1` contains Epic 1–2 commits. Builder polish (Weeks 1–2) may be uncommitted locally — run `git status` before handoff.

@@ -60,9 +60,23 @@ See git history / prior handoff entries for file map.
 
 Details: [builder-polish.md](./builder-polish.md) · [docs/PHASE-HISTORY.md](../../docs/PHASE-HISTORY.md)
 
-### Builder Polish — Week 2 — 🚧 NEXT
+### Builder Polish — Week 2 — ✅ COMPLETE (Stories #3, #6, #7, #8, #9, #12, #13)
 
-See [builder-polish.md §5 Week 2](./builder-polish.md#5-recommended-sequence-12-weeks-max-impact): import menu (#9), block delete confirm (#3), Figma lint + Ollama banner (#7), import progress (#8), modal a11y (#13), send test polish (#12).
+| Story | Deliverable |
+|-------|-------------|
+| #9 Import menu | `ImportMenu.tsx` — Import dropdown; quick Build when Figma session loaded |
+| #3 Block delete confirm | `BlockItem.tsx` — confirm() before remove |
+| #7 Lint + Ollama banner | `FigmaBuildModal.tsx` hook fix; `OllamaStatusBanner` in build + screenshot flows |
+| #8 Import progress | `ImportProgressBanner.tsx`; spinners + no-dismiss-while-busy in all import modals |
+| #13 Modal a11y | `useModalA11y.ts` applied to all `*Modal.tsx` |
+| #12 Send test polish | `SendTestModal.tsx` — `NEXT_PUBLIC_TEST_EMAIL_DEFAULT`, email validation |
+| #6 Gallery search/sort | `BuilderGallery.tsx` — filter by name, sort by updated/name |
+| #4 Name editing | Toolbar-only rename; removed duplicate field from `PropertyPanel` |
+| #14 Keyboard/a11y | Block/palette `aria-label`, Enter-to-add, focus rings |
+
+Details: [builder-polish.md](./builder-polish.md) · [docs/PHASE-HISTORY.md](../../docs/PHASE-HISTORY.md)
+
+**Builder polish backlog: ✅ COMPLETE** (all 14 stories done or N/A for optional category chips).
 
 ### Deferred — DO NOT build unless asked
 
@@ -114,21 +128,14 @@ Environment note: **Windows / PowerShell**; Python is `py -3`.
 - **Epic F3** — Background worker + `JobQueue`
 - **Epic F4** — Authentication + flip `AUTH_MODE=enforced`
 
-### Next active phase: Builder Polish Week 2
+### Next active phase
 
-Week 1 is **complete**. Continue with Week 2 from **[builder-polish.md](./builder-polish.md)**:
+**Builder polish is complete.** Next work is user-directed:
 
-1. **#9 Import menu grouping** — toolbar Import dropdown
-2. **#3 Block delete confirm**
-3. **#7 FigmaBuildModal lint + wire `OllamaStatusBanner`**
-4. **#8 Long-running import progress UX**
-5. **#13 Modal accessibility**
-6. **#12 Send test modal polish**
-7. **#6 Gallery search/sort** (optional if time)
+- **Epic F1–F4** (Postgres, S3, worker, auth) — only if explicitly requested
+- Optional hardening: refactor figma/export fs behind `AssetStore`; nested error envelope; Next.js upgrade per `docs/maintenance-upgrades.md`
 
 User-facing docs: [docs/BUILDER.md](../../docs/BUILDER.md) · [docs/README.md](../../docs/README.md)
-
-Other optional hardening (not in epics): refactor figma/export fs usage behind `AssetStore`; migrate error envelope to nested shape + update client; upgrade Next.js per `docs/maintenance-upgrades.md`.
 
 ---
 

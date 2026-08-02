@@ -7,6 +7,7 @@ import { AiImportModal } from '@/builder/components/AiImportModal';
 import { FigmaBatchModal } from '@/builder/components/FigmaBatchModal';
 import { FigmaBuildModal } from '@/builder/components/FigmaBuildModal';
 import { FigmaFetchModal } from '@/builder/components/FigmaFetchModal';
+import { ImportMenu } from '@/builder/components/ImportMenu';
 import { SendTestModal } from '@/builder/components/SendTestModal';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { pushToast } from '@/builder/store/toastStore';
@@ -130,48 +131,14 @@ export function BuilderToolbar() {
           />
           Advanced
         </label>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm btn-figma"
-          onClick={() => setFigmaFetchOpen(true)}
-          title="Fetch design details from Figma via API"
-        >
-          Fetch from Figma
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm btn-figma"
-          onClick={() => setFigmaBuildOpen(true)}
-          disabled={!figmaSession}
-          title={
-            figmaSession
-              ? `Build components from "${figmaSession.nodeName}"`
-              : 'Fetch a Figma frame first'
-          }
-        >
-          Build from Figma
-          {figmaSession && (
-            <span className="figma-session-badge" title={figmaSession.nodeName}>
-              ●
-            </span>
-          )}
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm btn-figma"
-          onClick={() => setFigmaBatchOpen(true)}
-          title="Import several Figma components at once (parallel)"
-        >
-          Batch Import
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm"
-          onClick={() => setAiImportOpen(true)}
-          title="Upload screenshots to generate email components"
-        >
-          Screenshot Upload
-        </button>
+        <ImportMenu
+          hasFigmaSession={!!figmaSession}
+          sessionNodeName={figmaSession?.nodeName}
+          onFetch={() => setFigmaFetchOpen(true)}
+          onBuild={() => setFigmaBuildOpen(true)}
+          onBatch={() => setFigmaBatchOpen(true)}
+          onScreenshot={() => setAiImportOpen(true)}
+        />
         <button
           type="button"
           className="btn btn-secondary btn-sm"

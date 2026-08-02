@@ -30,7 +30,8 @@ export function BlockCanvas() {
       </div>
       <div
         ref={setNodeRef}
-        className="builder-panel-body"
+        className="builder-panel-body builder-canvas-drop"
+        aria-label="Email block canvas. Drag components here or use Enter on palette items to add blocks."
         style={{
           outline: isOver ? '2px dashed var(--accent)' : undefined,
           outlineOffset: -2,

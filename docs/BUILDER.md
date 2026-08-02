@@ -20,6 +20,8 @@ The tool is intended for **internal developer-team use**. Authentication is not 
 | **Duplicate** | Copies the template and opens the new copy |
 | **Delete** | Confirms, then removes the template from disk |
 
+**Search & sort:** filter templates by name; sort by last updated or name.
+
 **Feedback:** load failures show a retry banner; duplicate/delete/create use toast notifications and disable buttons while in progress.
 
 ---
@@ -27,7 +29,7 @@ The tool is intended for **internal developer-team use**. Authentication is not 
 ## Editor layout
 
 ```
-Toolbar     Save · Export · Figma/AI · Send · Duplicate
+Toolbar     Save · Export · Import ▾ · Send · Duplicate
 ──────────────────────────────────────────────────────
 Components  │  Canvas (block list)     │  Properties
  (palette)  │  Live preview (iframe)   │  (meta + props)
@@ -47,12 +49,14 @@ Bottom nav: **Components | Canvas | Properties**. Palette and properties open as
 
 ## Core workflow
 
-1. **Add components** — drag from the palette onto the canvas, or double-click to insert.
+1. **Add components** — drag from the palette, double-click, or focus a palette item and press **Enter**.
 2. **Edit properties** — select a block; use the property panel on the right (or Properties drawer on mobile).
-3. **Preview** — live preview updates automatically (debounced). Stale preview dims with a spinner overlay while re-rendering.
-4. **Save** — manual **Save** or auto-save every **45 seconds** when dirty. Toasts confirm save/auto-save.
-5. **Export** — **Export** downloads a ZIP with HTML + bundled images.
-6. **Send test** — requires `RESEND_API_KEY` in `.env.local`.
+3. **Rename template** — edit the name in the **toolbar** (not in the property panel).
+4. **Remove blocks** — delete requires confirmation.
+5. **Preview** — live preview updates automatically (debounced). Stale preview dims with a spinner overlay while re-rendering.
+6. **Save** — manual **Save** or auto-save every **45 seconds** when dirty. Toasts confirm save/auto-save.
+7. **Export** — **Export** downloads a ZIP with HTML + bundled images.
+8. **Send test** — requires `RESEND_API_KEY`; optional default recipient via `NEXT_PUBLIC_TEST_EMAIL_DEFAULT` in `.env.local`.
 
 ### Unsaved changes
 
@@ -64,11 +68,13 @@ Bottom nav: **Components | Canvas | Properties**. Palette and properties open as
 
 ## Figma import
 
-Requires `FIGMA_ACCESS_TOKEN` in `.env.local`.
+Requires `FIGMA_ACCESS_TOKEN` in `.env.local`. Use **Import** in the toolbar:
 
 1. **Fetch from Figma** — paste desktop (and optional mobile) frame URLs.
-2. **Build from Figma** — converts the fetched frame to React Email blocks (primitives or image flattening).
+2. **Build from Figma** — converts the fetched frame to React Email blocks (also shown as a quick action when a session is loaded).
 3. **Batch Import** — import several Figma URLs in parallel.
+
+Long-running imports show progress and cannot be dismissed mid-operation. **Ollama status** is shown when AI assist is relevant.
 
 Optional local AI (Ollama): see `.env.example` and run `ollama pull llava`.
 

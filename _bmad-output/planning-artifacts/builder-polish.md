@@ -53,18 +53,18 @@ BuilderEditor
 | Area | Issue | Status |
 |---|---|---|
 | **Mobile/tablet** | At `max-width: 900px`, palette/properties hidden with no fallback | ✅ Fixed (#1) — `BuilderMobileNav` + slide-over drawers |
-| **Toolbar** | 10+ actions in one row, no overflow/menu | 🚧 Week 2 (#9 import grouping) |
+| **Toolbar** | 10+ actions in one row, no overflow/menu | ✅ Fixed (#9) — Import dropdown + quick Build when session loaded |
 | **Unsaved work** | No `beforeunload` or route-leave guard | ✅ Fixed (#2) — `useUnsavedChangesGuard` |
 | **Errors** | Export `alert()`; gallery failures silent | ✅ Fixed (#5, #11) — toasts + gallery retry banner |
 | **Loading** | Plain text; preview stale during re-render | ✅ Fixed (#10) — spinner, stale overlay, retry |
 | **Empty states** | Gallery empty state minimal | ✅ Improved (#5) — richer empty state + CTA |
-| **Destructive actions** | Block delete one-click with no confirm | 🚧 Week 2 (#3) |
-| **Modals** | No Escape/focus trap | 🚧 Week 2 (#13) |
+| **Destructive actions** | Block delete one-click with no confirm | ✅ Fixed (#3) — confirm before remove |
+| **Modals** | No Escape/focus trap | ✅ Fixed (#13) — `useModalA11y` on all modals |
 | **Auto-save** | Silent success | ✅ Fixed (#2) — "Auto-saved" toast |
 | **Duplicate UX** | Template name in toolbar **and** property panel | ⏸ Defer (#4) |
-| **AI status** | `OllamaStatusBanner` never imported | 🚧 Week 2 (#7) |
-| **Send test** | Hardcoded default recipient | 🚧 Week 2 (#12) |
-| **a11y** | Missing `aria-label`, focus management | 🚧 Week 2 (#13, #14) |
+| **AI status** | `OllamaStatusBanner` never imported | ✅ Fixed (#7) — wired in screenshot + Figma build |
+| **Send test** | Hardcoded default recipient | ✅ Fixed (#12) — env default + validation |
+| **a11y** | Missing `aria-label`, focus management | ✅ Fixed (#13); #14 keyboard nav deferred |
 
 ---
 
@@ -72,7 +72,6 @@ BuilderEditor
 
 | File | Issue |
 |---|---|
-| `src/builder/components/FigmaBuildModal.tsx:105` | **ESLint warning** — `useEffect` missing dependency `figmaSession` (`react-hooks/exhaustive-deps`) |
 | `src/builder/components/customizer/RichTextEditor.tsx:39` | Intentional `eslint-disable` for mount-only seed effect |
 | `ImageUploadField.tsx`, `FigmaReviewPanel.tsx` | `@next/next/no-img-element` suppressions (expected for uploads/previews) |
 
@@ -102,7 +101,7 @@ BuilderEditor
   - Navigating to `/builder` shows confirm if dirty
   - Auto-save success shows brief non-blocking feedback
 
-#### 3. Safe block deletion with confirm
+#### 3. Safe block deletion with confirm ✅
 
 - **User value:** Prevent accidental canvas data loss.
 - **Files:** `BlockItem.tsx`, optionally shared `ConfirmDialog.tsx`
@@ -111,7 +110,7 @@ BuilderEditor
   - Delete block requires confirmation (or undo snackbar within 5s)
   - Matches gallery delete pattern
 
-#### 4. Consolidate template name editing
+#### 4. Consolidate template name editing ✅
 
 - **User value:** One obvious place to rename templates.
 - **Files:** `BuilderToolbar.tsx`, `PropertyPanel.tsx`
@@ -132,7 +131,7 @@ BuilderEditor
   - Successful duplicate navigates or shows toast
   - Loading state disables action buttons
 
-#### 6. Gallery search, sort, and richer empty state
+#### 6. Gallery search, sort, and richer empty state ✅
 
 - **User value:** Find templates quickly as the list grows.
 - **Files:** `BuilderGallery.tsx`, `builder.css`
@@ -144,7 +143,7 @@ BuilderEditor
 
 ### Figma / AI Import
 
-#### 7. Fix FigmaBuildModal hook deps + wire AI status banner
+#### 7. Fix FigmaBuildModal hook deps + wire AI status banner ✅
 
 - **User value:** Stable image-node seeding; users know if AI/Ollama is down before import.
 - **Files:** `FigmaBuildModal.tsx`, `AiImportModal.tsx`, `FigmaFetchModal.tsx`, `figma/OllamaStatusBanner.tsx`
@@ -154,7 +153,7 @@ BuilderEditor
   - `OllamaStatusBanner` shown in Screenshot Upload and Figma build flows
   - Image checklist re-seeds correctly when session changes
 
-#### 8. Long-running import progress UX
+#### 8. Long-running import progress UX ✅
 
 - **User value:** Clear feedback during 30–60s Figma builds and batch imports.
 - **Files:** `FigmaBuildModal.tsx`, `FigmaBatchModal.tsx`, `FigmaFetchModal.tsx`, `AiImportModal.tsx`, `builder.css`
@@ -164,7 +163,7 @@ BuilderEditor
   - Modal cannot dismiss mid-operation (batch already blocks close)
   - Timeout/server errors show actionable message
 
-#### 9. Group toolbar import actions
+#### 9. Group toolbar import actions ✅
 
 - **User value:** Less cluttered toolbar; clearer import workflow.
 - **Files:** `BuilderToolbar.tsx`, `builder.css`, optionally `ImportMenu.tsx`
@@ -195,7 +194,7 @@ BuilderEditor
   - Export errors/success use toast or toolbar banner, not `alert()`
   - Save/export/send share same feedback pattern
 
-#### 12. Send test modal polish
+#### 12. Send test modal polish ✅
 
 - **User value:** Safer, clearer test sends without hardcoded email.
 - **Files:** `SendTestModal.tsx`, `builder.css`
@@ -207,7 +206,7 @@ BuilderEditor
 
 ### Polish / Accessibility
 
-#### 13. Modal accessibility (Escape, focus trap)
+#### 13. Modal accessibility (Escape, focus trap) ✅
 
 - **User value:** Keyboard and screen-reader friendly modals.
 - **Files:** All `*Modal.tsx` in `components/`, shared `useModalA11y.ts`
@@ -217,7 +216,7 @@ BuilderEditor
   - Focus trapped inside dialog; restored on close
   - Close buttons have `aria-label`
 
-#### 14. Canvas and palette keyboard / a11y labels
+#### 14. Canvas and palette keyboard / a11y labels ✅
 
 - **User value:** Basic keyboard access for block actions.
 - **Files:** `BlockItem.tsx`, `ComponentPalette.tsx`, `BlockCanvas.tsx`
@@ -241,19 +240,23 @@ BuilderEditor
 | 4 | **#10 Preview loading polish** | ✅ Done |
 | 5 | **#5 Gallery error handling** | ✅ Done |
 
-### Week 2 — Workflow polish and import UX 🚧 NEXT
+### Week 2 — Workflow polish and import UX ✅ COMPLETE
 
-| Priority | Story | Why |
+| Priority | Story | Status |
 |---|---|---|
-| 6 | **#9 Import menu grouping** | Toolbar relief; pairs with mobile work |
-| 7 | **#3 Block delete confirm** | Quick safety win |
-| 8 | **#7 FigmaBuildModal lint + Ollama banner** | Fix known lint; reduce import confusion |
-| 9 | **#8 Import progress UX** | Figma/AI flows are slow — users need patience cues |
-| 10 | **#13 Modal a11y** | Solid baseline before adding more modals |
-| 11 | **#12 Send test polish** | Small, user-facing |
-| 12 | **#6 Gallery search/sort** | Nice-to-have if time remains |
+| 6 | **#9 Import menu grouping** | ✅ Done |
+| 7 | **#3 Block delete confirm** | ✅ Done |
+| 8 | **#7 FigmaBuildModal lint + Ollama banner** | ✅ Done |
+| 9 | **#8 Import progress UX** | ✅ Done |
+| 10 | **#13 Modal a11y** | ✅ Done |
+| 11 | **#12 Send test polish** | ✅ Done |
+| 12 | **#6 Gallery search/sort** | ✅ Done |
 
-**Defer unless extra capacity:** #4 (name dedup), #14 (full keyboard nav) — valuable but lower impact than mobile + feedback.
+**Defer unless extra capacity:** ~~#4 (name dedup), #14 (full keyboard nav)~~ — ✅ Done.
+
+### Optional follow-up (Week 3+)
+
+Builder polish backlog is **complete**. Next phases: deferred infrastructure (F1–F4) only if requested.
 
 ---
 

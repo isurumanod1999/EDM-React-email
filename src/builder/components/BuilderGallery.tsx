@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { TemplateSummary } from '@/lib/schema/template';
@@ -20,6 +20,7 @@ async function readApiError(res: Response, fallback: string): Promise<string> {
 }
 
 type CardAction = 'duplicate' | 'delete';
+type SortOption = 'updated-desc' | 'updated-asc' | 'name-asc' | 'name-desc';
 
 export function BuilderGallery() {
   const router = useRouter();
@@ -27,9 +28,38 @@ export function BuilderGallery() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortOption>('updated-desc');
   const [busyAction, setBusyAction] = useState<{ id: string; action: CardAction } | null>(
     null
   );
+
+  const filteredTemplates = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    let list = q
+      ? templates.filter(
+          (t) =>
+            t.name.toLowerCase().includes(q) ||
+            (t.description?.toLowerCase().includes(q) ?? false)
+        )
+      : [...templates];
+
+    list.sort((a, b) => {
+      switch (sortBy) {
+        case 'updated-asc':
+          return new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        case 'updated-desc':
+        default:
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+      }
+    });
+
+    return list;
+  }, [templates, searchQuery, sortBy]);
 
   const fetchTemplates = async () => {
     setLoading(true);
@@ -165,8 +195,39 @@ export function BuilderGallery() {
       ) : null}
 
       {!loading && !loadError && templates.length > 0 ? (
-        <div className="gallery-grid">
-          {templates.map((template) => {
+        <>
+          <div className="gallery-controls">
+            <input
+              type="search"
+              className="gallery-search"
+              placeholder="Search templates…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search templates"
+            />
+            <select
+              className="gallery-sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              aria-label="Sort templates"
+            >
+              <option value="updated-desc">Recently updated</option>
+              <option value="updated-asc">Oldest updated</option>
+              <option value="name-asc">Name A–Z</option>
+              <option value="name-desc">Name Z–A</option>
+            </select>
+          </div>
+
+          {filteredTemplates.length === 0 ? (
+            <div className="gallery-empty gallery-empty-filtered">
+              <p className="gallery-empty-title">No matches</p>
+              <p className="gallery-empty-text">
+                No templates match &ldquo;{searchQuery.trim()}&rdquo;. Try a different search.
+              </p>
+            </div>
+          ) : (
+            <div className="gallery-grid">
+              {filteredTemplates.map((template) => {
             const busy = isCardBusy(template.id);
             const duplicating = busy && busyAction?.action === 'duplicate';
             const deleting = busy && busyAction?.action === 'delete';
@@ -214,7 +275,9 @@ export function BuilderGallery() {
               </article>
             );
           })}
-        </div>
+            </div>
+          )}
+        </>
       ) : null}
 
       <BuilderToastContainer />

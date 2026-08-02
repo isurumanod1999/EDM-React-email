@@ -18,6 +18,12 @@ const booleanFromEnv = (defaultValue: boolean) =>
       return !['false', '0', 'no', 'off'].includes(value.toLowerCase());
     });
 
+/** Blank env vars (`KEY=`) are treated as unset so Zod defaults apply. */
+function envOptional(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+}
+
 const configSchema = z.object({
   nodeEnv: z.enum(['development', 'test', 'production']).default('development'),
 
@@ -38,7 +44,7 @@ const configSchema = z.object({
   legacyDemosEnabled: booleanFromEnv(false),
 
   // Absolute base URL used to resolve image URLs in sent emails.
-  baseUrl: z.string().url().optional(),
+  baseUrl: z.string().url().default('http://localhost:3000'),
 
   ai: z.object({
     provider: z.enum(['ollama', 'gemini']).default('ollama'),
@@ -55,7 +61,8 @@ const configSchema = z.object({
 
   resend: z.object({
     apiKey: z.string().min(1).optional(),
-    from: z.string().min(1).default('onboarding@resend.dev'),
+    // Empty until send time; the send route falls back to onboarding@resend.dev.
+    from: z.string().default(''),
   }),
 });
 
@@ -71,7 +78,7 @@ function loadConfig(): AppConfig {
     legacyDemosEnabled:
       process.env.ENABLE_LEGACY_DEMOS ??
       (process.env.NODE_ENV === 'development' ? 'true' : 'false'),
-    baseUrl: process.env.PUBLIC_BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL,
+    baseUrl: envOptional(process.env.PUBLIC_BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL),
     ai: {
       provider: process.env.AI_PROVIDER?.toLowerCase(),
       ollamaBaseUrl: process.env.OLLAMA_BASE_URL,
@@ -80,12 +87,12 @@ function loadConfig(): AppConfig {
       geminiModel: process.env.GEMINI_MODEL,
     },
     figma: {
-      accessToken: process.env.FIGMA_ACCESS_TOKEN,
+      accessToken: envOptional(process.env.FIGMA_ACCESS_TOKEN),
       debug: process.env.FIGMA_DEBUG,
     },
     resend: {
-      apiKey: process.env.RESEND_API_KEY,
-      from: process.env.RESEND_FROM,
+      apiKey: envOptional(process.env.RESEND_API_KEY),
+      from: envOptional(process.env.RESEND_FROM),
     },
   });
 

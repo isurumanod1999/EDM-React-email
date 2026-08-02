@@ -47,7 +47,7 @@ export function FigmaConnectForm({
       </div>
 
       <div className="figma-setup-note">
-        Requires <code>FIGMA_ACCESS_TOKEN</code> in <code>.env.local</code>.{' '}
+        Requires a Figma access token in <code>.env.local</code>.{' '}
         <a
           href="https://help.figma.com/hc/en-us/articles/8085703771159"
           target="_blank"

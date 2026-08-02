@@ -1,8 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FigmaReviewPanel } from '@/builder/components/figma/FigmaReviewPanel';
+import { OllamaStatusBanner } from '@/builder/components/figma/OllamaStatusBanner';
+import { ImportProgressBanner } from '@/builder/components/ImportProgressBanner';
 import { ImportResultPanel } from '@/builder/components/ImportResultPanel';
+import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import type { AiBlock } from '@/lib/ai/schemas/analyzeResult';
 import {
@@ -35,20 +38,22 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
   const updateFigmaHint = useBuilderStore((s) => s.updateFigmaHint);
   const clearFigmaSession = useBuilderStore((s) => s.clearFigmaSession);
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   const [step, setStep] = useState<Step>('build');
   const [isBuilding, setIsBuilding] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<BuildResponse | null>(null);
   const [buildAs, setBuildAs] = useState<'design' | 'image'>('design');
 
-  // ── Mixed-mode "smart image export" (local state only — passed as DIRECT build
-  // params so nothing is persisted to the Figma session / builder store). ───────
   const [autoDetectImages, setAutoDetectImages] = useState(true);
   const [imageInstructions, setImageInstructions] = useState('');
   const [suggesting, setSuggesting] = useState(false);
   const [suggestError, setSuggestError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<ImageNodeOutlineEntry[]>([]);
   const [selectedImageIds, setSelectedImageIds] = useState<string[]>([]);
+
+  const busy = isBuilding || suggesting;
 
   const contextHintIds = useMemo(() => {
     if (!figmaSession?.desktopNode) return [] as string[];
@@ -74,7 +79,6 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
     return new Map(outline.map((n) => [n.id, n] as const));
   }, [figmaSession?.desktopNode]);
 
-  /** Layers shown in the export checklist (auto-detected + AI suggestions). */
   const imageExportChoices = useMemo(() => {
     const ids = new Set<string>([...detectedImageIds, ...selectedImageIds, ...suggestions.map((s) => s.id)]);
     return [...ids]
@@ -82,13 +86,10 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
       .filter((n): n is ImageNodeOutlineEntry => Boolean(n));
   }, [detectedImageIds, selectedImageIds, suggestions, outlineById]);
 
-  // Default the build mode to whatever was chosen in the Fetch step (if any),
-  // while still letting the user change it here before building.
   useEffect(() => {
     if (open && figmaSession?.buildAs) setBuildAs(figmaSession.buildAs);
   }, [open, figmaSession?.buildAs]);
 
-  // Seed the export checklist from heuristic detection whenever the frame loads.
   useEffect(() => {
     if (!open || !figmaSession) return;
     const badges = detectImageNodeIds(figmaSession.desktopNode);
@@ -102,7 +103,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
     setSelectedImageIds([...new Set([...badges, ...mergeAnchors, ...hints])]);
     setSuggestions([]);
     setSuggestError(null);
-  }, [open, figmaSession?.desktopNode, figmaSession?.designContext, figmaSession?.fetchedAt]);
+  }, [open, figmaSession]);
 
   const reset = useCallback(() => {
     setStep('build');
@@ -124,9 +125,6 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
     );
   }, []);
 
-  // Ask the AI classifier which nodes to rasterize, using the already-parsed
-  // frame outline + the user's free-form instruction. Best-effort: on any error
-  // the route returns 200 with an empty list and we fall back to auto-detect.
   const handleSuggest = useCallback(async () => {
     if (!figmaSession) return;
     setSuggesting(true);
@@ -161,9 +159,12 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
   }, [figmaSession, imageInstructions]);
 
   const handleClose = useCallback(() => {
+    if (busy) return;
     reset();
     onClose();
-  }, [onClose, reset]);
+  }, [busy, onClose, reset]);
+
+  useModalA11y({ open, onClose: handleClose, busy, dialogRef });
 
   const handleBuildReactEmail = async () => {
     if (!figmaSession || isBuilding) return;
@@ -207,9 +208,11 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
         data = JSON.parse(raw) as BuildResponse & { error?: string };
       } catch {
         throw new Error(
-          res.ok
-            ? 'Build returned an invalid response. Check the dev server terminal.'
-            : `Build failed (${res.status}). The server may have timed out — try fewer icon exports or re-fetch.`
+          res.status === 504 || res.status === 408
+            ? 'Build timed out — try fewer icon exports or re-fetch the frame.'
+            : res.ok
+              ? 'Build returned an invalid response. Check the dev server terminal.'
+              : `Build failed (${res.status}). The server may have timed out — try fewer icon exports or re-fetch.`
         );
       }
 
@@ -233,19 +236,27 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
     handleClose();
   };
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (busy) return;
+    if (e.target === e.currentTarget) handleClose();
+  };
+
   if (!open) return null;
 
   if (!figmaSession) {
     return (
-      <div className="import-modal-overlay" onClick={handleClose} role="presentation">
+      <div className="import-modal-overlay" onClick={handleOverlayClick} role="presentation">
         <div
+          ref={dialogRef}
           className="import-modal import-modal-figma"
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
+          aria-labelledby="figma-build-empty-title"
+          tabIndex={-1}
         >
           <div className="import-modal-header import-modal-header-figma">
-            <h2>Build from Figma</h2>
+            <h2 id="figma-build-empty-title">Build from Figma</h2>
           </div>
           <div className="import-modal-body">
             <p className="import-field-hint">
@@ -272,20 +283,15 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
   }
 
   return (
-    <div
-      className="import-modal-overlay"
-      onClick={(e) => {
-        if (isBuilding) return;
-        if (e.target === e.currentTarget) handleClose();
-      }}
-      role="presentation"
-    >
+    <div className="import-modal-overlay" onClick={handleOverlayClick} role="presentation">
       <div
+        ref={dialogRef}
         className="import-modal import-modal-figma"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="figma-build-title"
         aria-modal="true"
+        tabIndex={-1}
       >
         <div className="import-modal-header import-modal-header-figma">
           <div>
@@ -295,17 +301,27 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
               {figmaSession.nodeName} — Heading, Text, Button from Figma data
             </p>
           </div>
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={handleClose}
+            disabled={busy}
+            aria-label="Close dialog"
+          >
             ✕
           </button>
         </div>
 
         <div className="import-modal-body">
+          <OllamaStatusBanner />
+
           {isBuilding && (
-            <div className="import-modal-building" role="status" aria-live="polite">
-              Building React Email… exporting icons from Figma can take up to a minute.
-            </div>
+            <ImportProgressBanner message="Building React Email… exporting icons from Figma can take up to a minute." />
           )}
+          {suggesting && !isBuilding && (
+            <ImportProgressBanner message="Asking AI which layers to export as images…" />
+          )}
+
           {step === 'build' && (
             <>
               <FigmaReviewPanel
@@ -323,6 +339,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
                   className="import-modal-input"
                   value={buildAs}
                   onChange={(e) => setBuildAs(e.target.value as 'design' | 'image')}
+                  disabled={busy}
                 >
                   <option value="design">Design — structured HTML/CSS (editable)</option>
                   <option value="image">Image — flatten whole component to one PNG</option>
@@ -342,6 +359,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
                     <input
                       type="checkbox"
                       checked={autoDetectImages}
+                      disabled={busy}
                       onChange={(e) => {
                         const on = e.target.checked;
                         setAutoDetectImages(on);
@@ -365,6 +383,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
                     value={imageInstructions}
                     onChange={(e) => setImageInstructions(e.target.value)}
                     rows={2}
+                    disabled={busy}
                   />
 
                   <div className="figma-smart-image-actions">
@@ -372,7 +391,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
                       type="button"
                       className="btn btn-secondary btn-sm"
                       onClick={handleSuggest}
-                      disabled={suggesting}
+                      disabled={busy}
                     >
                       {suggesting ? 'Asking AI…' : 'Suggest with AI'}
                     </button>
@@ -391,6 +410,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
                             type="checkbox"
                             checked={selectedImageIds.includes(n.id)}
                             onChange={() => toggleImageId(n.id)}
+                            disabled={busy}
                           />
                           <span className="figma-smart-image-name">{n.name}</span>
                           <span className="figma-smart-image-meta">
@@ -428,7 +448,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
         </div>
 
         <div className="import-modal-footer">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose}>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose} disabled={busy}>
             Cancel
           </button>
 
@@ -437,7 +457,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
               type="button"
               className="btn btn-primary btn-sm figma-btn-primary"
               onClick={handleBuildReactEmail}
-              disabled={isBuilding}
+              disabled={busy}
             >
               {isBuilding ? 'Building...' : 'Build React Email'}
             </button>

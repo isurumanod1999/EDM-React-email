@@ -40,7 +40,8 @@ This folder and the planning artifacts describe the **EDM React Email Tool** as 
 | Epic 1 — API & storage foundation | ✅ Complete | Ports/adapters, template service, errors, logging |
 | Epic 2 — Internal hardening | ✅ Complete | Access gate, boundaries, verify pipeline, exposure gate |
 | Builder polish Week 1 | ✅ Complete | Mobile layout, toasts, unsaved guard, preview, gallery |
-| Builder polish Week 2 | 🚧 Pending | Import menu, Figma lint/banner, modal a11y, etc. |
+| Builder polish Week 2 | ✅ Complete | Import menu, block delete, Figma/AI UX, modal a11y, gallery search |
+| Builder polish (#4, #14) | ✅ Complete | Toolbar-only rename, canvas/palette keyboard a11y |
 | Epics F1–F4 | ⏸ Deferred | Postgres, S3, worker, authentication |
 
 ## Verify before release or handoff

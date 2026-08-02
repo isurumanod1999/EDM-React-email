@@ -1,6 +1,8 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { ImportProgressBanner } from '@/builder/components/ImportProgressBanner';
+import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
 
 interface FigmaBatchModalProps {
@@ -58,6 +60,7 @@ const makeInitialRows = () => [newRow(), newRow(), newRow(), newRow()];
 
 export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
   const addBlocksFromAi = useBuilderStore((s) => s.addBlocksFromAi);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const [rows, setRows] = useState<BatchRow[]>(makeInitialRows);
   const [isRunning, setIsRunning] = useState(false);
@@ -72,10 +75,12 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
   }, []);
 
   const handleClose = useCallback(() => {
-    if (isRunning) return; // don't close mid-import
+    if (isRunning) return;
     reset();
     onClose();
   }, [isRunning, onClose, reset]);
+
+  useModalA11y({ open, onClose: handleClose, busy: isRunning, dialogRef });
 
   const patchRow = useCallback((id: string, patch: Partial<BatchRow>) => {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
@@ -109,7 +114,13 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
       nodeName?: string;
       error?: string;
     };
-    if (!res.ok || !data.block) throw new Error(data.error ?? 'Import failed');
+    if (!res.ok || !data.block) {
+      const msg =
+        res.status === 504 || res.status === 408
+          ? 'Import timed out — try fewer rows or simpler frames.'
+          : (data.error ?? 'Import failed');
+      throw new Error(msg);
+    }
     return { ...data.block, label: data.block.label ?? data.nodeName };
   }, []);
 
@@ -165,6 +176,13 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
 
   if (!open) return null;
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (isRunning) return;
+    if (e.target === e.currentTarget) handleClose();
+  };
+
+  const importingCount = rows.filter((r) => r.status === 'importing').length;
+
   const statusLabel = (r: BatchRow): { text: string; cls: string } => {
     switch (r.status) {
       case 'importing':
@@ -179,13 +197,15 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
   };
 
   return (
-    <div className="import-modal-overlay" onClick={handleClose} role="presentation">
+    <div className="import-modal-overlay" onClick={handleOverlayClick} role="presentation">
       <div
+        ref={dialogRef}
         className="import-modal import-modal-figma import-modal-batch"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="figma-batch-title"
         aria-modal="true"
+        tabIndex={-1}
       >
         <div className="import-modal-header import-modal-header-figma">
           <div>
@@ -200,12 +220,18 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
             className="btn btn-ghost btn-sm"
             onClick={handleClose}
             disabled={isRunning}
+            aria-label="Close dialog"
           >
             ✕
           </button>
         </div>
 
         <div className="import-modal-body">
+          {isRunning && (
+            <ImportProgressBanner
+              message={`Importing ${importingCount || validRows.length} component(s) — each row may take up to a minute.`}
+            />
+          )}
           <div className="figma-batch-rows">
             {rows.map((row, i) => {
               const st = statusLabel(row);

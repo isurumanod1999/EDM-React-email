@@ -1,8 +1,11 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ImageUploadField } from '@/builder/components/ImageUploadField';
+import { OllamaStatusBanner } from '@/builder/components/figma/OllamaStatusBanner';
+import { ImportProgressBanner } from '@/builder/components/ImportProgressBanner';
 import { ImportResultPanel } from '@/builder/components/ImportResultPanel';
+import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import type { AiBlock } from '@/lib/ai/schemas/analyzeResult';
 
@@ -20,6 +23,7 @@ interface AnalyzeResponse {
 
 export function AiImportModal({ open, onClose }: AiImportModalProps) {
   const addBlocksFromAi = useBuilderStore((s) => s.addBlocksFromAi);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const [desktopUrl, setDesktopUrl] = useState<string | null>(null);
   const [mobileUrl, setMobileUrl] = useState<string | null>(null);
@@ -37,9 +41,12 @@ export function AiImportModal({ open, onClose }: AiImportModalProps) {
   }, []);
 
   const handleClose = useCallback(() => {
+    if (isAnalyzing) return;
     reset();
     onClose();
-  }, [onClose, reset]);
+  }, [isAnalyzing, onClose, reset]);
+
+  useModalA11y({ open, onClose: handleClose, busy: isAnalyzing, dialogRef });
 
   const handleAnalyze = async () => {
     if (!desktopUrl) {
@@ -62,7 +69,20 @@ export function AiImportModal({ open, onClose }: AiImportModalProps) {
         }),
       });
 
-      const data = await res.json();
+      const raw = await res.text();
+      let data: AnalyzeResponse & { error?: string };
+      try {
+        data = JSON.parse(raw) as AnalyzeResponse & { error?: string };
+      } catch {
+        throw new Error(
+          res.status === 504 || res.status === 408
+            ? 'Analysis timed out — try a smaller screenshot or check that Ollama/Gemini is running.'
+            : res.ok
+              ? 'Analysis returned an invalid response. Check the dev server terminal.'
+              : `Analysis failed (${res.status}). Check AI status above and try again.`
+        );
+      }
+
       if (!res.ok) {
         throw new Error(data.error ?? 'Analysis failed');
       }
@@ -81,28 +101,47 @@ export function AiImportModal({ open, onClose }: AiImportModalProps) {
     handleClose();
   };
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (isAnalyzing) return;
+    if (e.target === e.currentTarget) handleClose();
+  };
+
   if (!open) return null;
 
   return (
-    <div className="import-modal-overlay" onClick={handleClose} role="presentation">
+    <div className="import-modal-overlay" onClick={handleOverlayClick} role="presentation">
       <div
+        ref={dialogRef}
         className="import-modal import-modal-ai"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="screenshot-upload-title"
         aria-modal="true"
+        tabIndex={-1}
       >
         <div className="import-modal-header">
           <div>
             <h2 id="screenshot-upload-title">Screenshot Upload</h2>
             <p className="import-modal-subtitle">Upload screenshots to map them to email components</p>
           </div>
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={handleClose}
+            disabled={isAnalyzing}
+            aria-label="Close dialog"
+          >
             ✕
           </button>
         </div>
 
         <div className="import-modal-body">
+          <OllamaStatusBanner />
+
+          {isAnalyzing && (
+            <ImportProgressBanner message="Analyzing screenshots with AI — this may take 30–60 seconds." />
+          )}
+
           <div className="import-modal-uploads">
             <ImageUploadField
               label="Desktop screenshot"
@@ -130,6 +169,7 @@ export function AiImportModal({ open, onClose }: AiImportModalProps) {
               value={hint}
               onChange={(e) => setHint(e.target.value)}
               rows={2}
+              disabled={isAnalyzing}
             />
           </div>
 
@@ -146,7 +186,7 @@ export function AiImportModal({ open, onClose }: AiImportModalProps) {
         </div>
 
         <div className="import-modal-footer">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose}>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose} disabled={isAnalyzing}>
             Cancel
           </button>
           {!result ? (

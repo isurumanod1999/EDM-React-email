@@ -1,8 +1,10 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { FigmaConnectForm } from '@/builder/components/figma/FigmaConnectForm';
 import { FigmaReviewPanel } from '@/builder/components/figma/FigmaReviewPanel';
+import { ImportProgressBanner } from '@/builder/components/ImportProgressBanner';
+import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { toFigmaSession, type FigmaImportApiResult } from '@/builder/types/figmaSession';
 
@@ -16,6 +18,7 @@ type Step = 'connect' | 'review';
 
 export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchModalProps) {
   const setFigmaSession = useBuilderStore((s) => s.setFigmaSession);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const [step, setStep] = useState<Step>('connect');
   const [figmaUrl, setFigmaUrl] = useState('');
@@ -39,9 +42,12 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
   }, []);
 
   const handleClose = useCallback(() => {
+    if (isFetching) return;
     reset();
     onClose();
-  }, [onClose, reset]);
+  }, [isFetching, onClose, reset]);
+
+  useModalA11y({ open, onClose: handleClose, busy: isFetching, dialogRef });
 
   const handleFetch = async () => {
     if (!figmaUrl.trim()) {
@@ -62,7 +68,20 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
         }),
       });
 
-      const data = (await res.json()) as FigmaImportApiResult & { error?: string };
+      const raw = await res.text();
+      let data: FigmaImportApiResult & { error?: string };
+      try {
+        data = JSON.parse(raw) as FigmaImportApiResult & { error?: string };
+      } catch {
+        throw new Error(
+          res.status === 504 || res.status === 408
+            ? 'Fetch timed out — check your Figma token and try a smaller frame.'
+            : res.ok
+              ? 'Fetch returned an invalid response. Check the dev server terminal.'
+              : `Fetch failed (${res.status}). Verify your Figma access token in .env.local and restart the dev server.`
+        );
+      }
+
       if (!res.ok) {
         throw new Error(data.error ?? 'Figma import failed');
       }
@@ -98,16 +117,23 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
     onFetchComplete?.();
   };
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (isFetching) return;
+    if (e.target === e.currentTarget) handleClose();
+  };
+
   if (!open) return null;
 
   return (
-    <div className="import-modal-overlay" onClick={handleClose} role="presentation">
+    <div className="import-modal-overlay" onClick={handleOverlayClick} role="presentation">
       <div
+        ref={dialogRef}
         className="import-modal import-modal-figma"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="figma-fetch-title"
         aria-modal="true"
+        tabIndex={-1}
       >
         <div className="import-modal-header import-modal-header-figma">
           <div>
@@ -117,7 +143,13 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
               Pull design data via Figma API — build components in the next step
             </p>
           </div>
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={handleClose}
+            disabled={isFetching}
+            aria-label="Close dialog"
+          >
             ✕
           </button>
         </div>
@@ -128,6 +160,10 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
         </div>
 
         <div className="import-modal-body">
+          {isFetching && (
+            <ImportProgressBanner message="Fetching design data from Figma — this may take a few seconds." />
+          )}
+
           {step === 'connect' && (
             <>
               <FigmaConnectForm
@@ -145,6 +181,7 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
                   className="import-modal-input"
                   value={buildAs}
                   onChange={(e) => setBuildAs(e.target.value as 'design' | 'image')}
+                  disabled={isFetching}
                 >
                   <option value="design">Design — structured HTML/CSS (editable)</option>
                   <option value="image">Image — flatten whole component to one PNG</option>
@@ -171,7 +208,7 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
         </div>
 
         <div className="import-modal-footer">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose}>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose} disabled={isFetching}>
             Cancel
           </button>
 

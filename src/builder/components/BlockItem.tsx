@@ -27,6 +27,7 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
   };
 
   const isSelected = selectedBlockId === block.id;
+  const label = block.label ?? componentName;
 
   return (
     <div
@@ -34,12 +35,27 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
       style={style}
       className={`block-item ${isSelected ? 'selected' : ''} ${isDragging ? 'dragging' : ''}`}
       onClick={() => selectBlock(block.id)}
+      tabIndex={0}
+      role="button"
+      aria-pressed={isSelected}
+      aria-label={`${label}, ${componentName}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectBlock(block.id);
+        }
+      }}
     >
-      <span className="block-drag-handle" {...attributes} {...listeners}>
+      <span
+        className="block-drag-handle"
+        {...attributes}
+        {...listeners}
+        aria-label={`Reorder ${label}`}
+      >
         ⠿
       </span>
       <div className="block-info">
-        <div className="block-name">{block.label ?? componentName}</div>
+        <div className="block-name">{label}</div>
         <div className="block-type">{componentName}</div>
       </div>
       <div className="block-actions">
@@ -51,6 +67,7 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
             duplicateBlock(block.id);
           }}
           title="Duplicate"
+          aria-label={`Duplicate ${label}`}
         >
           ⧉
         </button>
@@ -59,9 +76,11 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
           className="btn btn-ghost btn-sm btn-danger"
           onClick={(e) => {
             e.stopPropagation();
+            if (!window.confirm(`Remove "${label}" from the canvas?`)) return;
             removeBlock(block.id);
           }}
           title="Remove"
+          aria-label={`Remove ${label}`}
         >
           ✕
         </button>

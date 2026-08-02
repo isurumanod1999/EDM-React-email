@@ -59,14 +59,6 @@ export function PropertyPanel({ className }: { className?: string }) {
             <div className="field-group">
               <div className="field-group-title">Template</div>
               <div className="field">
-                <label className="field-label">Name</label>
-                <input
-                  className="field-input"
-                  value={template.name}
-                  onChange={(e) => updateTemplateInfo({ name: e.target.value })}
-                />
-              </div>
-              <div className="field">
                 <label className="field-label">Description</label>
                 <textarea
                   className="field-textarea"
