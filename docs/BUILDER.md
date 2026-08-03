@@ -76,6 +76,8 @@ Requires `FIGMA_ACCESS_TOKEN` in `.env.local`. Use **Import** in the toolbar:
 
 Long-running imports show progress and cannot be dismissed mid-operation. **Ollama status** is shown when AI assist is relevant.
 
+**Registry component links:** Figma layers match editable registry blocks using **layer names first**, then Figma master component IDs. Shared IDs (e.g. 2UP Standard vs Dual CTA) are disambiguated by name and button layout. Successful matches produce blocks like `hero-banner`, `header`, `two-col-stacked` instead of a monolithic `figma-react-email` AST. Multi-section frames decompose when enough sections match. Unmatched frames fall back to React Email primitives. Extend links in `src/lib/figma/componentLinks.ts` and IDs in `src/lib/figma/figmaComponentIds.ts`.
+
 Optional local AI (Ollama): see `.env.example` and run `ollama pull llava`.
 
 ---

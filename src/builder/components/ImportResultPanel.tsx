@@ -11,6 +11,7 @@ interface ImportResultPanelProps {
   previewHtml?: string;
   warnings?: string[];
   buildMode?: 'react-email' | 'ai';
+  mappingMode?: 'registry' | 'primitives' | 'image';
 }
 
 export function ImportResultPanel({
@@ -20,6 +21,7 @@ export function ImportResultPanel({
   previewHtml,
   warnings,
   buildMode,
+  mappingMode,
 }: ImportResultPanelProps) {
   const registry = useBuilderStore((s) => s.registry);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
@@ -41,7 +43,10 @@ export function ImportResultPanel({
             {Math.round(confidence * 100)}% match
           </span>
         )}
-        {buildMode === 'react-email' && (
+        {mappingMode === 'registry' && (
+          <span className="import-confidence high">Registry components</span>
+        )}
+        {buildMode === 'react-email' && mappingMode !== 'registry' && (
           <span className="import-confidence high">React Email build</span>
         )}
         <span className="import-result-reasoning">{reasoning}</span>

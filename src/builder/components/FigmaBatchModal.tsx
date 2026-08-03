@@ -33,6 +33,7 @@ interface BatchRow {
   error?: string;
   nodeName?: string;
   block?: BatchBlock;
+  blocks?: BatchBlock[];
 }
 
 /**
@@ -93,9 +94,12 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
   );
 
   const validRows = useMemo(() => rows.filter((r) => r.desktopUrl.trim()), [rows]);
-  const doneRows = useMemo(() => rows.filter((r) => r.status === 'done' && r.block), [rows]);
+  const doneRows = useMemo(
+    () => rows.filter((r) => r.status === 'done' && (r.blocks?.length ?? r.block)),
+    [rows]
+  );
 
-  const importRow = useCallback(async (row: BatchRow): Promise<BatchBlock> => {
+  const importRow = useCallback(async (row: BatchRow): Promise<BatchBlock[]> => {
     const res = await fetch('/api/figma/import-build', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -104,24 +108,25 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
         mobileFigmaUrl: row.mobileUrl.trim() || undefined,
         label: row.label.trim() || undefined,
         buildAs: row.buildAs,
-        // Mixed-mode image export (ignored server-side when buildAs='image').
         autoDetectImages: row.autoDetectImages,
         imageInstructions: row.imageInstructions.trim() || undefined,
       }),
     });
     const data = (await res.json()) as {
       block?: BatchBlock;
+      blocks?: BatchBlock[];
       nodeName?: string;
       error?: string;
     };
-    if (!res.ok || !data.block) {
+    const blocks = data.blocks ?? (data.block ? [data.block] : []);
+    if (!res.ok || blocks.length === 0) {
       const msg =
         res.status === 504 || res.status === 408
           ? 'Import timed out — try fewer rows or simpler frames.'
           : (data.error ?? 'Import failed');
       throw new Error(msg);
     }
-    return { ...data.block, label: data.block.label ?? data.nodeName };
+    return blocks.map((b) => ({ ...b, label: b.label ?? data.nodeName }));
   }, []);
 
   const handleImportAll = useCallback(async () => {
@@ -149,8 +154,14 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
         const row = queue.shift();
         if (!row) return;
         try {
-          const block = await importRow(row);
-          patchRow(row.id, { status: 'done', block, nodeName: block.label, error: undefined });
+          const blocks = await importRow(row);
+          patchRow(row.id, {
+            status: 'done',
+            blocks,
+            block: blocks[0],
+            nodeName: blocks[0]?.label,
+            error: undefined,
+          });
         } catch (e) {
           patchRow(row.id, {
             status: 'error',
@@ -167,7 +178,9 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
   }, [rows, importRow, patchRow]);
 
   const handleAddAll = useCallback(() => {
-    const blocks = rows.filter((r) => r.status === 'done' && r.block).map((r) => r.block as BatchBlock);
+    const blocks = rows.flatMap((r) =>
+      r.blocks?.length ? r.blocks : r.block ? [r.block] : []
+    );
     if (blocks.length === 0) return;
     addBlocksFromAi(blocks);
     reset();

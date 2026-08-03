@@ -28,6 +28,7 @@ interface BuildResponse {
   reasoning: string;
   previewHtml?: string;
   warnings?: string[];
+  mappingMode?: 'registry' | 'primitives' | 'image';
 }
 
 type Step = 'build' | 'result';
@@ -441,6 +442,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
               previewHtml={result.previewHtml}
               warnings={result.warnings}
               buildMode="react-email"
+              mappingMode={result.mappingMode}
             />
           )}
 
