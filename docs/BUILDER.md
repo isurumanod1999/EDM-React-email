@@ -76,7 +76,11 @@ Requires `FIGMA_ACCESS_TOKEN` in `.env.local`. Use **Import** in the toolbar:
 
 Long-running imports show progress and cannot be dismissed mid-operation. **Ollama status** is shown when AI assist is relevant.
 
-**Registry component links:** Figma layers match editable registry blocks using **layer names first**, then Figma master component IDs. Shared IDs (e.g. 2UP Standard vs Dual CTA) are disambiguated by name and button layout. Successful matches produce blocks like `hero-banner`, `header`, `two-col-stacked` instead of a monolithic `figma-react-email` AST. Multi-section frames decompose when enough sections match. Unmatched frames fall back to React Email primitives. Extend links in `src/lib/figma/componentLinks.ts` and IDs in `src/lib/figma/figmaComponentIds.ts`.
+**Registry component links:** Figma layers match editable registry blocks using **layer names first**, then Figma master component IDs. Shared IDs (e.g. 2UP Standard vs Dual CTA) are disambiguated by name and button layout. Successful matches produce blocks like `hero-banner`, `header`, `two-col-stacked` instead of a monolithic `figma-react-email` AST. Multi-section frames decompose when enough sections match. Extend links in `src/lib/figma/componentLinks.ts` and IDs in `src/lib/figma/figmaComponentIds.ts`.
+
+A name match alone is **not** enough to accept a registry block. Every string in the Figma layer must survive into the block's props, and buttons and images must land in fields that render them as such. A frame named `Opening` that also holds a headline and a CTA is therefore *not* collapsed into the text-only `intro-copy` block — matches that would drop content fall back to React Email primitives, which reproduce the frame faithfully.
+
+**Image export hints:** only small icon/badge-style layers are auto-exported as PNGs from the Figma design context. To rasterize anything larger, name it in the build instructions (e.g. `export FRAME "Callout" as image`) or select it in the build modal. Flattening a whole component is the **Image** build option, not a hint.
 
 Optional local AI (Ollama): see `.env.example` and run `ollama pull llava`.
 

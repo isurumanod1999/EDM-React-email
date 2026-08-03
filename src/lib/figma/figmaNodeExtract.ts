@@ -197,12 +197,24 @@ function looksLikeButton(node: ParsedFigmaNode): boolean {
 
 export function findButtons(root: ParsedFigmaNode): ButtonInfo[] {
   const buttons: ButtonInfo[] = [];
-  walkNodes(root, (node) => {
-    if (!looksLikeButton(node)) return;
-    const text = primaryText(node);
-    if (!text) return;
-    buttons.push({ text, url: findLinkHref(node) });
-  });
+
+  const visit = (node: ParsedFigmaNode) => {
+    if (looksLikeButton(node)) {
+      const text = primaryText(node);
+      if (text) {
+        buttons.push({ text, url: findLinkHref(node) });
+        // The label inside a button is part of it, not a second button — and
+        // counting both makes buttons[1] a duplicate of buttons[0].
+        return;
+      }
+    }
+    for (const child of node.children) {
+      if (child.visible === false) continue;
+      visit(child);
+    }
+  };
+
+  visit(root);
   return buttons;
 }
 

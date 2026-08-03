@@ -26,7 +26,7 @@ import {
 } from './customizer/controls';
 import { RichTextEditor } from './customizer/RichTextEditor';
 import { hasRichFormatting } from '@/builder/lib/sanitizeHtml';
-import { autoMobileStyle } from '@/components/email/FigmaReactEmailBlock';
+import { autoMobileStyle } from '@/components/email/mobileTypography';
 import type { StyleTarget } from '@/builder/store/builderStore';
 
 const FIGMA_BLOCK_ID = 'figma-react-email';

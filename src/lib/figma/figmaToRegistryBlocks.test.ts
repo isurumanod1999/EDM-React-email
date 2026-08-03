@@ -231,4 +231,41 @@ describe('tryFigmaToRegistryBlocks', () => {
     const generic = frame('Random Frame', [textNode('Text', 'Hello')]);
     expect(tryFigmaToRegistryBlocks(generic)).toBeNull();
   });
+
+  it('rejects a text-only component for a frame that also has a button', () => {
+    // "Opening" links to intro-copy by name, but intro-copy cannot render the
+    // headline as a heading nor the CTA as a button — the AST build must win.
+    const opening = frame('Opening', [
+      frame('Copy', [
+        textNode('Headline', 'Welcome to the Navarathon', 40),
+        textNode('Body', '<Name>, this month go the distance for less.', 16),
+      ]),
+      frame('CTA', [buttonNode('CTA', 'See all offers')]),
+    ]);
+
+    expect(tryFigmaToRegistryBlocks(opening)).toBeNull();
+  });
+
+  it('rejects a registry match that would drop an image', () => {
+    const intro = frame('Intro', [
+      textNode('Body', 'Read our latest offers below.', 16),
+      imageNode('Illustration', '/images/uploads/illustration.png'),
+    ]);
+
+    expect(tryFigmaToRegistryBlocks(intro)).toBeNull();
+  });
+
+  it('maps intro-copy when the frame really is only greeting + body', () => {
+    const intro = frame('Intro Copy', [
+      textNode('Greeting', 'Hello Sam,', 16),
+      textNode('Body', 'This month, go the distance for less.', 16),
+    ]);
+
+    const result = tryFigmaToRegistryBlocks(intro);
+    expect(result).not.toBeNull();
+    expect(result!.blocks[0].componentId).toBe('intro-copy');
+    // "This month" must not be promoted to the greeting by an unanchored /hi/.
+    expect(result!.blocks[0].props.greeting).toBe('Hello Sam,');
+    expect(result!.blocks[0].props.body).toBe('This month, go the distance for less.');
+  });
 });

@@ -14,6 +14,8 @@ This folder and the planning artifacts describe the **EDM React Email Tool** as 
 | [API.md](./API.md) | API consumers | Route list, error shape, limits |
 | [maintenance-upgrades.md](./maintenance-upgrades.md) | Maintainers | Next.js / PostgreSQL upgrade track |
 | [PHASE-HISTORY.md](./PHASE-HISTORY.md) | Handoff | Epic 1–2 and builder polish completion log |
+| [DEMO-PRESENTATION.md](./DEMO-PRESENTATION.md) | Demo / stakeholders | Timeline, talking points, Mermaid sources |
+| [demo-diagrams.html](./demo-diagrams.html) | **Demo slides** | Fullscreen visual diagrams (architecture, workflow, Figma, timeline) |
 
 ## Stakeholder / process docs
 

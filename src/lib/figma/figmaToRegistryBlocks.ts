@@ -229,10 +229,20 @@ function extractSectionTitle(node: ParsedFigmaNode): Record<string, unknown> {
   };
 }
 
+/**
+ * A salutation only counts when the line STARTS with one — an unanchored
+ * `/hi/` also matches the "hi" inside "This month…", which promotes a whole
+ * body paragraph to the greeting slot.
+ */
+const GREETING_LINE = /^\s*(hello|hi|hey|dear|greetings)\b/i;
+
 function extractIntroCopy(node: ParsedFigmaNode): Record<string, unknown> {
   const texts = findAllTextNodes(node);
-  const greeting = texts.find((t) => /hello|hi|dear|greeting/i.test(t.text ?? ''))?.text?.trim();
-  const bodyNodes = texts.filter((t) => t !== texts.find((x) => x.text === greeting));
+  const greetingNode = texts.find(
+    (t) => GREETING_LINE.test(t.text ?? '') && (t.text?.trim().length ?? 0) <= 80
+  );
+  const greeting = greetingNode?.text?.trim();
+  const bodyNodes = texts.filter((t) => t !== greetingNode);
   const body = bodyNodes.map((t) => t.text?.trim()).filter(Boolean).join('\n\n');
   return {
     greeting: greeting ?? 'Hello,',
@@ -500,10 +510,85 @@ function extractPropsForLink(
   node: ParsedFigmaNode,
   mobileRoot?: ParsedFigmaNode,
   urls?: RegistryBuildUrls
-): Record<string, unknown> {
+): { raw: Record<string, unknown>; props: Record<string, unknown> } {
   const extractor = EXTRACTORS[link.registryComponentId];
   const raw = extractor ? extractor(node, mobileRoot, urls) : {};
-  return normalizeProps(link.registryComponentId, raw);
+  return { raw, props: normalizeProps(link.registryComponentId, raw) };
+}
+
+/**
+ * Whether a registry component can actually carry everything the Figma node
+ * holds.
+ *
+ * `requiredFields` only asks "did the fields this component HAS get filled?",
+ * which happily accepts a text-only component for a frame that also contains a
+ * headline, a CTA button and a background image — the extra content is silently
+ * dropped. This checks the opposite direction: every source string must survive
+ * into the props, and buttons/images must land in fields that render them as
+ * such. When they don't, the caller falls back to the AST build, which
+ * reproduces the frame faithfully.
+ */
+function normalizeForCompare(value: string): string {
+  return value
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+interface PropEntry {
+  key: string;
+  value: string;
+}
+
+function collectPropEntries(value: unknown, key = '', out: PropEntry[] = []): PropEntry[] {
+  if (typeof value === 'string') {
+    out.push({ key, value });
+  } else if (Array.isArray(value)) {
+    value.forEach((item) => collectPropEntries(item, key, out));
+  } else if (value && typeof value === 'object') {
+    for (const [childKey, childValue] of Object.entries(value)) {
+      collectPropEntries(childValue, childKey, out);
+    }
+  }
+  return out;
+}
+
+const BUTTON_PROP_KEY = /^(cta\d*text|buttontext|buttonlabel|primarytext|secondarytext)$/i;
+const IMAGE_PROP_KEY = /src$/i;
+
+function retainsSourceContent(node: ParsedFigmaNode, raw: Record<string, unknown>): boolean {
+  const entries = collectPropEntries(raw);
+  const haystack = entries.map((e) => normalizeForCompare(e.value)).join(' \u241f ');
+
+  const sourceTexts = findAllTextNodes(node)
+    .map((t) => normalizeForCompare(t.text ?? ''))
+    .filter((t) => t.length >= 2);
+  if (sourceTexts.some((text) => !haystack.includes(text))) return false;
+
+  const buttonLabels = findButtons(node)
+    .map((b) => normalizeForCompare(b.text))
+    .filter((label) => label.length > 0);
+  if (buttonLabels.length > 0) {
+    const buttonValues = entries
+      .filter((e) => BUTTON_PROP_KEY.test(e.key))
+      .map((e) => normalizeForCompare(e.value));
+    if (!buttonLabels.some((label) => buttonValues.some((v) => v.includes(label)))) return false;
+  }
+
+  // Only descendants count: a fill on the frame itself is a background, not content.
+  const hasSourceImage = findNodes(
+    node,
+    (n) => n.id !== node.id && Boolean(imageUrl(n) || n.imageRef || n.type === 'IMAGE')
+  ).length > 0;
+  if (hasSourceImage) {
+    const hasImageProp = entries.some(
+      (e) => IMAGE_PROP_KEY.test(e.key) && e.value.trim().length > 0
+    );
+    if (!hasImageProp) return false;
+  }
+
+  return true;
 }
 
 export interface NodeMatch {
@@ -524,9 +609,10 @@ export function matchNodeToRegistry(
   if (!link) return null;
 
   const mobileChild = matchMobileChild(target, mobileRoot, desktopRoot);
-  const props = extractPropsForLink(link, target, mobileChild ?? mobileRoot, urls);
+  const { raw, props } = extractPropsForLink(link, target, mobileChild ?? mobileRoot, urls);
   const confidence = scoreProps(link, props);
   if (confidence < 0.5) return null;
+  if (!retainsSourceContent(target, raw)) return null;
 
   return { link, node: target, confidence, props };
 }

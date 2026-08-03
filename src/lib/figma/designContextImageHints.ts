@@ -82,6 +82,25 @@ function hintMatchesNode(node: ParsedFigmaNode, hint: DesignContextLayerHint): b
   return sizeClose(node, hint.width, hint.height);
 }
 
+/** Largest edge (px) an unprompted design-context layer may have to auto-export. */
+const AUTO_EXPORT_MAX_EDGE = 96;
+
+const AUTO_EXPORT_NAME = /icon|badge|glyph|emblem|sticker|stamp|seal|rosette/i;
+
+/**
+ * Design context is a dump of EVERY layer in the frame, root included. Treating
+ * each line as an export target force-rasterizes the whole design down to one
+ * flat PNG — the root line matches the root node and swallows everything below
+ * it. Unprompted auto-export is therefore limited to small icon/badge-style
+ * layers, which is what the feature exists for; anything larger has to be named
+ * explicitly in the build instructions.
+ */
+function isAutoExportable(hint: DesignContextLayerHint): boolean {
+  if (hint.width == null || hint.height == null) return false;
+  if (hint.width > AUTO_EXPORT_MAX_EDGE || hint.height > AUTO_EXPORT_MAX_EDGE) return false;
+  return AUTO_EXPORT_NAME.test(hint.name);
+}
+
 /**
  * Resolve Figma nodeIds for layers described in design context and/or instructions.
  * Example context line:
@@ -95,30 +114,36 @@ export function findNodeIdsFromDesignHints(
   const hints: DesignContextLayerHint[] = [];
 
   if (designContext?.trim()) {
-    hints.push(...parseDesignContextLayerHints(designContext));
+    hints.push(...parseDesignContextLayerHints(designContext).filter(isAutoExportable));
   }
 
   if (instruction?.trim()) {
     hints.push(...parseDesignContextLayerHints(instruction));
   }
 
+  // A layer the user named in the instructions is matched on name alone — it
+  // may be any type or size, not just a 56×56 icon instance.
   for (const name of parseInstructionExportNames(instruction ?? '')) {
-    hints.push({ type: 'INSTANCE', name, width: 56, height: 56 });
+    hints.push({ type: '', name });
   }
 
   if (hints.length === 0) return [];
 
   const ids: string[] = [];
   const seen = new Set<string>();
+  const rootId = nodeKey(root);
 
   const walk = (node: ParsedFigmaNode) => {
     if (!node.visible) return;
-    for (const hint of hints) {
-      if (hintMatchesNode(node, hint)) {
-        const id = nodeKey(node);
-        if (id && !seen.has(id)) {
-          seen.add(id);
-          ids.push(id);
+    // Flattening the root is what `buildAs: 'image'` is for, never a hint.
+    if (nodeKey(node) !== rootId) {
+      for (const hint of hints) {
+        if (hintMatchesNode(node, hint)) {
+          const id = nodeKey(node);
+          if (id && !seen.has(id)) {
+            seen.add(id);
+            ids.push(id);
+          }
         }
       }
     }
