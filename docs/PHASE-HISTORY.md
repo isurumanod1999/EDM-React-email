@@ -61,12 +61,15 @@ Last updated: 2026-08-02
 | #4 Name editing | Toolbar-only rename; removed duplicate field from PropertyPanel |
 | #14 Keyboard/a11y | Block/palette aria-labels, Enter-to-add, focus rings |
 
-**Builder polish backlog is complete.** Optional next: Epics F1–F4 (only if requested).
+**Builder polish backlog is complete.**
+
+**Product next (pending):** Client QA — render in real email clients (desktop + mobile) → add URLs from tagging doc + click-test them — see [NEXT-PLANS.md](./NEXT-PLANS.md). Epics F1–F4 only if requested.
 
 ---
 
 ## Deferred (not started)
 
+- **Client QA (render in clients · add & test URLs)** — [NEXT-PLANS.md](./NEXT-PLANS.md)  
 - **F1** PostgreSQL template storage  
 - **F2** S3 asset storage  
 - **F3** Background worker / JobQueue  
@@ -76,4 +79,4 @@ Last updated: 2026-08-02
 
 ## Git reference
 
-Branch `bmad-1` contains Epic 1–2 commits. Builder polish (Weeks 1–2) may be uncommitted locally — run `git status` before handoff.
+Branch `bmad-2` holds recent polish + Figma accuracy work. Run `git status` before handoff.

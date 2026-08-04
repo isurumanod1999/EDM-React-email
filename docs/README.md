@@ -1,6 +1,6 @@
 # Documentation Index
 
-Last updated: 2026-08-02
+Last updated: 2026-08-04
 
 This folder and the planning artifacts describe the **EDM React Email Tool** as it exists today: a Next.js drag-and-drop email builder for an internal developer team.
 
@@ -14,8 +14,9 @@ This folder and the planning artifacts describe the **EDM React Email Tool** as 
 | [API.md](./API.md) | API consumers | Route list, error shape, limits |
 | [maintenance-upgrades.md](./maintenance-upgrades.md) | Maintainers | Next.js / PostgreSQL upgrade track |
 | [PHASE-HISTORY.md](./PHASE-HISTORY.md) | Handoff | Epic 1–2 and builder polish completion log |
+| [NEXT-PLANS.md](./NEXT-PLANS.md) | **Next work** | Client QA: render in clients · add & test URLs (**pending**) |
 | [DEMO-PRESENTATION.md](./DEMO-PRESENTATION.md) | Demo / stakeholders | Timeline, talking points, Mermaid sources |
-| [demo-diagrams.html](./demo-diagrams.html) | **Demo slides** | Fullscreen visual diagrams (architecture, workflow, Figma, timeline) |
+| [demo-diagrams.html](./demo-diagrams.html) | **Demo slides** | Architecture, workflow, Figma, timeline, next / QA / tagging |
 
 ## Stakeholder / process docs
 

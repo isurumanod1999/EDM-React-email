@@ -2,11 +2,12 @@
 
 **Audience:** stakeholders / team demo  
 **Demo date:** Tuesday, Aug 4, 2026  
-**Branch:** `bmad-2` · **Verify:** `npm run verify` (26 tests)
+**Branch:** `bmad-2` · **Verify:** `npm run verify`  
+**Next work (pending):** [NEXT-PLANS.md](./NEXT-PLANS.md) — Client QA: render in clients · add & test URLs
 
 > **Best visuals:** open [`demo-diagrams.html`](./demo-diagrams.html) in Chrome/Edge → press **F11** for fullscreen. Arrow keys / PageUp·Down move between slides. Print → Save as PDF for PowerPoint.
 >
-> Mermaid source for editing also lives below. Talking points: [`DEMO-PRESENTATION.md`](./DEMO-PRESENTATION.md) (this file).
+> Slides include **What's next**, **Render in clients**, and **Add & test URLs** (all pending Client QA). Talking points below.
 
 ---
 
@@ -24,10 +25,12 @@
 | Component registry (Header, Hero, 2UP, Footer, …) | ✅ |
 | Live HTML preview (React Email) | ✅ |
 | Figma fetch / build / batch import | ✅ |
-| Figma → **registry component links** (editable blocks) | ✅ |
+| Figma → registry links **or** primitives fallback (content guard) | ✅ |
 | Screenshot / AI import (Ollama or Gemini) | ✅ |
 | Export ZIP + Resend test send | ✅ |
 | Architecture ports (ready for Postgres/S3/auth) | ✅ ports · ⏸ adapters deferred |
+| **Render QA in real email clients (desktop + mobile)** | ⏸ **Pending** |
+| **Add URLs from tagging doc + click-test every URL** | ⏸ **Pending** |
 | Production authentication | ⏸ Deferred (Epic F4) |
 
 ---
@@ -297,9 +300,21 @@ pie title Delivery status (story / epic view)
 | Question | Answer |
 |----------|--------|
 | Is this production SaaS? | Internal tool; `AUTH_MODE=open`. Auth/Postgres/S3 designed as ports, not built yet. |
-| How accurate is Figma import? | Best on Nissan DS names/IDs (Header, Hero, 2UP, call-out…). Unmatched → primitives/image. Accuracy improved Aug 3 with name-first links + ID table. |
+| How accurate is Figma import? | Best on Nissan DS names/IDs (Header, Hero, 2UP, call-out…). Registry match only when it keeps all content; otherwise → React Email primitives or image flatten. |
 | Why React Email? | Component model + email-safe HTML; maintainable vs sliced Handlebars-only. |
-| What’s next? | Stakeholder choice: more Figma IDs, or F1–F4 infrastructure. |
+| What’s next? | **Client QA:** **(1)** How templates render in real email clients on desktop and mobile. **(2)** Find a way to add URLs from the tagging doc, then test every URL. Fix what breaks from render evidence along the way. |
+
+---
+
+## 10b. Next plans (detail)
+
+Canonical checklist: **[NEXT-PLANS.md](./NEXT-PLANS.md)**. Diagrams: `demo-diagrams.html` → `#next`, `#render-qa`, `#add-urls`.
+
+### 1. Render in real email clients — **pending**
+Browser preview is not enough. QA every template in Outlook, Gmail, Apple Mail, and on iPhone / Android (and other clients as needed). Capture screenshots + defects; fix layout/CSS issues found there; re-QA.
+
+### 2. Add URLs — then test them — **pending**
+Find a way to apply tagging-doc URLs (and labels / alt) onto CTAs, images, logos, and text links. After send, click-test every URL on desktop and mobile. Wrong destination or broken tracking = fail QA. **Not built yet.**
 
 ---
 
@@ -309,6 +324,8 @@ pie title Delivery status (story / epic view)
 |-------|------|
 | Architecture summary | `docs/ARCHITECTURE.md` |
 | Builder how-to | `docs/BUILDER.md` |
+| **Next plans (Client QA)** | `docs/NEXT-PLANS.md` |
+| Demo slides | `docs/demo-diagrams.html` |
 | Component links | `src/lib/figma/componentLinks.ts` |
 | Master IDs | `src/lib/figma/figmaComponentIds.ts` |
 | Handoff / status | `_bmad-output/planning-artifacts/HANDOFF.md` |

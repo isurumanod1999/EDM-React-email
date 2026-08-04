@@ -102,6 +102,17 @@ For blocks imported via **Build from Figma** (`figma-react-email`):
 
 ---
 
+## Known gaps / next (pending)
+
+Not done in the tool yet — see [NEXT-PLANS.md](./NEXT-PLANS.md):
+
+1. **Render QA** — how templates look in real email clients on desktop and mobile (not only browser preview)  
+2. **Add & test URLs** — get tagging-doc URLs onto CTAs / images / links, then click-test every URL  
+3. **Rendering fixes** — driven by render QA evidence (Outlook, dark mode, etc.)  
+
+
+---
+
 ## Storage
 
 Templates are JSON files under `data/templates/`. Uploaded images go to `public/images/uploads/`. No database or cloud storage in the current phase.

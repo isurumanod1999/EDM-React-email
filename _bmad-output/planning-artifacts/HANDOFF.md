@@ -2,7 +2,7 @@
 
 > Purpose: let a **new Cursor agent (new account)** resume this exact plan without the previous chat's memory. Everything needed is in the repo `.md` files listed below plus this status.
 
-Last updated: 2026-08-02
+Last updated: 2026-08-04
 
 ---
 
@@ -130,10 +130,18 @@ Environment note: **Windows / PowerShell**; Python is `py -3`.
 
 ### Next active phase
 
-**Builder polish is complete.** Next work is user-directed:
+**Builder polish is complete.** Productization next (see [docs/NEXT-PLANS.md](../../docs/NEXT-PLANS.md)):
+
+1. **Render QA** — how templates render in real email clients on desktop + mobile (pending; browser preview only today)
+2. **Add URLs & test them** — tagging doc → href / label / alt, then click-test every link on desk + mobile (pending)
+3. **Rendering fixes** — from render QA evidence (image flatten + primitives)
+
+Also available if asked:
 
 - **Epic F1–F4** (Postgres, S3, worker, auth) — only if explicitly requested
 - Optional hardening: refactor figma/export fs behind `AssetStore`; nested error envelope; Next.js upgrade per `docs/maintenance-upgrades.md`
+
+Demo visuals: [docs/demo-diagrams.html](../../docs/demo-diagrams.html) · [docs/DEMO-PRESENTATION.md](../../docs/DEMO-PRESENTATION.md)
 
 User-facing docs: [docs/BUILDER.md](../../docs/BUILDER.md) · [docs/README.md](../../docs/README.md)
 
