@@ -8,6 +8,7 @@ import { FigmaBatchModal } from '@/builder/components/FigmaBatchModal';
 import { FigmaBuildModal } from '@/builder/components/FigmaBuildModal';
 import { FigmaFetchModal } from '@/builder/components/FigmaFetchModal';
 import { ImportMenu } from '@/builder/components/ImportMenu';
+import { TaggingPanel } from '@/builder/components/tagging/TaggingPanel';
 import { SendTestModal } from '@/builder/components/SendTestModal';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { pushToast } from '@/builder/store/toastStore';
@@ -139,6 +140,7 @@ export function BuilderToolbar() {
           onBatch={() => setFigmaBatchOpen(true)}
           onScreenshot={() => setAiImportOpen(true)}
         />
+        <TaggingPanel />
         <button
           type="button"
           className="btn btn-secondary btn-sm"

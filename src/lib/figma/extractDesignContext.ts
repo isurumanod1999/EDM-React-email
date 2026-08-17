@@ -1,4 +1,5 @@
 import type { FigmaNodeDocument } from './client';
+import { visibleDocumentChildren } from './parseFigmaNode';
 
 function rgbToHex(r: number, g: number, b: number): string {
   const toHex = (v: number) =>
@@ -39,7 +40,10 @@ function summarizeNode(node: FigmaNodeDocument, depth = 0): string[] {
 
   lines.push(line);
 
-  for (const child of node.children ?? []) {
+  // Hidden and fully clipped layers are described to the AI and to the image
+  // detector as if they were on screen, which is how switched-off social rows
+  // end up in the output. Use the parser's rule so context and build agree.
+  for (const child of visibleDocumentChildren(node)) {
     if (depth < 6) {
       lines.push(...summarizeNode(child, depth + 1));
     }

@@ -363,7 +363,10 @@ function stripExports(node: ParsedFigmaNode): ParsedFigmaNode {
   // they contain overlay text, because email can't reproduce free-form overlap.
   const keepRasterOnly =
     !hasTextDescendant(node) && !hasButtonDescendant(node) && !isAutoLayoutContainer;
-  const keep = keepRasterOnly || isAbsoluteComposite(node);
+  // Image slots (including Figma Image component shells with an aspect-ratio
+  // keeper child) must keep their PNG export — stripping them forces a fallback
+  // to the raw imageRef hash, which browsers cannot load.
+  const keep = keepRasterOnly || isAbsoluteComposite(node) || isImageNode(node);
   return {
     ...node,
     exportUrl: keep ? node.exportUrl : undefined,
@@ -613,8 +616,10 @@ function isCtaButtonStack(node: ParsedFigmaNode): boolean {
 
 function getImageSrc(node: ParsedFigmaNode): string | undefined {
   if (node.exportUrl && !hasTextDescendant(node)) return node.exportUrl;
+  if (node.forcedExportUrl) return node.forcedExportUrl;
   if (node.imageRef?.startsWith('/') || node.imageRef?.startsWith('http')) return node.imageRef;
-  return node.imageRef;
+  // Raw Figma fill hash — not loadable in email; omit instead of a broken src.
+  return undefined;
 }
 
 /** Largest-area image descendant (the background / key-visual), if any. */
@@ -1108,6 +1113,28 @@ function interleaveChildGaps(
 }
 
 /**
+ * Apply a Figma stroke as CSS. A frame whose sides differ gets only the edges
+ * that carry weight — a 1px top rule stays a rule instead of boxing the section.
+ */
+function applyBorder(
+  style: CSSProperties,
+  node: ParsedFigmaNode,
+  stroke: string,
+  weight: number
+): void {
+  const px = (w: number) => `${Math.max(1, Math.round(w))}px solid ${stroke}`;
+  const sides = node.strokeSides;
+  if (!sides) {
+    style.border = px(weight);
+    return;
+  }
+  if (sides.top > 0) style.borderTop = px(sides.top);
+  if (sides.right > 0) style.borderRight = px(sides.right);
+  if (sides.bottom > 0) style.borderBottom = px(sides.bottom);
+  if (sides.left > 0) style.borderLeft = px(sides.left);
+}
+
+/**
  * Visual box styling for a content frame: background color, border (stroke),
  * corner radius and padding. Returns undefined when the frame has no visible
  * box, so plain content isn't wrapped in a redundant Section.
@@ -1135,7 +1162,7 @@ function boxStyle(node: ParsedFigmaNode): CSSProperties | undefined {
       marginRight: 'auto',
     };
     if (bg) iconStyle.backgroundColor = bg;
-    if (hasBorder) iconStyle.border = `${Math.max(1, Math.round(strokeWeight))}px solid ${stroke}`;
+    if (hasBorder) applyBorder(iconStyle, node, stroke!, strokeWeight);
     // Round shape scaled to the icon (half its size), capped at the real radius.
     if (node.cornerRadius && node.cornerRadius > 0) {
       const maxDim = Math.max(node.width ?? 0, node.height ?? 0);
@@ -1150,7 +1177,7 @@ function boxStyle(node: ParsedFigmaNode): CSSProperties | undefined {
   const align = nodeTextAlign(node);
   if (align) style.textAlign = align;
   if (bg) style.backgroundColor = bg;
-  if (hasBorder) style.border = `${Math.max(1, Math.round(strokeWeight))}px solid ${stroke}`;
+  if (hasBorder) applyBorder(style, node, stroke!, strokeWeight);
   // Colored / bordered blocks need breathing room even when Figma padding is 0;
   // transparent frames only get padding when the design actually specified it.
   if (bg || hasBorder) {
@@ -1614,7 +1641,8 @@ export function buildPrimitivesFromFigma(
 
   const sectionNodes: ReactEmailNode[] = [];
 
-  // Multiple full-height page sections (e.g. hero + footer), not content + CTA siblings
+  // Multiple full-height page sections (e.g. hero + footer), not content + CTA
+  // siblings — and not image + copy within one composed card (1-up, promo, etc.).
   const fullSections = topKids.filter(isFullSection);
   const hasCtaSibling = topKids.some(
     (k) =>
@@ -1622,11 +1650,19 @@ export function buildPrimitivesFromFigma(
       isCtaButtonStack(k) ||
       (isButtonNode(k) && !isFullSection(k))
   );
+  const isComposedCard =
+    root.layoutMode === 'VERTICAL' &&
+    topKids.length >= 2 &&
+    topKids.length <= 4 &&
+    (root.height ?? 0) < 900 &&
+    topKids.some((k) => isImageNode(k) || hasImageDescendant(k)) &&
+    topKids.some((k) => hasTextDescendant(k));
   // A horizontal auto-layout root is a row of columns, not stacked page
   // sections — let mapNode build the Row/Column structure instead of splitting.
   const rootIsRow =
     root.layoutMode === 'HORIZONTAL' && getContentChildren(root).length > 1;
-  const shouldSplit = fullSections.length > 1 && !hasCtaSibling && !rootIsRow;
+  const shouldSplit =
+    fullSections.length > 1 && !hasCtaSibling && !rootIsRow && !isComposedCard;
 
   if (shouldSplit) {
     for (const section of fullSections) {

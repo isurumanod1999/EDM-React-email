@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "id": "5de28747-303f-478d-a781-a4c64ff1a78f",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "92859e8c-db62-40a2-832d-974fc673d3fd",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "left",
+            "padding": "12px 16px"
+          },
+          "children": [
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "textAlign": "left",
+                "padding": "0px 40px 0px 40px"
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "left",
+                    "border": "1px solid #989898",
+                    "padding": "40px 0px 40px 0px"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "^ Google built-in is a trademark of Google LLC.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "* Select features only available on select grades. Grade applicability to be confirmed closer to launch.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "1. Whichever occurs first, when servicing at authorised Nissan dealers. Where vehicle is not serviced through Nissan or ceases to be serviced at Nissan, additional years will not be added so 10 year/300,000km warranty (whichever occurs first) may not apply. Warranty protection will remain 5 year/unlimited km warranty, plus any additional service activated years added under the Plan. Conditions apply. Full terms at nissan.com.au/warranty    2. When servicing at authorised Nissan dealers. Where vehicle is not serviced through Nissan or ceases to be serviced at Nissan, additional years will not be added, so 10 year/300,000km roadside assist (whichever occurs first) may not apply. Roadside assist duration will remain as 1 year/unlimited kilometre roadside assist (whichever occurs first), plus any service activated years added under the Plan. Terms and conditions apply, please visit Nissan.com.au/roadsideassistance.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "3. Ask your Nissan Dealer to explain exactly what items are covered in each Scheduled Service. Applies for the first 5 services or 5 years, whichever occurs first. Some exclusions apply. Ask your Nissan Dealer or visit Nissan.com.au/service to find out more and for full terms and conditions.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 22
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "If you do not wish to receive future emails and special offers from Nissan Australia click here to unsubscribe. To ensure you receive the latest information from Nissan Australia, simply add noreply@nissan.com.au to your address book.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "NISSAN MOTOR CO. (AUSTRALIA) PTY. LTD.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "1 Peters Avenue, Mulgrave, Victoria 3170",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 0
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "textAlign": "center",
+                "padding": "0px 40px 0px 40px"
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "center",
+                    "border": "1px solid #989898",
+                    "padding": "20px 0px 48px 0px"
+                  },
+                  "children": [
+                    {
+                      "type": "Img",
+                      "src": "/images/uploads/figma-export-459a9dc4-0b51-4426-9838-bade4f20c866.png",
+                      "width": 200,
+                      "height": 62,
+                      "alt": "Logo",
+                      "className": "figma-img-I139-867-504-4735",
+                      "align": "center"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sourceFrame": "🟢 Footer",
+        "mobileFrame": ""
+      },
+      "label": "🟢 Footer"
+    }
+  ],
+  "createdAt": "2026-08-10T12:45:21.858Z",
+  "updatedAt": "2026-08-10T12:50:39.012Z"
+}

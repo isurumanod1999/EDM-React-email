@@ -198,7 +198,9 @@ export const Footer: React.FC<FooterProps> = ({
 
               <td align="right" valign="middle" className={EDM_CLASS.footerStack} style={{ width: '50%' }}>
                 <table cellPadding={0} cellSpacing={0} role="presentation" align="right" style={{ marginLeft: 'auto' }}>
-                  {socialTitle && (
+                  {/* Without icons the heading is a label for nothing — and on a
+                      Figma-built footer it invents copy the design never had. */}
+                  {socialTitle && socialLinks.length > 0 && (
                     <tr>
                       <td
                         align="right"

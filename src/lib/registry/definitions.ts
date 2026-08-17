@@ -537,6 +537,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       },
       sourceFrame: '',
       mobileFrame: '',
+      hideBorders: false,
+      borderColor: '',
     },
     fields: [
       {
@@ -545,6 +547,20 @@ export const componentDefinitions: ComponentDefinition[] = [
         type: 'text',
         group: 'Content',
         advanced: true,
+      },
+      {
+        key: 'hideBorders',
+        label: 'Hide Borders',
+        type: 'boolean',
+        group: 'Style',
+        helpText: 'Remove every border the Figma design carries',
+      },
+      {
+        key: 'borderColor',
+        label: 'Border Color',
+        type: 'color',
+        group: 'Style',
+        helpText: 'Recolor the borders from the Figma design. Leave empty to keep the original.',
       },
       {
         key: 'mobileFrame',

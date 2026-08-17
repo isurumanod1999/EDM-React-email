@@ -18,6 +18,7 @@ import {
   type FigmaReactEmailBlockProps,
 } from '@/lib/figma/types/reactEmailAst';
 import { autoMobileStyle } from '@/components/email/mobileTypography';
+import { applyBorderControls } from '@/lib/figma/borderControls';
 
 const EMAIL_FONT =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
@@ -662,6 +663,8 @@ export const FigmaReactEmailBlock: React.FC<FigmaReactEmailBlockProps> = ({
   editable,
   blockId,
   emitResponsiveStyles = true,
+  hideBorders = false,
+  borderColor,
 }) => {
   if (!tree) {
     return (
@@ -676,6 +679,11 @@ export const FigmaReactEmailBlock: React.FC<FigmaReactEmailBlockProps> = ({
   // renders still get a unique, deterministic prefix.
   const ns = sanitizeNs(blockId ?? `t${hashTree(tree)}`);
   const ctx: RenderCtx = { editable: Boolean(editable), blockId, ns };
+  const trimmedBorderColor = borderColor?.trim() || undefined;
+  const rendered =
+    hideBorders || trimmedBorderColor
+      ? applyBorderControls(tree, hideBorders, trimmedBorderColor)
+      : tree;
 
   // A React Fragment groups the responsive <Head><style> and the rendered tree.
   // Fragments emit NO DOM of their own (no wrapper element), so this is not a
@@ -687,8 +695,8 @@ export const FigmaReactEmailBlock: React.FC<FigmaReactEmailBlockProps> = ({
   // <body> is unreliable in email clients).
   return (
     <>
-      {emitResponsiveStyles && <ResponsiveStyles tree={tree} ns={ns} />}
-      {renderNode(tree, 'root', [], ctx)}
+      {emitResponsiveStyles && <ResponsiveStyles tree={rendered} ns={ns} />}
+      {renderNode(rendered, 'root', [], ctx)}
     </>
   );
 };

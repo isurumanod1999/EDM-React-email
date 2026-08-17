@@ -122,4 +122,8 @@ export interface FigmaReactEmailBlockProps {
    * head so media queries survive in email clients.
    */
   emitResponsiveStyles?: boolean;
+  /** Strip every border the imported design carries, without editing the tree. */
+  hideBorders?: boolean;
+  /** Recolor every border the imported design carries. Ignored when empty. */
+  borderColor?: string;
 }

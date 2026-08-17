@@ -62,6 +62,22 @@ Returns `{ url, filename, size }`.
 
 ---
 
+## Tagging (campaign URL Excel)
+
+Post-compose only. Excel parsing is server-side (`exceljs`); browser never loads the workbook parser.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/tagging/parse` | Multipart `file` (`.xlsx`, max 10 MB) → `{ rows, sheetName? }` |
+| POST | `/api/tagging/apply` | JSON `{ templateId, mappings[] }` → writes URL/alt props, saves template |
+
+Parse row shape: `finalUrl`, `urlLabel`, `altText?`, `status` (`proposed` \| `skipped`), `skipReason?`, `raw`.  
+Apply mapping shape: `rowIndex`, `targetId`, `finalUrl`, `urlLabel`, `altText?`. Target ids: `{blockId}:{propKey}`, `{blockId}:social:N:url`, `{blockId}:tree:path:href`.
+
+Error codes include `tagging_parse_failed`, `tagging_apply_failed`. Multipart parse is exempt from the JSON body-size limiter (same pattern as assets upload).
+
+---
+
 ## Figma
 
 | Method | Path | Description |

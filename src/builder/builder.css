@@ -2321,3 +2321,170 @@
   color: var(--accent);
   text-decoration: underline;
 }
+
+/* ---- Tagging panel ---- */
+
+.tagging-popover {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 50;
+  margin-top: 6px;
+  width: 720px;
+  max-width: calc(100vw - 32px);
+  max-height: 70vh;
+  overflow: auto;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.tagging-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tagging-popover-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tagging-tabs,
+.tagging-actions {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.tagging-notice {
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.tagging-muted {
+  color: var(--text-secondary);
+}
+
+.tagging-ok {
+  color: #22c55e;
+}
+
+.tagging-warn {
+  color: #f59e0b;
+}
+
+.tagging-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tagging-table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 8px 6px 0;
+  white-space: nowrap;
+}
+
+.tagging-table td {
+  padding: 7px 8px 7px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.tagging-table tr:last-child td {
+  border-bottom: none;
+}
+
+.tagging-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  word-break: break-word;
+}
+
+.tagging-url {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.tagging-url a {
+  color: var(--accent);
+}
+
+/* Native selects inherit the OS palette, which is unreadable on the dark
+   builder chrome, so the theme is applied explicitly. */
+.tagging-select {
+  max-width: 220px;
+  width: 100%;
+  font-size: 0.75rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.tagging-select option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.tagging-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.tagging-status-applied {
+  background: rgba(34, 197, 94, 0.16);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.tagging-status-confirmed {
+  background: rgba(99, 102, 241, 0.16);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.tagging-status-proposed {
+  background: rgba(56, 189, 248, 0.16);
+  color: #7dd3fc;
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.tagging-status-unmatched {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.tagging-status-skipped {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}

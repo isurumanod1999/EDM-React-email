@@ -45,6 +45,7 @@ function jsonError(
 
 function maxBodyBytesForPath(pathname: string): number | null {
   if (pathname.startsWith('/api/assets/upload')) return null; // validated in route
+  if (pathname.startsWith('/api/tagging/parse')) return null; // multipart xlsx; validated in route
   if (pathname.startsWith('/api/figma/') || pathname.startsWith('/api/ai/')) {
     return MAX_HEAVY_JSON_BODY_BYTES;
   }

@@ -1,6 +1,8 @@
 import { getComponentDefinition } from '@/lib/registry';
+import type { FieldType } from '@/lib/registry/types';
 import type { ParsedFigmaNode } from './parseFigmaNode';
 import { resolveComponentLink, type ComponentLink } from './componentLinks';
+import { figmaToReactEmailTree } from './figmaToReactEmail';
 import {
   bodyTextNodes,
   findAllTextNodes,
@@ -41,13 +43,68 @@ export interface RegistryBuildUrls {
   mobileUrl?: string;
 }
 
+/** Field groups that describe how a block looks rather than what it says. */
+const PRESENTATION_GROUPS = new Set(['Layout', 'Style']);
+
+/** Fallback for fields the registry declares without a group. */
+const PRESENTATION_FIELD_TYPES = new Set<FieldType>(['color', 'number', 'select']);
+
+/**
+ * Defaults that are not declared registry fields but still only affect layout.
+ * Anything else undeclared (`showLinks`, `socialTitle`, `showDivider`, …) is
+ * treated as content and dropped.
+ */
+const PRESENTATION_ONLY_PROPS = new Set([
+  'deskPadding',
+  'mobPadding',
+  'iconPadding',
+  'align',
+  'textAlign',
+  'socialIconSize',
+  'dividerColor',
+  'linkColor',
+  'imgBorderRadius',
+  'cardBackgroundColor',
+]);
+
+/**
+ * Merge the registry defaults a Figma-built block may safely inherit.
+ *
+ * Registry defaults are Nissan demo content so a hand-added block looks
+ * finished the moment it lands on the canvas. A block built from Figma must
+ * show only what the frame actually contains, so copy, links, logos and social
+ * icons are never inherited — a footer holding one legal paragraph would
+ * otherwise ship "Connect with us", Facebook/Instagram icons and
+ * Manage preferences / Unsubscribe / Privacy Policy links the design never had.
+ * Colours, padding and alignment still fall back to the registry so blocks keep
+ * sane spacing when Figma does not specify it.
+ */
 function normalizeProps(
   componentId: string,
   props: Record<string, unknown>
 ): Record<string, unknown> {
+  const extracted = Object.fromEntries(
+    Object.entries(props).filter(([, value]) => value !== undefined)
+  );
+
   const def = getComponentDefinition(componentId);
-  if (!def) return props;
-  return { ...structuredClone(def.defaultProps as Record<string, unknown>), ...props };
+  if (!def) return extracted;
+
+  const fields = new Map((def.fields ?? []).map((f) => [f.key, f]));
+  const defaults = structuredClone(def.defaultProps as Record<string, unknown>);
+  const presentation: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(defaults)) {
+    const field = fields.get(key);
+    const keep = field
+      ? field.group
+        ? PRESENTATION_GROUPS.has(field.group)
+        : PRESENTATION_FIELD_TYPES.has(field.type)
+      : PRESENTATION_ONLY_PROPS.has(key);
+    if (keep) presentation[key] = value;
+  }
+
+  return { ...presentation, ...extracted };
 }
 
 function scoreProps(link: ComponentLink, props: Record<string, unknown>): number {
@@ -249,22 +306,6 @@ function extractIntroCopy(node: ParsedFigmaNode): Record<string, unknown> {
     body: body || primaryText(node) || '',
     backgroundColor: node.backgroundColor,
     textAlign: node.textAlign ?? 'left',
-  };
-}
-
-function extractFooter(node: ParsedFigmaNode): Record<string, unknown> {
-  const texts = findAllTextNodes(node);
-  const copyright =
-    texts.find((t) => /©|copyright|\d{4}/i.test(t.text ?? ''))?.text?.trim() ??
-    texts[texts.length - 1]?.text?.trim() ??
-    '';
-  const legal = texts.find((t) => /terms|conditions|legal|warranty/i.test(t.text ?? ''))?.text?.trim();
-  const logoNode = findImageByName(node, /logo/i);
-  return {
-    logoSrc: logoNode ? imageUrl(logoNode) : undefined,
-    copyright,
-    legalText: legal ?? '',
-    backgroundColor: node.backgroundColor,
   };
 }
 
@@ -480,6 +521,20 @@ function extractOrderCard(node: ParsedFigmaNode): Record<string, unknown> {
   };
 }
 
+/**
+ * Registry components an automatic Figma match must never produce.
+ *
+ * The prebuilt Footer renders a fixed order (logo → social → links → legal) and
+ * ships Nissan demo content, so mapping a Figma frame onto it can reorder the
+ * design or introduce elements the selected frame never had. Rejecting the
+ * match here rather than deleting the link in `componentLinks.ts` covers every
+ * route into the component at once — layer name, emoji-prefixed name, master
+ * component ID and user overrides — and leaves the Footer untouched for users
+ * who add it by hand from the builder registry. Rejected nodes fall through to
+ * the AST build, which reproduces only the visible Figma nodes.
+ */
+const REGISTRY_MATCH_BYPASS = new Set(['footer']);
+
 const EXTRACTORS: Record<
   string,
   (node: ParsedFigmaNode, mobileRoot?: ParsedFigmaNode, urls?: RegistryBuildUrls) => Record<string, unknown>
@@ -490,7 +545,6 @@ const EXTRACTORS: Record<
   'cta-banner': extractCtaBanner,
   'section-title': extractSectionTitle,
   'intro-copy': extractIntroCopy,
-  footer: extractFooter,
   'image-block': extractImageBlock,
   'button-row': extractButtonRow,
   testimonial: extractTestimonial,
@@ -608,6 +662,8 @@ export function matchNodeToRegistry(
   const link = resolveComponentLink(target);
   if (!link) return null;
 
+  if (REGISTRY_MATCH_BYPASS.has(link.registryComponentId)) return null;
+
   const mobileChild = matchMobileChild(target, mobileRoot, desktopRoot);
   const { raw, props } = extractPropsForLink(link, target, mobileChild ?? mobileRoot, urls);
   const confidence = scoreProps(link, props);
@@ -671,26 +727,79 @@ function buildRegistryResult(
   };
 }
 
-function acceptDecomposedMatches(matches: NodeMatch[], context: string): RegistryBuildResult | null {
+function selectDecomposedMatches(matches: NodeMatch[]): NodeMatch[] | null {
   if (matches.length === 0) return null;
 
   const avgConfidence = matches.reduce((sum, m) => sum + m.confidence, 0) / matches.length;
   if (matches.length >= 2 && avgConfidence >= MIN_DECOMPOSE_AVG) {
-    return buildRegistryResult(
-      matches,
-      `Matched ${matches.length} Figma sections to registry components (${matches.map((m) => m.link.label).join(', ')}) via component links.`
-    );
+    return matches;
   }
 
   const strong = matches.filter((m) => m.confidence >= MIN_REGISTRY_CONFIDENCE);
   if (strong.length >= 2 && strong.length / matches.length >= MIN_PARTIAL_MATCH_RATIO) {
-    return buildRegistryResult(
-      strong,
-      `${context}: matched ${strong.length}/${matches.length} linked sections with high confidence (${strong.map((m) => m.link.label).join(', ')}).`
-    );
+    return strong;
   }
 
   return null;
+}
+
+function acceptDecomposedMatches(matches: NodeMatch[], context: string): RegistryBuildResult | null {
+  const selected = selectDecomposedMatches(matches);
+  if (!selected) return null;
+
+  const reasoning =
+    selected.length === matches.length
+      ? `Matched ${selected.length} Figma sections to registry components (${selected.map((m) => m.link.label).join(', ')}) via component links.`
+      : `${context}: matched ${selected.length}/${matches.length} linked sections with high confidence (${selected.map((m) => m.link.label).join(', ')}).`;
+  return buildRegistryResult(selected, reasoning);
+}
+
+function buildMixedDecomposedResult(
+  children: ParsedFigmaNode[],
+  matches: NodeMatch[],
+  mobileRoot: ParsedFigmaNode | undefined,
+  desktopRoot: ParsedFigmaNode
+): RegistryBuildResult {
+  const registryByNodeId = new Map(matches.map((match) => [match.node.id, match]));
+  const blocks: RegistryBuildBlock[] = [];
+
+  for (const child of children) {
+    const target = unwrapWrapper(child);
+    const match = registryByNodeId.get(target.id);
+    if (match) {
+      blocks.push({
+        componentId: match.link.registryComponentId,
+        props: match.props,
+        label: match.link.label,
+      });
+      continue;
+    }
+
+    const link = resolveComponentLink(target);
+    if (link?.registryComponentId !== 'footer') continue;
+
+    const mobileChild = matchMobileChild(target, mobileRoot, desktopRoot);
+    const mobileTarget = mobileChild ? unwrapWrapper(mobileChild) : undefined;
+    const built = figmaToReactEmailTree(target, mobileTarget);
+    blocks.push({
+      componentId: 'figma-react-email',
+      props: {
+        tree: built.tree,
+        sourceFrame: target.name,
+        mobileFrame: mobileTarget?.name ?? '',
+      },
+      label: target.name,
+    });
+  }
+
+  const avgConfidence =
+    matches.reduce((sum, match) => sum + match.confidence, 0) / matches.length;
+  return {
+    blocks,
+    confidence: avgConfidence,
+    mappingMode: 'registry',
+    reasoning: `Matched ${matches.length} Figma sections to registry components and built the Footer from its design-derived AST in source order.`,
+  };
 }
 
 /**
@@ -715,8 +824,16 @@ export function tryFigmaToRegistryBlocks(
     }
 
     if (matches.length >= 2) {
-      const partial = acceptDecomposedMatches(matches, 'Decomposed email frame');
-      if (partial) return partial;
+      const selected = selectDecomposedMatches(matches);
+      if (selected) {
+        const hasFooter = children.some(
+          (child) => resolveComponentLink(unwrapWrapper(child))?.registryComponentId === 'footer'
+        );
+        if (hasFooter) {
+          return buildMixedDecomposedResult(children, selected, mobileNode, root);
+        }
+        return acceptDecomposedMatches(matches, 'Decomposed email frame');
+      }
     }
   }
 
@@ -751,11 +868,22 @@ export function tryFigmaToRegistryBlocks(
   }
 
   if (instanceMatches.length >= 1) {
-    const partial = acceptDecomposedMatches(
-      instanceMatches,
-      `Decomposed ${instanceMatches.length} linked Figma instance(s)`
-    );
-    if (partial) return partial;
+    const selected = selectDecomposedMatches(instanceMatches);
+    if (selected) {
+      // A footer among the walked sections is bypassed by matchNodeToRegistry,
+      // so it never lands in `selected`. Inject it as a design-derived AST block
+      // in place rather than dropping it from the email.
+      const hasFooter = walkTargets.some(
+        (child) => resolveComponentLink(unwrapWrapper(child))?.registryComponentId === 'footer'
+      );
+      if (hasFooter) {
+        return buildMixedDecomposedResult(walkTargets, selected, mobileNode, root);
+      }
+      return acceptDecomposedMatches(
+        instanceMatches,
+        `Decomposed ${instanceMatches.length} linked Figma instance(s)`
+      );
+    }
   }
 
   return null;

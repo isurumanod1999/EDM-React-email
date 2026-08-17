@@ -3,11 +3,11 @@
 **Audience:** stakeholders / team demo  
 **Demo date:** Tuesday, Aug 4, 2026  
 **Branch:** `bmad-2` · **Verify:** `npm run verify`  
-**Next work (pending):** [NEXT-PLANS.md](./NEXT-PLANS.md) — Client QA: render in clients · add & test URLs
+**Next work (pending):** [NEXT-PLANS.md](./NEXT-PLANS.md) — Client QA: render in real email clients (tagging URLs **done**)
 
-> **Best visuals:** open [`demo-diagrams.html`](./demo-diagrams.html) in Chrome/Edge → press **F11** for fullscreen. Arrow keys / PageUp·Down move between slides. Print → Save as PDF for PowerPoint.
+> **For Confluence:** paste [`CONFLUENCE-EDM-React-Email-Tool.md`](./CONFLUENCE-EDM-React-Email-Tool.md) into a new Confluence page (primary stakeholder doc).
 >
-> Slides include **What's next**, **Render in clients**, and **Add & test URLs** (all pending Client QA). Talking points below.
+> Optional local slides: [`demo-diagrams.html`](./demo-diagrams.html). Talking points below.
 
 ---
 
@@ -29,8 +29,8 @@
 | Screenshot / AI import (Ollama or Gemini) | ✅ |
 | Export ZIP + Resend test send | ✅ |
 | Architecture ports (ready for Postgres/S3/auth) | ✅ ports · ⏸ adapters deferred |
+| **Tagging Excel → apply FINAL URL / Alt Text + checklist** | ✅ |
 | **Render QA in real email clients (desktop + mobile)** | ⏸ **Pending** |
-| **Add URLs from tagging doc + click-test every URL** | ⏸ **Pending** |
 | Production authentication | ⏸ Deferred (Epic F4) |
 
 ---
@@ -302,19 +302,19 @@ pie title Delivery status (story / epic view)
 | Is this production SaaS? | Internal tool; `AUTH_MODE=open`. Auth/Postgres/S3 designed as ports, not built yet. |
 | How accurate is Figma import? | Best on Nissan DS names/IDs (Header, Hero, 2UP, call-out…). Registry match only when it keeps all content; otherwise → React Email primitives or image flatten. |
 | Why React Email? | Component model + email-safe HTML; maintainable vs sliced Handlebars-only. |
-| What’s next? | **Client QA:** **(1)** How templates render in real email clients on desktop and mobile. **(2)** Find a way to add URLs from the tagging doc, then test every URL. Fix what breaks from render evidence along the way. |
+| What’s next? | **Client QA:** how templates render in real email clients on desktop and mobile. Fix what breaks from render evidence. Tagging Excel import + in-tool checklist is already live. |
 
 ---
 
 ## 10b. Next plans (detail)
 
-Canonical checklist: **[NEXT-PLANS.md](./NEXT-PLANS.md)**. Diagrams: `demo-diagrams.html` → `#next`, `#render-qa`, `#add-urls`.
+Canonical checklist: **[NEXT-PLANS.md](./NEXT-PLANS.md)**. Confluence: **[CONFLUENCE-EDM-React-Email-Tool.md](./CONFLUENCE-EDM-React-Email-Tool.md)**.
 
 ### 1. Render in real email clients — **pending**
 Browser preview is not enough. QA every template in Outlook, Gmail, Apple Mail, and on iPhone / Android (and other clients as needed). Capture screenshots + defects; fix layout/CSS issues found there; re-QA.
 
-### 2. Add URLs — then test them — **pending**
-Find a way to apply tagging-doc URLs (and labels / alt) onto CTAs, images, logos, and text links. After send, click-test every URL on desktop and mobile. Wrong destination or broken tracking = fail QA. **Not built yet.**
+### 2. Add URLs — then test them — **done**
+Toolbar **Tagging…**: upload Book1 `.xlsx` (FINAL URL / URL Label / Alt Text) → rematch → apply onto block props → desk/mobile checklist. See [BUILDER.md](./BUILDER.md#tagging-urls-post-compose).
 
 ---
 
@@ -324,8 +324,9 @@ Find a way to apply tagging-doc URLs (and labels / alt) onto CTAs, images, logos
 |-------|------|
 | Architecture summary | `docs/ARCHITECTURE.md` |
 | Builder how-to | `docs/BUILDER.md` |
+| **Confluence page (paste source)** | `docs/CONFLUENCE-EDM-React-Email-Tool.md` |
 | **Next plans (Client QA)** | `docs/NEXT-PLANS.md` |
-| Demo slides | `docs/demo-diagrams.html` |
+| Demo talking points | `docs/DEMO-PRESENTATION.md` |
 | Component links | `src/lib/figma/componentLinks.ts` |
 | Master IDs | `src/lib/figma/figmaComponentIds.ts` |
 | Handoff / status | `_bmad-output/planning-artifacts/HANDOFF.md` |

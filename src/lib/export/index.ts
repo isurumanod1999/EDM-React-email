@@ -4,9 +4,11 @@ import { bundleImagesInHtml } from './bundleImages';
 import { createExportZip } from './createExportZip';
 import { enhanceEmailHtml } from './enhanceEmailHtml';
 import { sanitizeExportName } from './sanitizeName';
+import { wrapHtmlLines } from './wrapHtmlLines';
 
 export { sanitizeExportName } from './sanitizeName';
 export { enhanceEmailHtml } from './enhanceEmailHtml';
+export { wrapHtmlLines } from './wrapHtmlLines';
 export { bundleImagesInHtml, collectImageUrls, EXPORT_IMG_DIR } from './bundleImages';
 export type { BundledImage } from './bundleImages';
 export { createExportZip } from './createExportZip';
@@ -16,7 +18,7 @@ export type { EmailExportPackage } from './createExportZip';
 export async function buildEmailExport(html: string, templateName: string) {
   const enhanced = enhanceEmailHtml(html);
   const { html: htmlWithLocalImages, images } = await bundleImagesInHtml(enhanced);
-  return createExportZip(templateName, htmlWithLocalImages, images);
+  return createExportZip(templateName, wrapHtmlLines(htmlWithLocalImages), images);
 }
 
 /** Write export folder (template-name.html + img/) for Gulp / CLI */

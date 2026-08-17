@@ -29,7 +29,7 @@ The tool is intended for **internal developer-team use**. Authentication is not 
 ## Editor layout
 
 ```
-Toolbar     Save · Export · Import ▾ · Send · Duplicate
+Toolbar     Save · Export · Import ▾ · Tagging… · Send · Duplicate
 ──────────────────────────────────────────────────────
 Components  │  Canvas (block list)     │  Properties
  (palette)  │  Live preview (iframe)   │  (meta + props)
@@ -55,8 +55,9 @@ Bottom nav: **Components | Canvas | Properties**. Palette and properties open as
 4. **Remove blocks** — delete requires confirmation.
 5. **Preview** — live preview updates automatically (debounced). Stale preview dims with a spinner overlay while re-rendering.
 6. **Save** — manual **Save** or auto-save every **45 seconds** when dirty. Toasts confirm save/auto-save.
-7. **Export** — **Export** downloads a ZIP with HTML + bundled images.
-8. **Send test** — requires `RESEND_API_KEY`; optional default recipient via `NEXT_PUBLIC_TEST_EMAIL_DEFAULT` in `.env.local`.
+7. **Tagging (URLs)** — after the layout is composed, use **Tagging…** to upload the campaign Excel and apply FINAL URLs (see below).
+8. **Export** — **Export** downloads a ZIP with HTML + bundled images.
+9. **Send test** — requires `RESEND_API_KEY`; optional default recipient via `NEXT_PUBLIC_TEST_EMAIL_DEFAULT` in `.env.local`.
 
 ### Unsaved changes
 
@@ -102,14 +103,33 @@ For blocks imported via **Build from Figma** (`figma-react-email`):
 
 ---
 
+## Tagging URLs (post-compose)
+
+Build the template **without** requiring campaign URLs, then apply them from the tagging spreadsheet.
+
+1. Open a composed template in the editor.
+2. Click **Tagging…** / **Upload** and choose a Book1-style `.xlsx` with columns **FINAL URL**, **URL Label**, **Alt Text** (extra header text / newlines are OK).
+3. Review proposed matches (URL Label → linkable targets). Rematch or clear rows as needed; confirm, then **Apply & save**.
+4. Use the **Checklist** tab to mark pass/fail for desktop and mobile preview contexts.
+
+| Behavior | Detail |
+|----------|--------|
+| Match key | **URL Label** (not FINAL URL) |
+| Writes | FINAL URL → URL props; Alt Text → paired alt props; Figma tree `href` / `alt` when applicable |
+| Does not write | CTA / button **visible text** (URL Label is match-only) |
+| Skipped rows | Mirror / Unsubscribe CRM includes, empty / non-http FINAL URL |
+| Partial apply | Allowed; unmatched rows warn but do **not** hard-block export |
+
+APIs: `POST /api/tagging/parse`, `POST /api/tagging/apply` — see [API.md](./API.md).
+
+---
+
 ## Known gaps / next (pending)
 
 Not done in the tool yet — see [NEXT-PLANS.md](./NEXT-PLANS.md):
 
 1. **Render QA** — how templates look in real email clients on desktop and mobile (not only browser preview)  
-2. **Add & test URLs** — get tagging-doc URLs onto CTAs / images / links, then click-test every URL  
-3. **Rendering fixes** — driven by render QA evidence (Outlook, dark mode, etc.)  
-
+2. **Rendering fixes** — driven by render QA evidence (Outlook, dark mode, etc.)  
 
 ---
 

@@ -160,7 +160,7 @@ describe('tryFigmaToRegistryBlocks', () => {
     expect(result!.mappingMode).toBe('registry');
   });
 
-  it('decomposes stacked header + footer into multiple registry blocks', () => {
+  it('preserves source order with registry sections and a design-derived AST footer', () => {
     const email = frame('Email', [
       frame('Header', [imageNode('Logo', '/images/uploads/logo.png')]),
       frame('Hero', [
@@ -173,9 +173,60 @@ describe('tryFigmaToRegistryBlocks', () => {
     const result = tryFigmaToRegistryBlocks(email);
 
     expect(result).not.toBeNull();
-    expect(result!.blocks.length).toBeGreaterThanOrEqual(2);
-    expect(result!.blocks.map((b) => b.componentId)).toContain('header');
-    expect(result!.blocks.map((b) => b.componentId)).toContain('hero-banner');
+    expect(result!.blocks.map((b) => b.componentId)).toEqual([
+      'header',
+      'hero-banner',
+      'figma-react-email',
+    ]);
+    expect(result!.blocks.some((b) => b.componentId === 'footer')).toBe(false);
+    expect(result!.blocks[2].label).toBe('Footer');
+    expect(result!.blocks[2].props.sourceFrame).toBe('Footer');
+    expect(JSON.stringify(result!.blocks[2].props.tree)).toContain('© 2026 Nissan');
+  });
+
+  it('injects the AST footer even when sections are nested under a wrapper', () => {
+    // Root has a single wrapper child, so the flat decompose path is skipped and
+    // the nested-walk path runs — it must still emit the footer, not drop it.
+    const email = frame('Email', [
+      frame('Wrapper', [
+        frame('Header', [imageNode('Logo', '/images/uploads/logo.png')]),
+        frame('Hero', [
+          imageNode('Banner', '/images/uploads/banner.png'),
+          textNode('Headline', 'Welcome', 28),
+        ]),
+        frame('Footer', [textNode('Copyright', '© 2026 Nissan', 12)]),
+      ]),
+    ]);
+
+    const result = tryFigmaToRegistryBlocks(email);
+
+    expect(result).not.toBeNull();
+    const ids = result!.blocks.map((b) => b.componentId);
+    expect(ids).toContain('header');
+    expect(ids).toContain('hero-banner');
+    expect(ids).toContain('figma-react-email');
+    expect(ids).not.toContain('footer');
+    const footerBlock = result!.blocks.find((b) => b.componentId === 'figma-react-email');
+    expect(footerBlock!.label).toBe('Footer');
+    expect(JSON.stringify(footerBlock!.props.tree)).toContain('© 2026 Nissan');
+  });
+
+  it('never routes a Figma footer to the prebuilt Footer, however it is matched', () => {
+    const byName = frame('Footer', [textNode('Copyright', '© 2026 Nissan', 12)]);
+    const byNormalizedName = frame('🟢 Footer', [textNode('Copyright', '© 2026 Nissan', 12)]);
+    const byComponentId = frame(
+      'Frame 1618868494',
+      [textNode('Copyright', '© 2026 Nissan', 12)],
+      { type: 'INSTANCE', componentId: '8535:1312' }
+    );
+
+    // The link still resolves — the rejection happens at the registry-match
+    // boundary so the AST build can reproduce the design exactly.
+    expect(resolveComponentLink(byComponentId)?.registryComponentId).toBe('footer');
+
+    expect(tryFigmaToRegistryBlocks(byName)).toBeNull();
+    expect(tryFigmaToRegistryBlocks(byNormalizedName)).toBeNull();
+    expect(tryFigmaToRegistryBlocks(byComponentId)).toBeNull();
   });
 
   it('maps 2UP layout to two-col-stacked when columns have product content', () => {

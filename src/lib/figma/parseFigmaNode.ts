@@ -54,6 +54,11 @@ export interface ParsedFigmaNode {
   cornerRadius?: number;
   strokeColor?: string;
   strokeWeight?: number;
+  /**
+   * Per-side stroke weights, set only when the sides differ. A Figma rule drawn
+   * on one edge (a footer's hairline divider) must not become a box.
+   */
+  strokeSides?: { top: number; right: number; bottom: number; left: number };
   imageRef?: string;
   /** PNG export from Figma /images API — pixel-accurate render of this node */
   exportUrl?: string;
@@ -314,10 +319,11 @@ export function parseFigmaNode(
     cornerRadius,
     strokeColor,
     strokeWeight,
+    strokeSides: strokeSidesOf(node),
     imageRef: extractImageRef(node.fills),
     componentId: node.componentId,
     nodeId: node.id,
-    children: visibleChildren(node).map((child) => parseFigmaNode(child, variables)),
+    children: visibleDocumentChildren(node).map((child) => parseFigmaNode(child, variables)),
   };
 
   return parsed;
@@ -327,26 +333,52 @@ export function parseFigmaNode(
  * Resolve a node's stroke weight so a visible border is never dropped.
  *
  * Figma reports borders three different ways:
+ *  - `individualStrokeWeights` (per-side) — checked first, because Figma keeps
+ *    sending a stale uniform `strokeWeight` alongside it. Trusting the scalar
+ *    turns a one-sided rule into a full box.
  *  - `strokeWeight` (uniform) — the common case.
- *  - `individualStrokeWeights` (per-side) — `strokeWeight` is then often absent,
- *    so we take the thickest visible side.
  *  - neither, when the weight is left at Figma's implicit 1px default — if a
  *    stroke paint resolved to a color, we treat the weight as 1.
+ *
+ * The number returned is the thickest side; `strokeSides` carries which edges
+ * actually have it.
  */
 function effectiveStrokeWeight(
   node: FigmaNodeDocument,
   strokeColor: string | undefined
 ): number | undefined {
-  if (typeof node.strokeWeight === 'number' && node.strokeWeight > 0) {
-    return node.strokeWeight;
-  }
   const sides = node.individualStrokeWeights;
   if (sides) {
     const maxSide = Math.max(sides.top ?? 0, sides.right ?? 0, sides.bottom ?? 0, sides.left ?? 0);
     if (maxSide > 0) return maxSide;
+    // Every side is 0 — the design explicitly has no border here.
+    return undefined;
+  }
+  if (typeof node.strokeWeight === 'number' && node.strokeWeight > 0) {
+    return node.strokeWeight;
   }
   if (strokeColor) return 1;
   return node.strokeWeight;
+}
+
+/**
+ * Per-side weights, only when the sides genuinely differ. Uniform borders stay
+ * undefined so downstream keeps emitting the simpler shorthand.
+ */
+function strokeSidesOf(
+  node: FigmaNodeDocument
+): { top: number; right: number; bottom: number; left: number } | undefined {
+  const sides = node.individualStrokeWeights;
+  if (!sides) return undefined;
+  const resolved = {
+    top: sides.top ?? 0,
+    right: sides.right ?? 0,
+    bottom: sides.bottom ?? 0,
+    left: sides.left ?? 0,
+  };
+  const values = Object.values(resolved);
+  if (values.every((v) => v === values[0])) return undefined;
+  return resolved;
 }
 
 /**
@@ -357,8 +389,12 @@ function effectiveStrokeWeight(
  * enabled. Design systems commonly stack every component variant inside one
  * slot (e.g. a 48px-tall "CTA" frame holding 5 button variants); Figma shows
  * only the top one, so the converter must not emit all of them.
+ *
+ * This is the canonical rule: anything that summarizes or converts a raw Figma
+ * document must use it, or the design context will describe layers the build
+ * never emits.
  */
-function visibleChildren(node: FigmaNodeDocument): FigmaNodeDocument[] {
+export function visibleDocumentChildren(node: FigmaNodeDocument): FigmaNodeDocument[] {
   const kids = (node.children ?? []).filter((child) => child.visible !== false);
   if (kids.length <= 1 || node.clipsContent === false) return kids;
 

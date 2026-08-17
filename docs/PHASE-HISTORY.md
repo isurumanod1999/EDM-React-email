@@ -63,13 +63,15 @@ Last updated: 2026-08-02
 
 **Builder polish backlog is complete.**
 
-**Product next (pending):** Client QA — render in real email clients (desktop + mobile) → add URLs from tagging doc + click-test them — see [NEXT-PLANS.md](./NEXT-PLANS.md). Epics F1–F4 only if requested.
+**Tagging URL import (2026-08-10):** post-compose Excel parse → URL Label match → apply FINAL URL/alt → desk/mobile checklist. Stories 1.1–1.6 done; see `_bmad-output/planning-artifacts/epics-tagging-url-import.md`.
+
+**Product next (pending):** Client QA — render in real email clients (desktop + mobile) — see [NEXT-PLANS.md](./NEXT-PLANS.md). Epics F1–F4 only if requested.
 
 ---
 
 ## Deferred (not started)
 
-- **Client QA (render in clients · add & test URLs)** — [NEXT-PLANS.md](./NEXT-PLANS.md)  
+- **Client QA (render in real email clients)** — [NEXT-PLANS.md](./NEXT-PLANS.md)  
 - **F1** PostgreSQL template storage  
 - **F2** S3 asset storage  
 - **F3** Background worker / JobQueue  
