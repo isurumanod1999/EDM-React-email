@@ -61,6 +61,8 @@ interface BuilderState {
   removeBlock: (id: string) => void;
   duplicateBlock: (id: string) => void;
   reorderBlocks: (activeId: string, overId: string) => void;
+  /** Replace the full blocks array (code-view apply). Preserves meta/id. */
+  replaceBlocks: (blocks: TemplateBlock[]) => void;
   updateBlockProp: (blockId: string, key: string, value: unknown) => void;
   updateMeta: (meta: Partial<EmailTemplateMeta>) => void;
   updateTemplateInfo: (
@@ -343,6 +345,12 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     const [moved] = blocks.splice(oldIndex, 1);
     blocks.splice(newIndex, 0, moved);
 
+    set(markDirty(get(), { blocks }));
+  },
+
+  replaceBlocks: (blocks) => {
+    const { template } = get();
+    if (!template) return;
     set(markDirty(get(), { blocks }));
   },
 

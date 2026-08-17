@@ -1,54 +1,16 @@
 # generated: 2026-08-09
-# last_updated: 2026-08-09
+# last_updated: 2026-08-17
 # project: EDM react email tool
 # project_key: NOKEY
 # tracking_system: file-system
-# story_location: {project-root}/_bmad-output/implementation-artifacts
-# epics_source: _bmad-output/planning-artifacts/epics-tagging-url-import.md
-# note: Tracks the Tagging URL import feature epic only. Baseline Epic 1–2 (API/storage + hardening) live in epics.md and are complete — not re-listed here to avoid story-key collisions.
-
-# STATUS DEFINITIONS:
-# ==================
-# Epic Status:
-#   - backlog: Epic not yet started
-#   - in-progress: Epic actively being worked on
-#   - done: All stories in epic completed
-#
-# Epic Status Transitions:
-#   - backlog → in-progress: Automatically when first story is created (via create-story)
-#   - in-progress → done: Manually when all stories reach 'done' status
-#
-# Story Status:
-#   - backlog: Story only exists in epic file
-#   - ready-for-dev: Story file created in stories folder
-#   - in-progress: Developer actively working on implementation
-#   - review: Ready for code review (via Dev's code-review workflow)
-#   - done: Story completed
-#
-# Retrospective Status:
-#   - optional: Can be completed but not required
-#   - done: Retrospective has been completed
-#
-# Action Item Status:
-#   - open: Committed during a retrospective, not yet addressed
-#   - in-progress: Actively being worked on
-#   - done: Completed
-#
-# WORKFLOW NOTES:
-# ===============
-# - Epic transitions to 'in-progress' automatically when first story is created
-# - Stories can be worked in parallel if team capacity allows
-# - Developer typically creates next story after previous one is 'done' to incorporate learnings
-# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
-# - Retrospective appends its action items to action_items; sprint-status surfaces open ones
+# story_location: "_bmad-output/implementation-artifacts"
 
 generated: 2026-08-09
-last_updated: 2026-08-10
+last_updated: 2026-08-17
 project: EDM react email tool
 project_key: NOKEY
 tracking_system: file-system
 story_location: "_bmad-output/implementation-artifacts"
-epics_source: "_bmad-output/planning-artifacts/epics-tagging-url-import.md"
 
 development_status:
   epic-1: done
@@ -59,3 +21,13 @@ development_status:
   1-5-prove-applied-urls-in-preview-and-exported-html: done
   1-6-in-tool-click-checklist-desktop-mobile: done
   epic-1-retrospective: optional
+
+  # React code editor (Epic 1 in epics-react-code-editor.md; tracked as epic-2)
+  epic-2: done
+  2-1-print-the-template-as-react-email-jsx: done
+  2-2-parse-edited-jsx-back-into-template-blocks: done
+  2-3-prove-the-round-trip: done
+  2-4-code-panel-in-the-builder: done
+  2-5-apply-valid-edits-to-the-canvas: done
+  2-6-restructure-across-blocks-and-columns: done
+  epic-2-retrospective: optional

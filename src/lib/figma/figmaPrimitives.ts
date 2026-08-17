@@ -557,6 +557,13 @@ function inferButtonLabel(node: ParsedFigmaNode): string {
   return 'Learn more';
 }
 
+/** True when the subtree includes a chevron/arrow icon beside the label. */
+function hasChevronIcon(node: ParsedFigmaNode, depth = 0): boolean {
+  if (/chevron|arrow_right|arrow-right|›|→/i.test(node.name)) return true;
+  if (depth >= 5) return false;
+  return node.children.some((c) => hasChevronIcon(c, depth + 1));
+}
+
 function isButtonNode(node: ParsedFigmaNode): boolean {
   // A small square is an icon container, not a button — even with a fill + radius.
   if (isIconSized(node)) return false;
@@ -602,6 +609,8 @@ function isImageNode(node: ParsedFigmaNode): boolean {
 
 /** Vertical stack of 2+ pill buttons (Figma "CTA" group). */
 function isCtaButtonStack(node: ParsedFigmaNode): boolean {
+  // A horizontal auto-layout row is a Row/Column layout, not a stacked CTA list.
+  if (node.layoutMode === 'HORIZONTAL') return false;
   const kids = getContentChildren(node);
   if (kids.length < 2) return false;
   // Only count button-SIZED direct children. hasButtonVisualStructure recurses
@@ -978,7 +987,10 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
   void align;
   const texts = findAllTextNodes(node);
   const primaryText = texts.find((t) => (t.text?.length ?? 0) > 2) ?? texts[0];
-  const label = inferButtonLabel(node);
+  const labelBase = inferButtonLabel(node);
+  const label = hasChevronIcon(node) && !/[›→]$/.test(labelBase.trim())
+    ? `${labelBase.trim()} ›`
+    : labelBase;
   const fill = findButtonFill(node);
 
   const bg =
@@ -992,6 +1004,9 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
     normalizeColor(fill?.strokeColor) ?? normalizeColor(node.strokeColor) ?? deepStroke.color;
   const strokeWeight = fill?.strokeWeight ?? node.strokeWeight ?? deepStroke.weight ?? 0;
   const isOutline = (!bg || isLightColor(bg)) && !!strokeColor && strokeWeight > 0;
+  const hasBorder = !!strokeColor && strokeWeight > 0;
+  // Text-link CTAs: no fill shape and no border — label only (e.g. Interior ›).
+  const isTransparent = !isOutline && !hasBorder && !bg;
 
   // Preserve the button's ACTUAL Figma colors — they are already correct for the
   // design's own background. We can't see the section background here, so coercing
@@ -1004,17 +1019,20 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
   // fill bound to a Figma color token we can't read) must never render as bare
   // text. Fall back to a visible pill that contrasts with the label color.
   const fallbackFill = isLightColor(textColor) ? '#333333' : '#e0e0e0';
-  const fillColor = isOutline ? bg ?? 'transparent' : bg ?? fallbackFill;
+  const fillColor = isOutline
+    ? bg ?? 'transparent'
+    : isTransparent
+      ? 'transparent'
+      : bg ?? fallbackFill;
   const borderColor = strokeColor ?? textColor;
   // Render the border whenever Figma has a visible stroke — outline CTAs depend
   // on it, and a filled CTA can legitimately carry a stroke too. (Previously this
   // only fired for `isOutline`, so any bordered solid button lost its outline.)
-  const hasBorder = !!strokeColor && strokeWeight > 0;
   const border = hasBorder
     ? `${Math.max(1, Math.round(strokeWeight))}px solid ${borderColor}`
     : undefined;
   const radius = fill?.cornerRadius ?? findMaxCornerRadius(node);
-  const pillRadius = radius >= 8 ? 999 : Math.max(radius, 0);
+  const pillRadius = isTransparent ? 0 : radius >= 8 ? 999 : Math.max(radius, 0);
   const fw = primaryText?.fontWeight ?? 700;
   const fs = primaryText?.fontSize ?? 14;
   const lineH = primaryText?.lineHeight ?? Math.round(fs * 1.2);
@@ -1037,9 +1055,11 @@ function mapButton(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): R
   const pl = node.paddingLeft ?? fill?.paddingLeft ?? 0;
   const targetH = designH > 0 ? Math.min(designH, 64) : 48;
   const borderPx = hasBorder ? Math.max(1, Math.round(strokeWeight)) : 0;
-  const vPad = Math.max(4, Math.round((targetH - lineH) / 2) - borderPx);
-  const hPad = (pl || pr) > 0 ? Math.min(pl || pr, 48) : 24;
-  const verticalPad = `${vPad}px ${hPad}px`;
+  const vPad = isTransparent
+    ? '0'
+    : Math.max(4, Math.round((targetH - lineH) / 2) - borderPx);
+  const hPad = isTransparent ? 0 : (pl || pr) > 0 ? Math.min(pl || pr, 48) : 24;
+  const verticalPad = isTransparent ? '0' : `${vPad}px ${hPad}px`;
 
   const mobileBtn = primaryText ? mobileTextStyle(primaryText) : undefined;
 

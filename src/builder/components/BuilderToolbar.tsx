@@ -9,6 +9,7 @@ import { FigmaBuildModal } from '@/builder/components/FigmaBuildModal';
 import { FigmaFetchModal } from '@/builder/components/FigmaFetchModal';
 import { ImportMenu } from '@/builder/components/ImportMenu';
 import { TaggingPanel } from '@/builder/components/tagging/TaggingPanel';
+import { CodePanel } from '@/builder/components/code/CodePanel';
 import { SendTestModal } from '@/builder/components/SendTestModal';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { pushToast } from '@/builder/store/toastStore';
@@ -141,6 +142,7 @@ export function BuilderToolbar() {
           onScreenshot={() => setAiImportOpen(true)}
         />
         <TaggingPanel />
+        <CodePanel />
         <button
           type="button"
           className="btn btn-secondary btn-sm"

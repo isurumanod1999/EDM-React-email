@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "0929ded6-2876-4414-a3ee-045e50662944",
-  "name": "Untitled Template",
+  "name": "Nissan Patrol Y63",
   "category": "newsletter",
   "meta": {
     "previewText": "Preview your email",
@@ -748,177 +748,8 @@
         "borderColor": ""
       },
       "label": "🟢 Footer"
-    },
-    {
-      "id": "4f9ba0fc-8071-4456-927d-a94c50fbc8ec",
-      "componentId": "figma-react-email",
-      "componentVersion": 1,
-      "props": {
-        "tree": {
-          "type": "Section",
-          "style": {
-            "maxWidth": 600,
-            "width": "100%",
-            "margin": "0 auto",
-            "backgroundColor": "#000000",
-            "textAlign": "center",
-            "padding": "40px 40px 40px 40px"
-          },
-          "children": [
-            {
-              "type": "Heading",
-              "content": "THE NEW ERA  \nOF PATROL",
-              "as": "h1",
-              "style": {
-                "color": "#caa185",
-                "fontSize": "56px",
-                "fontWeight": 700,
-                "textAlign": "center",
-                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-                "margin": 0,
-                "padding": 0,
-                "lineHeight": "50px",
-                "whiteSpace": "pre-line"
-              },
-              "html": "THE NEW ERA  <br>OF PATROL"
-            },
-            {
-              "type": "Heading",
-              "content": "ARRIVES EARLY 2027",
-              "as": "h1",
-              "style": {
-                "color": "#caa185",
-                "fontSize": "32px",
-                "fontWeight": 700,
-                "textAlign": "center",
-                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-                "margin": 0,
-                "padding": 0,
-                "lineHeight": "45px",
-                "whiteSpace": "pre-line"
-              }
-            },
-            {
-              "type": "Spacer",
-              "height": 40
-            },
-            {
-              "type": "Section",
-              "style": {
-                "width": "100%",
-                "textAlign": "center",
-                "padding": "0px 12px 0px 12px"
-              },
-              "children": [
-                {
-                  "type": "Text",
-                  "content": "<Name>,",
-                  "style": {
-                    "color": "#ffffff",
-                    "fontSize": "16px",
-                    "fontWeight": 400,
-                    "textAlign": "center",
-                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-                    "margin": 0,
-                    "padding": 0,
-                    "lineHeight": "24px",
-                    "whiteSpace": "pre-line",
-                    "marginBottom": 16
-                  }
-                },
-                {
-                  "type": "Text",
-                  "content": "The road ahead is going to get a whole lot more exciting!",
-                  "style": {
-                    "color": "#ffffff",
-                    "fontSize": "16px",
-                    "fontWeight": 400,
-                    "textAlign": "center",
-                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-                    "margin": 0,
-                    "padding": 0,
-                    "lineHeight": "24px",
-                    "whiteSpace": "pre-line",
-                    "marginBottom": 16
-                  }
-                },
-                {
-                  "type": "Text",
-                  "content": "The all-new Nissan Patrol arrives in early 2027, bringing together elevated comfort, commanding performance, legendary off-road capability and new to Patrol features.",
-                  "style": {
-                    "color": "#ffffff",
-                    "fontSize": "16px",
-                    "fontWeight": 400,
-                    "textAlign": "center",
-                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-                    "margin": 0,
-                    "padding": 0,
-                    "lineHeight": "24px",
-                    "whiteSpace": "pre-line",
-                    "marginBottom": 16
-                  }
-                },
-                {
-                  "type": "Text",
-                  "content": "Register your interest to be the first to know when the  latest all-new Patrol updates drops.",
-                  "style": {
-                    "color": "#ffffff",
-                    "fontSize": "16px",
-                    "fontWeight": 400,
-                    "textAlign": "center",
-                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-                    "margin": 0,
-                    "padding": 0,
-                    "lineHeight": "24px",
-                    "whiteSpace": "pre-line",
-                    "marginBottom": 0
-                  }
-                }
-              ]
-            },
-            {
-              "type": "Spacer",
-              "height": 40
-            },
-            {
-              "type": "Button",
-              "href": "#",
-              "label": "Register your interest",
-              "containerStyle": {
-                "textAlign": "center",
-                "width": "100%",
-                "margin": 0,
-                "padding": 0
-              },
-              "style": {
-                "backgroundColor": "#b42535",
-                "color": "#ffffff",
-                "borderRadius": 999,
-                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-                "fontSize": "16px",
-                "fontWeight": 400,
-                "lineHeight": "24px",
-                "padding": "12px 32px",
-                "textAlign": "center",
-                "textTransform": "uppercase",
-                "textDecoration": "none",
-                "width": "290px",
-                "maxWidth": "100%",
-                "display": "inline-block",
-                "boxSizing": "border-box",
-                "margin": 0
-              }
-            }
-          ]
-        },
-        "sourceFrame": "Opening",
-        "mobileFrame": "",
-        "hideBorders": false,
-        "borderColor": ""
-      },
-      "label": "Opening"
     }
   ],
   "createdAt": "2026-08-11T02:53:30.027Z",
-  "updatedAt": "2026-08-11T10:39:36.382Z"
+  "updatedAt": "2026-08-17T15:53:05.355Z"
 }
