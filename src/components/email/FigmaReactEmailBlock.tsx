@@ -11,6 +11,16 @@ import {
   Button,
   Hr,
   Head,
+  Preview,
+  Font,
+  CodeInline,
+  Markdown,
+  CodeBlock,
+  dracula,
+  oneLight,
+  oneDark,
+  nightOwl,
+  xonokai,
 } from '@/lib/email/react-email';
 import {
   RESPONSIVE_COL_CLASS,
@@ -22,6 +32,14 @@ import { applyBorderControls } from '@/lib/figma/borderControls';
 
 const EMAIL_FONT =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+
+const CODE_THEMES = {
+  dracula,
+  oneLight,
+  oneDark,
+  nightOwl,
+  xonokai,
+} as const;
 
 /**
  * A solid background color safe to mirror onto a table's `bgcolor` attribute.
@@ -445,6 +463,7 @@ function renderNode(
         <Column
           key={key}
           {...sel}
+          align={node.align}
           className={[node.className, rspCls].filter(Boolean).join(' ') || undefined}
           style={node.style}
         >
@@ -652,6 +671,64 @@ function renderNode(
           </Text>
         </Section>
       );
+
+    case 'Preview':
+      return (
+        <Preview key={key} {...sel}>
+          {node.content}
+        </Preview>
+      );
+
+    case 'Font':
+      return (
+        <Head key={key}>
+          <Font
+            fontFamily={node.fontFamily}
+            fallbackFontFamily={
+              node.fallbackFontFamily as React.ComponentProps<typeof Font>['fallbackFontFamily']
+            }
+            webFont={
+              node.webFont as React.ComponentProps<typeof Font>['webFont'] | undefined
+            }
+            fontStyle={node.fontStyle as React.ComponentProps<typeof Font>['fontStyle']}
+            fontWeight={node.fontWeight as React.ComponentProps<typeof Font>['fontWeight']}
+          />
+        </Head>
+      );
+
+    case 'CodeInline':
+      return (
+        <CodeInline key={key} {...sel} style={node.style}>
+          {node.content}
+        </CodeInline>
+      );
+
+    case 'Markdown':
+      return (
+        <Markdown
+          key={key}
+          markdownContainerStyles={node.markdownContainerStyles}
+          markdownCustomStyles={node.markdownCustomStyles}
+        >
+          {node.content}
+        </Markdown>
+      );
+
+    case 'CodeBlock': {
+      const theme =
+        CODE_THEMES[(node.themeName ?? 'dracula') as keyof typeof CODE_THEMES] ?? dracula;
+      return (
+        <CodeBlock
+          key={key}
+          {...sel}
+          code={node.code}
+          language={node.language as React.ComponentProps<typeof CodeBlock>['language']}
+          theme={theme}
+          lineNumbers={node.lineNumbers}
+          fontFamily={node.fontFamily}
+        />
+      );
+    }
 
     default:
       return null;

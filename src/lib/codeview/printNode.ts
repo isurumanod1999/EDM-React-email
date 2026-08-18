@@ -19,6 +19,7 @@ function attrsFor(node: ReactEmailNode): AttrSpec[] {
     case 'Column':
       return [
         ['className', node.className],
+        ['align', node.align],
         ['style', node.style],
         ['mobileStyle', node.mobileStyle],
       ];
@@ -83,6 +84,32 @@ function attrsFor(node: ReactEmailNode): AttrSpec[] {
       ];
     case 'Spacer':
       return [['height', node.height]];
+    case 'Preview':
+      return [['content', node.content]];
+    case 'Font':
+      return [
+        ['fontFamily', node.fontFamily],
+        ['fallbackFontFamily', node.fallbackFontFamily],
+        ['webFont', node.webFont],
+        ['fontStyle', node.fontStyle],
+        ['fontWeight', node.fontWeight],
+      ];
+    case 'CodeInline':
+      return [['content', node.content], ['style', node.style]];
+    case 'Markdown':
+      return [
+        ['content', node.content],
+        ['markdownContainerStyles', node.markdownContainerStyles],
+        ['markdownCustomStyles', node.markdownCustomStyles],
+      ];
+    case 'CodeBlock':
+      return [
+        ['code', node.code],
+        ['language', node.language],
+        ['themeName', node.themeName],
+        ['lineNumbers', node.lineNumbers],
+        ['fontFamily', node.fontFamily],
+      ];
     default: {
       const _exhaustive: never = node;
       return _exhaustive;

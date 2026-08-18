@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { printBlocks, parseBlocks, CodeViewParseError } from '@/lib/codeview';
+import { AST_ELEMENT_NAMES } from '@/lib/codeview/nodeSchema';
 import { CodeEditor } from '@/builder/components/code/CodeEditor';
 import { CodePreviewPane } from '@/builder/components/code/CodePreviewPane';
 import { pushToast } from '@/builder/store/toastStore';
@@ -309,10 +310,11 @@ export function CodePanel() {
 
           <section className="code-modal-pane code-modal-pane--code">
             <p className="code-modal-hint">
-              Structured React Email JSX (11 node types). Valid edits apply to the canvas and preview
-              automatically — move nodes between <code>&lt;Column&gt;</code>s, reorder{' '}
-              <code>&lt;Block&gt;</code>s, or retype copy and styles. Invalid edits keep the last
-              good state. <kbd>Esc</kbd> closes.
+              Structured React Email JSX ({AST_ELEMENT_NAMES.size} components: Section, Container,
+              Row, Column, Text, Heading, Img, Link, Button, Hr, Spacer, Preview, Font, CodeInline,
+              Markdown, CodeBlock). Valid edits apply to the canvas and preview automatically — move
+              nodes between <code>&lt;Column&gt;</code>s, reorder <code>&lt;Block&gt;</code>s, or
+              retype copy and styles. Invalid edits keep the last good state. <kbd>Esc</kbd> closes.
             </p>
 
             {error && (

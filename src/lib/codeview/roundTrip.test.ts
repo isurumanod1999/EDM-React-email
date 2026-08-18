@@ -78,6 +78,32 @@ function allNodesFixture(): ReactEmailNode {
                   },
                   { type: 'Hr', style: { borderColor: '#ccc' }, mobileStyle: { margin: 4 } },
                   { type: 'Spacer', height: 16 },
+                  { type: 'Preview', content: 'Inbox preview line' },
+                  {
+                    type: 'Font',
+                    fontFamily: 'Roboto',
+                    fallbackFontFamily: ['Helvetica', 'Arial', 'sans-serif'],
+                    webFont: { url: 'https://fonts.example/roboto.woff2', format: 'woff2' },
+                    fontWeight: 400,
+                  },
+                  {
+                    type: 'CodeInline',
+                    content: 'npm install',
+                    style: { backgroundColor: '#eee', padding: '2px 4px' },
+                  },
+                  {
+                    type: 'Markdown',
+                    content: '# Hello\n\n**Bold** text',
+                    markdownContainerStyles: { padding: 12 },
+                    markdownCustomStyles: { h1: { color: '#111' } },
+                  },
+                  {
+                    type: 'CodeBlock',
+                    code: 'const x = 1;',
+                    language: 'javascript',
+                    themeName: 'dracula',
+                    lineNumbers: true,
+                  },
                 ],
               },
               {
@@ -93,7 +119,7 @@ function allNodesFixture(): ReactEmailNode {
 }
 
 describe('round-trip parse(print(doc))', () => {
-  it('is identity for all 11 node types + optional props', () => {
+  it('is identity for all 16 node types + optional props', () => {
     const blocks: TemplateBlock[] = [
       {
         id: 'all-nodes',

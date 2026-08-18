@@ -2,6 +2,7 @@
 
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { useTemplatePreview } from '@/builder/hooks/useTemplatePreview';
+import { usePreviewScrollRestore } from '@/builder/hooks/usePreviewScrollRestore';
 
 /**
  * Read-only live preview for the code view's left pane.
@@ -18,6 +19,8 @@ export function CodePreviewPane() {
     400,
     false
   );
+
+  const { outerRef, iframeRef, onOuterScroll, handleIframeLoad } = usePreviewScrollRestore();
 
   const hasBlocks = (template?.blocks.length ?? 0) > 0;
   const showInitialLoad = (loading || isPending) && !html;
@@ -47,7 +50,11 @@ export function CodePreviewPane() {
         </div>
       </div>
 
-      <div className="code-modal-preview-stage">
+      <div
+        ref={outerRef}
+        className="code-modal-preview-stage"
+        onScroll={onOuterScroll}
+      >
         {error ? (
           <div className="code-modal-preview-error" role="alert">
             <span>{error}</span>
@@ -69,7 +76,12 @@ export function CodePreviewPane() {
                 Rendering preview…
               </div>
             ) : html ? (
-              <iframe srcDoc={html} title="Template preview" />
+              <iframe
+                ref={iframeRef}
+                srcDoc={html}
+                title="Template preview"
+                onLoad={() => handleIframeLoad()}
+              />
             ) : null}
           </div>
         )}

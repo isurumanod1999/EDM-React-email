@@ -166,6 +166,16 @@ export function nodeSummary(node: ReactEmailNode): string {
       return truncate(node.alt || node.src.split('/').pop() || 'image');
     case 'Spacer':
       return `${node.height}px`;
+    case 'Preview':
+      return truncate(node.content);
+    case 'CodeInline':
+      return truncate(node.content);
+    case 'Markdown':
+      return truncate(node.content);
+    case 'CodeBlock':
+      return truncate(node.code.split('\n')[0] ?? 'code');
+    case 'Font':
+      return node.fontFamily;
     default:
       return '';
   }

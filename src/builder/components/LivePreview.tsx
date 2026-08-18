@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { useTemplatePreview } from '@/builder/hooks/useTemplatePreview';
+import { usePreviewScrollRestore } from '@/builder/hooks/usePreviewScrollRestore';
 
 const FIGMA_BLOCK_ID = 'figma-react-email';
 
@@ -20,7 +21,7 @@ export function LivePreview() {
     true
   );
 
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const { outerRef, iframeRef, onOuterScroll, handleIframeLoad } = usePreviewScrollRestore();
 
   const pushHighlight = useCallback(() => {
     iframeRef.current?.contentWindow?.postMessage(
@@ -98,7 +99,11 @@ export function LivePreview() {
         </div>
       </div>
 
-      <div className="builder-preview-frame-wrap">
+      <div
+        ref={outerRef}
+        className="builder-preview-frame-wrap"
+        onScroll={onOuterScroll}
+      >
         {!hasBlocks ? (
           <div className="canvas-empty" style={{ maxWidth: 400 }}>
             Add components to see a live preview
@@ -129,7 +134,7 @@ export function LivePreview() {
                     ref={iframeRef}
                     srcDoc={html}
                     title="Email Preview"
-                    onLoad={pushHighlight}
+                    onLoad={() => handleIframeLoad(pushHighlight)}
                   />
                   {isStale ? (
                     <div className="builder-preview-loading-overlay" aria-busy="true">

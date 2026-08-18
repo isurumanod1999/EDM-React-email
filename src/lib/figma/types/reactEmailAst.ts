@@ -12,6 +12,8 @@ export type ReactEmailNode =
       style?: CSSProperties;
       mobileStyle?: CSSProperties;
       className?: string;
+      /** Horizontal alignment of cell content (maps to React Email Column `align`). */
+      align?: 'left' | 'center' | 'right';
       children: ReactEmailNode[];
     }
   | {
@@ -102,7 +104,37 @@ export type ReactEmailNode =
       mobileStyle?: CSSProperties;
     }
   | { type: 'Hr'; style?: CSSProperties; mobileStyle?: CSSProperties }
-  | { type: 'Spacer'; height: number };
+  | { type: 'Spacer'; height: number }
+  /** Inbox preview line — maps to React Email `<Preview>`. */
+  | { type: 'Preview'; content: string }
+  /** Web font declaration — rendered inside `<Head>` (React Email `<Font>`). */
+  | {
+      type: 'Font';
+      fontFamily: string;
+      fallbackFontFamily: string | string[];
+      webFont?: { url: string; format: string };
+      fontStyle?: string;
+      fontWeight?: number | string;
+    }
+  /** Inline code snippet — maps to React Email `<CodeInline>`. */
+  | { type: 'CodeInline'; content: string; style?: CSSProperties }
+  /** Markdown body — maps to React Email `<Markdown>`. */
+  | {
+      type: 'Markdown';
+      content: string;
+      markdownContainerStyles?: CSSProperties;
+      markdownCustomStyles?: Record<string, CSSProperties>;
+    }
+  /** Syntax-highlighted code block — maps to React Email `<CodeBlock>`. */
+  | {
+      type: 'CodeBlock';
+      code: string;
+      language: string;
+      /** Named theme from `@react-email/code-block` (e.g. dracula, oneLight). */
+      themeName?: string;
+      lineNumbers?: boolean;
+      fontFamily?: string;
+    };
 
 export interface FigmaReactEmailBlockProps {
   tree: ReactEmailNode;

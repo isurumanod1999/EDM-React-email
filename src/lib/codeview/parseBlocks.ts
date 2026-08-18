@@ -11,6 +11,7 @@ import {
   BLOCK_ATTR_RESERVED,
   BLOCK_ELEMENT_NAME,
   NODE_ATTR_WHITELIST,
+  REACT_EMAIL_COMPONENT_NAMES,
   STYLE_BAG_ATTRS,
 } from '@/lib/codeview/nodeSchema';
 
@@ -102,6 +103,25 @@ function elementChildren(node: AnyNode): AnyNode[] {
   });
 }
 
+function parseLayoutChildren(node: AnyNode, lineOffset: number): ReactEmailNode[] {
+  const out: ReactEmailNode[] = [];
+  for (const raw of elementChildren(node)) {
+    if (raw.type === 'JSXText') {
+      const text = String(raw.value ?? '').replace(/\s+/g, ' ').trim();
+      if (!text) continue;
+      out.push({ type: 'Text', content: text });
+      continue;
+    }
+    out.push(parseAstNode(raw, lineOffset));
+  }
+  return out;
+}
+
+function columnAlign(value: unknown): 'left' | 'center' | 'right' | undefined {
+  if (value === 'left' || value === 'center' || value === 'right') return value;
+  return undefined;
+}
+
 function styleOf(value: unknown): CSSProperties | undefined {
   if (value == null) return undefined;
   if (typeof value !== 'object' || Array.isArray(value)) {
@@ -120,10 +140,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
     fail(`Member components like "${typeName}" are not allowed`, n);
   }
   if (!AST_ELEMENT_NAMES.has(typeName)) {
-    fail(
-      `Unknown element <${typeName}>. Allowed: ${[...AST_ELEMENT_NAMES].join(', ')}`,
-      n
-    );
+    fail(`Unknown element <${typeName}>. Allowed: ${REACT_EMAIL_COMPONENT_NAMES}`, n);
   }
 
   const attrs = readAttrs(node.openingElement.attributes, lineOffset);
@@ -134,7 +151,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
     }
   }
 
-  const kids = elementChildren(node).map((c) => parseAstNode(c, lineOffset));
+  const kids = parseLayoutChildren(node, lineOffset);
 
   switch (typeName as ReactEmailNode['type']) {
     case 'Section':
@@ -152,6 +169,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         style: styleOf(attrs.style),
         mobileStyle: styleOf(attrs.mobileStyle),
         className: attrs.className as string | undefined,
+        align: columnAlign(attrs.align),
         children: kids,
       });
     case 'Text':
@@ -233,6 +251,69 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
       if (kids.length) fail('<Spacer> cannot have children', n);
       if (typeof attrs.height !== 'number') fail('<Spacer> requires a numeric height attribute', n);
       return { type: 'Spacer', height: attrs.height };
+    case 'Preview':
+      if (kids.length) fail('<Preview> cannot have children — use content attribute', n);
+      if (typeof attrs.content !== 'string') fail('<Preview> requires a string content attribute', n);
+      return cleanNode({ type: 'Preview', content: attrs.content });
+    case 'Font':
+      if (kids.length) fail('<Font> cannot have children', n);
+      if (typeof attrs.fontFamily !== 'string') {
+        fail('<Font> requires a string fontFamily attribute', n);
+      }
+      if (
+        typeof attrs.fallbackFontFamily !== 'string' &&
+        !(
+          Array.isArray(attrs.fallbackFontFamily) &&
+          attrs.fallbackFontFamily.every((f) => typeof f === 'string')
+        )
+      ) {
+        fail('<Font> requires fallbackFontFamily as a string or string array', n);
+      }
+      return cleanNode({
+        type: 'Font',
+        fontFamily: attrs.fontFamily,
+        fallbackFontFamily: attrs.fallbackFontFamily as string | string[],
+        webFont: attrs.webFont as { url: string; format: string } | undefined,
+        fontStyle: attrs.fontStyle as string | undefined,
+        fontWeight: attrs.fontWeight as number | string | undefined,
+      });
+    case 'CodeInline':
+      if (kids.length) fail('<CodeInline> cannot have children — use content attribute', n);
+      if (typeof attrs.content !== 'string') {
+        fail('<CodeInline> requires a string content attribute', n);
+      }
+      return cleanNode({
+        type: 'CodeInline',
+        content: attrs.content,
+        style: styleOf(attrs.style),
+      });
+    case 'Markdown':
+      if (kids.length) fail('<Markdown> cannot have children — use content attribute', n);
+      if (typeof attrs.content !== 'string') {
+        fail('<Markdown> requires a string content attribute', n);
+      }
+      return cleanNode({
+        type: 'Markdown',
+        content: attrs.content,
+        markdownContainerStyles: styleOf(attrs.markdownContainerStyles),
+        markdownCustomStyles: styleOf(attrs.markdownCustomStyles) as
+          | Record<string, CSSProperties>
+          | undefined,
+      });
+    case 'CodeBlock':
+      if (kids.length) fail('<CodeBlock> cannot have children', n);
+      if (typeof attrs.code !== 'string') fail('<CodeBlock> requires a string code attribute', n);
+      if (typeof attrs.language !== 'string') {
+        fail('<CodeBlock> requires a string language attribute', n);
+      }
+      return cleanNode({
+        type: 'CodeBlock',
+        code: attrs.code,
+        language: attrs.language,
+        themeName: attrs.themeName as string | undefined,
+        lineNumbers: attrs.lineNumbers as boolean | undefined,
+        fontFamily: attrs.fontFamily as string | undefined,
+      });
     default:
       fail(`Unhandled element <${typeName}>`, n);
   }

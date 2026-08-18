@@ -105,7 +105,7 @@ describe('printBlocks', () => {
     expect(printBlocks(blocks)).toBe(printBlocks(blocks));
   });
 
-  it('covers all 11 node types and optional props', () => {
+  it('covers all 16 node types and optional props', () => {
     const tree: ReactEmailNode = {
       type: 'Section',
       mobileStyle: { padding: 4 },
@@ -176,6 +176,29 @@ describe('printBlocks', () => {
                     },
                     { type: 'Hr', style: { borderColor: '#ccc' }, mobileStyle: { margin: 4 } },
                     { type: 'Spacer', height: 16 },
+                    { type: 'Preview', content: 'Inbox preview line' },
+                    {
+                      type: 'Font',
+                      fontFamily: 'Roboto',
+                      fallbackFontFamily: ['Helvetica', 'Arial', 'sans-serif'],
+                      webFont: { url: 'https://fonts.example/roboto.woff2', format: 'woff2' },
+                    },
+                    {
+                      type: 'CodeInline',
+                      content: 'npm install',
+                      style: { backgroundColor: '#eee' },
+                    },
+                    {
+                      type: 'Markdown',
+                      content: '# Hello',
+                      markdownContainerStyles: { padding: 12 },
+                    },
+                    {
+                      type: 'CodeBlock',
+                      code: 'const x = 1;',
+                      language: 'javascript',
+                      themeName: 'oneLight',
+                    },
                   ],
                 },
               ],
@@ -203,6 +226,12 @@ describe('printBlocks', () => {
     expect(out).toContain('containerStyle={{ textAlign: "center" }}');
     expect(out).toContain('<Hr');
     expect(out).toContain('<Spacer height={16} />');
+    expect(out).toContain('<Preview content="Inbox preview line" />');
+    expect(out).toContain('<Font');
+    expect(out).toContain('<CodeInline');
+    expect(out).toContain('<Markdown');
+    expect(out).toContain('<CodeBlock');
+    expect(out).toContain('themeName="oneLight"');
     expect(out).toContain('hideBorders={true}');
     expect(out).toContain('borderColor="#f00"');
     expect(out).not.toMatch(new RegExp('<Text[^>]*>[^<]+</Text>'));
