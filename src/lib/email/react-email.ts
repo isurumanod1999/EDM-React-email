@@ -26,6 +26,7 @@ export {
   Preview,
   Row,
   Section,
+  Tailwind,
   Text,
   dracula,
   oneDark,

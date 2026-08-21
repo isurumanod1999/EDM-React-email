@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { useTemplatePreview } from '@/builder/hooks/useTemplatePreview';
 import { usePreviewScrollRestore } from '@/builder/hooks/usePreviewScrollRestore';
+import { usePreviewSelectionBridge } from '@/builder/hooks/usePreviewSelectionBridge';
 
 const FIGMA_BLOCK_ID = 'figma-react-email';
 
@@ -11,9 +12,7 @@ export function LivePreview() {
   const template = useBuilderStore((s) => s.template);
   const viewMode = useBuilderStore((s) => s.viewMode);
   const setViewMode = useBuilderStore((s) => s.setViewMode);
-  const selectNode = useBuilderStore((s) => s.selectNode);
   const selectedBlockId = useBuilderStore((s) => s.selectedBlockId);
-  const selectedNodePath = useBuilderStore((s) => s.selectedNodePath);
 
   const { html, loading, isPending, isStale, error, retry } = useTemplatePreview(
     template,
@@ -22,40 +21,11 @@ export function LivePreview() {
   );
 
   const { outerRef, iframeRef, onOuterScroll, handleIframeLoad } = usePreviewScrollRestore();
+  const { pushHighlight } = usePreviewSelectionBridge(iframeRef);
 
-  const pushHighlight = useCallback(() => {
-    iframeRef.current?.contentWindow?.postMessage(
-      {
-        source: 'figma-customizer-parent',
-        type: 'highlight',
-        blockId: selectedBlockId,
-        nodePath: selectedNodePath,
-      },
-      '*'
-    );
-  }, [selectedBlockId, selectedNodePath]);
-
-  useEffect(() => {
-    function onMessage(e: MessageEvent) {
-      const data = e.data as
-        | { source?: string; type?: string; blockId?: string; nodePath?: string }
-        | undefined;
-      if (!data || data.source !== 'figma-customizer') return;
-
-      if (data.type === 'select' && data.blockId) {
-        selectNode(data.blockId, data.nodePath ?? null);
-      } else if (data.type === 'ready') {
-        pushHighlight();
-      }
-    }
-
-    window.addEventListener('message', onMessage);
-    return () => window.removeEventListener('message', onMessage);
-  }, [selectNode, pushHighlight]);
-
-  useEffect(() => {
-    pushHighlight();
-  }, [pushHighlight, html]);
+  const onIframeLoad = useCallback(() => {
+    handleIframeLoad(pushHighlight);
+  }, [handleIframeLoad, pushHighlight]);
 
   const frameWidth = viewMode === 'desktop' ? '100%' : '375px';
   const maxWidth = viewMode === 'desktop' ? '700px' : '375px';
@@ -134,7 +104,7 @@ export function LivePreview() {
                     ref={iframeRef}
                     srcDoc={html}
                     title="Email Preview"
-                    onLoad={() => handleIframeLoad(pushHighlight)}
+                    onLoad={onIframeLoad}
                   />
                   {isStale ? (
                     <div className="builder-preview-loading-overlay" aria-busy="true">

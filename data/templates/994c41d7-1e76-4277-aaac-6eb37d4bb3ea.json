@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "id": "994c41d7-1e76-4277-aaac-6eb37d4bb3ea",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "504798f1-dd5c-4c23-8fae-cff42acee93c",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "40px"
+          },
+          "children": [
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "textAlign": "center",
+                "backgroundColor": "#292929",
+                "padding": "40px 0px 40px 0px",
+                "borderRadius": 16
+              },
+              "children": [
+                {
+                  "type": "Heading",
+                  "content": "TELL ME MORE",
+                  "as": "h2",
+                  "style": {
+                    "color": "#c2997f",
+                    "fontSize": "28px",
+                    "fontWeight": 700,
+                    "textAlign": "center",
+                    "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "34px",
+                    "whiteSpace": "pre-line"
+                  }
+                },
+                {
+                  "type": "Spacer",
+                  "height": 16
+                },
+                {
+                  "type": "Text",
+                  "content": "Where are you in your journey? (please select one):",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line"
+                  }
+                },
+                {
+                  "type": "Spacer",
+                  "height": 24
+                },
+                {
+                  "type": "Button",
+                  "href": "#",
+                  "label": "I’m ready to upgrade Soon ›",
+                  "containerStyle": {
+                    "textAlign": "center",
+                    "width": "100%",
+                    "margin": 0,
+                    "padding": 0
+                  },
+                  "style": {
+                    "backgroundColor": "transparent",
+                    "color": "#ffffff",
+                    "borderRadius": 0,
+                    "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "lineHeight": "24px",
+                    "padding": "0",
+                    "textAlign": "center",
+                    "textTransform": "uppercase",
+                    "textDecoration": "none",
+                    "width": "266px",
+                    "maxWidth": "100%",
+                    "display": "inline-block",
+                    "boxSizing": "border-box",
+                    "margin": 0
+                  },
+                  "mobileStyle": {
+                    "fontSize": "14px"
+                  }
+                },
+                {
+                  "type": "Spacer",
+                  "height": 16
+                },
+                {
+                  "type": "Button",
+                  "href": "#",
+                  "label": "I Might buy in the next 6 months ›",
+                  "containerStyle": {
+                    "textAlign": "center",
+                    "width": "100%",
+                    "margin": 0,
+                    "padding": 0
+                  },
+                  "style": {
+                    "backgroundColor": "transparent",
+                    "color": "#ffffff",
+                    "borderRadius": 0,
+                    "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "lineHeight": "24px",
+                    "padding": "0",
+                    "textAlign": "center",
+                    "textTransform": "uppercase",
+                    "textDecoration": "none",
+                    "width": "318px",
+                    "maxWidth": "100%",
+                    "display": "inline-block",
+                    "boxSizing": "border-box",
+                    "margin": 0
+                  },
+                  "mobileStyle": {
+                    "fontSize": "14px"
+                  }
+                },
+                {
+                  "type": "Spacer",
+                  "height": 16
+                },
+                {
+                  "type": "Button",
+                  "href": "#",
+                  "label": "I’m just here for Patrol News ›",
+                  "containerStyle": {
+                    "textAlign": "center",
+                    "width": "100%",
+                    "margin": 0,
+                    "padding": 0
+                  },
+                  "style": {
+                    "backgroundColor": "transparent",
+                    "color": "#ffffff",
+                    "borderRadius": 0,
+                    "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "lineHeight": "24px",
+                    "padding": "0",
+                    "textAlign": "center",
+                    "textTransform": "uppercase",
+                    "textDecoration": "none",
+                    "width": "293px",
+                    "maxWidth": "100%",
+                    "display": "inline-block",
+                    "boxSizing": "border-box",
+                    "margin": 0
+                  },
+                  "mobileStyle": {
+                    "fontSize": "14px"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "sourceFrame": "CTA Banner",
+        "mobileFrame": "CTA Banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "CTA Banner"
+    }
+  ],
+  "createdAt": "2026-08-19T03:49:34.443Z",
+  "updatedAt": "2026-08-19T06:19:29.595Z"
+}

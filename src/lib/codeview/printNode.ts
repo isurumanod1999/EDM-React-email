@@ -1,6 +1,11 @@
 import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
 import { renderTag, type AttrSpec } from '@/lib/codeview/printAttrs';
+import { computeSpan, type PrintBuffer } from '@/lib/codeview/printBuffer';
 import { DEFAULT_MAX_LINE_LENGTH } from '@/lib/codeview/types';
+
+function pathToString(path: number[]): string {
+  return path.join('.');
+}
 
 function pad(level: number, size: number): string {
   return ' '.repeat(level * size);
@@ -110,11 +115,36 @@ function attrsFor(node: ReactEmailNode): AttrSpec[] {
         ['lineNumbers', node.lineNumbers],
         ['fontFamily', node.fontFamily],
       ];
+    case 'Html':
+      return [
+        ['lang', node.lang],
+        ['dir', node.dir],
+        ['style', node.style],
+      ];
+    case 'Body':
+      return [['style', node.style]];
+    case 'Head':
+      return [];
+    case 'Tailwind':
+      return [['config', node.config]];
     default: {
       const _exhaustive: never = node;
       return _exhaustive;
     }
   }
+}
+
+/**
+ * Pass-through HTML attributes, flattened back into ordinary JSX attributes so
+ * printed code reads like the React Email docs (`cellPadding={0}`), not a bag.
+ * Sorted for deterministic output.
+ */
+function htmlAttrsFor(node: ReactEmailNode): AttrSpec[] {
+  const bag = 'attrs' in node ? node.attrs : undefined;
+  if (!bag) return [];
+  return Object.keys(bag)
+    .sort()
+    .map((key) => [key, bag[key]] as AttrSpec);
 }
 
 function childrenOf(node: ReactEmailNode): ReactEmailNode[] | null {
@@ -123,9 +153,57 @@ function childrenOf(node: ReactEmailNode): ReactEmailNode[] | null {
     case 'Container':
     case 'Row':
     case 'Column':
+    case 'Html':
+    case 'Body':
+    case 'Head':
+    case 'Tailwind':
       return node.children;
     default:
       return null;
+  }
+}
+
+/**
+ * Print one ReactEmailNode into `out`, optionally recording AST spans for selection sync.
+ */
+export function printNodeToBuffer(
+  node: ReactEmailNode,
+  path: number[],
+  level: number,
+  indentSize: number,
+  maxLineLength: number,
+  out: PrintBuffer,
+  blockId?: string,
+  nodeIndex?: Record<string, ReturnType<typeof computeSpan>>
+): void {
+  const from = out.length();
+  const indent = pad(level, indentSize);
+  const attrs = [...attrsFor(node), ...htmlAttrsFor(node)];
+  const kids = childrenOf(node);
+
+  if (!kids || kids.length === 0) {
+    out.append(renderTag(node.type, attrs, indent, true, indentSize, maxLineLength));
+  } else {
+    out.append(renderTag(node.type, attrs, indent, false, indentSize, maxLineLength));
+    out.append('\n');
+    kids.forEach((child, i) => {
+      printNodeToBuffer(
+        child,
+        [...path, i],
+        level + 1,
+        indentSize,
+        maxLineLength,
+        out,
+        blockId,
+        nodeIndex
+      );
+      if (i < kids.length - 1) out.append('\n');
+    });
+    out.append(`\n${indent}</${node.type}>`);
+  }
+
+  if (blockId && nodeIndex) {
+    nodeIndex[`${blockId}:${pathToString(path)}`] = computeSpan(out.toString(), from, out.length());
   }
 }
 
@@ -138,17 +216,14 @@ export function printNode(
   indentSize = 2,
   maxLineLength = DEFAULT_MAX_LINE_LENGTH
 ): string {
-  const indent = pad(level, indentSize);
-  const attrs = attrsFor(node);
-  const kids = childrenOf(node);
-
-  if (!kids || kids.length === 0) {
-    return renderTag(node.type, attrs, indent, true, indentSize, maxLineLength);
-  }
-
-  const open = renderTag(node.type, attrs, indent, false, indentSize, maxLineLength);
-  const body = kids
-    .map((child) => printNode(child, level + 1, indentSize, maxLineLength))
-    .join('\n');
-  return `${open}\n${body}\n${indent}</${node.type}>`;
+  const parts: string[] = [];
+  const out: PrintBuffer = {
+    length: () => parts.join('').length,
+    append(text: string) {
+      parts.push(text);
+    },
+    toString: () => parts.join(''),
+  };
+  printNodeToBuffer(node, [], level, indentSize, maxLineLength, out);
+  return out.toString();
 }

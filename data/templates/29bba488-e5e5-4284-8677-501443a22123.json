@@ -142,6 +142,79 @@
           },
           "children": [
             {
+              "type": "Row",
+              "attrs": {
+                "cellSpacing": 8
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "style": {
+                    "width": "50%",
+                    "height": 40,
+                    "backgroundColor": "rgb(52,211,153,0.6)"
+                  },
+                  "align": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "1/2"
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "style": {
+                    "width": "50%",
+                    "height": 40,
+                    "backgroundColor": "rgb(34,211,238,0.6)"
+                  },
+                  "align": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "1/2"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Row",
+              "children": [
+                {
+                  "type": "Column",
+                  "style": {
+                    "width": "33.333333%",
+                    "height": 40,
+                    "backgroundColor": "rgb(244,114,182,0.6)"
+                  },
+                  "align": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "1/3"
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "style": {
+                    "width": "66.666667%",
+                    "height": 40,
+                    "backgroundColor": "rgb(192,132,252,0.6)"
+                  },
+                  "align": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "2/3"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "type": "Heading",
               "content": "THE NEW ERA  OF PATROL",
               "as": "h1",
@@ -653,9 +726,9 @@
                 {
                   "type": "Column",
                   "style": {
-                    "width": "23.333333%",
+                    "backgroundColor": "rgb(251,146,60,0.6)",
                     "height": 40,
-                    "backgroundColor": "rgb(251,146,60,0.6)"
+                    "width": "23.333333%"
                   },
                   "align": "center",
                   "children": [
@@ -668,9 +741,9 @@
                 {
                   "type": "Column",
                   "style": {
-                    "width": "33.333333%",
+                    "backgroundColor": "rgb(52,211,153,0.6)",
                     "height": 40,
-                    "backgroundColor": "rgb(52,211,153,0.6)"
+                    "width": "33.333333%"
                   },
                   "align": "center",
                   "children": [
@@ -683,9 +756,9 @@
                 {
                   "type": "Column",
                   "style": {
-                    "width": "33.333333%",
+                    "backgroundColor": "rgb(34,211,238,0.6)",
                     "height": 40,
-                    "backgroundColor": "rgb(34,211,238,0.6)"
+                    "width": "33.333333%"
                   },
                   "align": "center",
                   "children": [
@@ -1494,5 +1567,5 @@
     }
   ],
   "createdAt": "2026-08-17T15:54:45.610Z",
-  "updatedAt": "2026-08-18T04:16:39.384Z"
+  "updatedAt": "2026-08-18T08:20:51.552Z"
 }

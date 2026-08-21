@@ -17,7 +17,17 @@ export type NodePath = number[];
 /** Node variants that hold children. */
 type ContainerNode = Extract<
   ReactEmailNode,
-  { type: 'Section' | 'Container' | 'Row' | 'Column' }
+  {
+    type:
+      | 'Section'
+      | 'Container'
+      | 'Row'
+      | 'Column'
+      | 'Html'
+      | 'Body'
+      | 'Head'
+      | 'Tailwind';
+  }
 >;
 
 function isContainer(node: ReactEmailNode): node is ContainerNode {
@@ -25,7 +35,11 @@ function isContainer(node: ReactEmailNode): node is ContainerNode {
     node.type === 'Section' ||
     node.type === 'Container' ||
     node.type === 'Row' ||
-    node.type === 'Column'
+    node.type === 'Column' ||
+    node.type === 'Html' ||
+    node.type === 'Body' ||
+    node.type === 'Head' ||
+    node.type === 'Tailwind'
   );
 }
 

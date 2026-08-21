@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useBuilderStore } from '@/builder/store/builderStore';
-import { printBlocks, parseBlocks, CodeViewParseError } from '@/lib/codeview';
-import { AST_ELEMENT_NAMES } from '@/lib/codeview/nodeSchema';
+import { printBlocks, parseBlocks, CodeViewParseError, printBlocksWithIndex, spanForSelection } from '@/lib/codeview';
+import { REACT_EMAIL_COMPONENT_NAMES } from '@/lib/codeview/nodeSchema';
 import { CodeEditor } from '@/builder/components/code/CodeEditor';
 import { CodePreviewPane } from '@/builder/components/code/CodePreviewPane';
 import { pushToast } from '@/builder/store/toastStore';
@@ -28,6 +28,9 @@ type Layout = 'split' | 'code';
 export function CodePanel() {
   const template = useBuilderStore((s) => s.template);
   const replaceBlocks = useBuilderStore((s) => s.replaceBlocks);
+  const selectedBlockId = useBuilderStore((s) => s.selectedBlockId);
+  const selectedNodePath = useBuilderStore((s) => s.selectedNodePath);
+  const selectNode = useBuilderStore((s) => s.selectNode);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [source, setSource] = useState('');
@@ -56,6 +59,16 @@ export function CodePanel() {
     () => (template ? JSON.stringify(template.blocks) : ''),
     [template]
   );
+
+  const selectionIndex = useMemo(
+    () => (template ? printBlocksWithIndex(template.blocks).index : null),
+    [blocksSignature, template]
+  );
+
+  const highlightSpan = useMemo(() => {
+    if (!selectionIndex || !selectedBlockId || codeDirty) return null;
+    return spanForSelection(selectionIndex, selectedBlockId, selectedNodePath);
+  }, [selectionIndex, selectedBlockId, selectedNodePath, codeDirty]);
 
   // Sync printed code when the canvas changes and the editor is clean.
   useEffect(() => {
@@ -310,11 +323,12 @@ export function CodePanel() {
 
           <section className="code-modal-pane code-modal-pane--code">
             <p className="code-modal-hint">
-              Structured React Email JSX ({AST_ELEMENT_NAMES.size} components: Section, Container,
-              Row, Column, Text, Heading, Img, Link, Button, Hr, Spacer, Preview, Font, CodeInline,
-              Markdown, CodeBlock). Valid edits apply to the canvas and preview automatically — move
-              nodes between <code>&lt;Column&gt;</code>s, reorder <code>&lt;Block&gt;</code>s, or
-              retype copy and styles. Invalid edits keep the last good state. <kbd>Esc</kbd> closes.
+              React Email components only: {REACT_EMAIL_COMPONENT_NAMES}, plus <code>Spacer</code>.
+              Paste snippets straight from the docs — bare markup and <code>&lt;&gt;</code> fragments
+              are wrapped in a <code>&lt;Block&gt;</code> for you. Raw HTML tags are not allowed, but
+              HTML props are (<code>cellPadding</code>, <code>colSpan</code>, <code>target</code>,{' '}
+              <code>data-*</code>). Preview/canvas selection highlights matching lines.{' '}
+              <kbd>Alt</kbd>+click in code to select. <kbd>Esc</kbd> closes.
             </p>
 
             {error && (
@@ -332,6 +346,9 @@ export function CodePanel() {
                 }}
                 fontSize={fontSize}
                 wrap={wrap}
+                highlightSpan={highlightSpan}
+                selectionIndex={selectionIndex}
+                onSelect={selectNode}
               />
             </div>
           </section>

@@ -11,11 +11,14 @@ import {
   Button,
   Hr,
   Head,
+  Html,
+  Body,
   Preview,
   Font,
   CodeInline,
   Markdown,
   CodeBlock,
+  Tailwind,
   dracula,
   oneLight,
   oneDark,
@@ -322,7 +325,7 @@ type TextLikeNode = Extract<ReactEmailNode, { type: 'Text' | 'Heading' | 'Link' 
 function renderTextLike(
   node: TextLikeNode,
   key: string,
-  sel: Record<string, string>,
+  sel: Record<string, string | number | boolean>,
   className: string | undefined,
   content: string,
   html: string | undefined
@@ -395,6 +398,29 @@ function renderTextLike(
   );
 }
 
+/**
+ * Pass-through HTML attributes for a node, minus `className` — that one is
+ * merged with the generated responsive class by the caller instead of being
+ * spread, or the author's class would silently drop the media-query hook.
+ */
+function htmlAttrs(node: ReactEmailNode): Record<string, string | number | boolean> {
+  const bag = 'attrs' in node ? node.attrs : undefined;
+  if (!bag) return {};
+  const { className: _ignored, ...rest } = bag;
+  return rest;
+}
+
+/** Author-supplied class from the pass-through bag, if any. */
+function authorClass(node: ReactEmailNode): string | undefined {
+  const bag = 'attrs' in node ? node.attrs : undefined;
+  const cls = bag?.className;
+  return typeof cls === 'string' ? cls : undefined;
+}
+
+function joinClasses(...parts: (string | undefined)[]): string | undefined {
+  return parts.filter(Boolean).join(' ') || undefined;
+}
+
 function renderNode(
   node: ReactEmailNode,
   key: string,
@@ -406,6 +432,8 @@ function renderNode(
   // the same block-namespaced name as collectResponsiveInfo so the media query
   // hits — and only this block's element, never a same-path node in another block.
   const rspCls = nodeMobileStyle(node) ? responsiveClass(ctx.ns, path) : undefined;
+  const extra = htmlAttrs(node);
+  const authorCls = authorClass(node);
 
   switch (node.type) {
     case 'Section': {
@@ -423,7 +451,8 @@ function renderNode(
           key={key}
           {...sel}
           {...(bgColor ? { bgcolor: bgColor } : {})}
-          className={rspCls}
+          {...extra}
+          className={joinClasses(authorCls, rspCls)}
           style={{ ...(hasFixedWidth ? {} : { width: '100%' }), ...node.style }}
         >
           {node.children.map((child, i) => renderNode(child, `${key}-s-${i}`, [...path, i], ctx))}
@@ -438,7 +467,8 @@ function renderNode(
           key={key}
           {...sel}
           {...(cBg ? { bgcolor: cBg } : {})}
-          className={rspCls}
+          {...extra}
+          className={joinClasses(authorCls, rspCls)}
           style={{
             maxWidth: 600,
             width: '100%',
@@ -453,7 +483,13 @@ function renderNode(
 
     case 'Row':
       return (
-        <Row key={key} {...sel} className={rspCls} style={{ width: '100%', ...node.style }}>
+        <Row
+          key={key}
+          {...sel}
+          {...extra}
+          className={joinClasses(authorCls, rspCls)}
+          style={{ width: '100%', ...node.style }}
+        >
           {node.children.map((child, i) => renderNode(child, `${key}-r-${i}`, [...path, i], ctx))}
         </Row>
       );
@@ -463,12 +499,70 @@ function renderNode(
         <Column
           key={key}
           {...sel}
+          {...extra}
           align={node.align}
-          className={[node.className, rspCls].filter(Boolean).join(' ') || undefined}
+          className={joinClasses(node.className, authorCls, rspCls)}
           style={node.style}
         >
           {node.children.map((child, i) => renderNode(child, `${key}-c-${i}`, [...path, i], ctx))}
         </Column>
+      );
+
+    case 'Html':
+      return (
+        <Html
+          key={key}
+          {...sel}
+          {...extra}
+          className={authorCls}
+          lang={node.lang}
+          dir={node.dir}
+          style={node.style}
+        >
+          {node.children.map((child, i) => renderNode(child, `${key}-h-${i}`, [...path, i], ctx))}
+        </Html>
+      );
+
+    case 'Body':
+      return (
+        <Body key={key} {...sel} {...extra} className={authorCls} style={node.style}>
+          {node.children.map((child, i) => renderNode(child, `${key}-b-${i}`, [...path, i], ctx))}
+        </Body>
+      );
+
+    case 'Head':
+      return (
+        <Head key={key}>
+          {node.children.map((child, i) => {
+            if (child.type === 'Font') {
+              return (
+                <Font
+                  key={`${key}-f-${i}`}
+                  fontFamily={child.fontFamily}
+                  fallbackFontFamily={
+                    child.fallbackFontFamily as React.ComponentProps<typeof Font>['fallbackFontFamily']
+                  }
+                  webFont={
+                    child.webFont as React.ComponentProps<typeof Font>['webFont'] | undefined
+                  }
+                  fontStyle={child.fontStyle as React.ComponentProps<typeof Font>['fontStyle']}
+                  fontWeight={child.fontWeight as React.ComponentProps<typeof Font>['fontWeight']}
+                />
+              );
+            }
+            return renderNode(child, `${key}-hd-${i}`, [...path, i], ctx);
+          })}
+        </Head>
+      );
+
+    case 'Tailwind':
+      return (
+        <Tailwind
+          key={key}
+          config={node.config as React.ComponentProps<typeof Tailwind>['config']}
+        >
+          {node.children.map((child, i) => renderNode(child, `${key}-tw-${i}`, [...path, i], ctx))}
+        </Tailwind>
       );
 
     case 'Text':
@@ -484,8 +578,8 @@ function renderNode(
         const deskEl = renderTextLike(
           node,
           `${key}-desk`,
-          sel,
-          `${swap}-desk`,
+          { ...sel, ...extra },
+          joinClasses(authorCls, `${swap}-desk`),
           node.content,
           node.html
         );
@@ -494,14 +588,21 @@ function renderNode(
         const mobEl = renderTextLike(
           node,
           `${key}-mob`,
-          sel,
-          [`${swap}-mob`, rspCls].filter(Boolean).join(' ') || undefined,
+          { ...sel, ...extra },
+          joinClasses(authorCls, `${swap}-mob`, rspCls),
           node.mobileContent ?? node.content,
           node.mobileHtml
         );
         return [deskEl, mobEl];
       }
-      return renderTextLike(node, key, sel, rspCls, node.content, node.html);
+      return renderTextLike(
+        node,
+        key,
+        { ...sel, ...extra },
+        joinClasses(authorCls, rspCls),
+        node.content,
+        node.html
+      );
     }
 
     case 'Img': {
@@ -570,7 +671,8 @@ function renderNode(
           <Img
             key={`${key}-img`}
             {...imgSel}
-            className={rspCls}
+            {...extra}
+            className={joinClasses(authorCls, rspCls)}
             src={node.src}
             width={node.width}
             height={node.height}
@@ -613,7 +715,14 @@ function renderNode(
       // query (mirrors the text-content swap, buttons kept inline-block so the
       // pill keeps its shape/centering rather than stretching full-width).
       const mkBtn = (label: string, k: string, cls: string | undefined) => (
-        <Button key={k} {...sel} className={cls} href={node.href} style={btnStyle}>
+        <Button
+          key={k}
+          {...sel}
+          {...extra}
+          className={joinClasses(authorCls, cls)}
+          href={node.href}
+          style={btnStyle}
+        >
           {label}
         </Button>
       );
@@ -648,7 +757,8 @@ function renderNode(
         <Hr
           key={key}
           {...sel}
-          className={rspCls}
+          {...extra}
+          className={joinClasses(authorCls, rspCls)}
           style={{
             borderColor: '#e6ebf1',
             borderWidth: '1px',

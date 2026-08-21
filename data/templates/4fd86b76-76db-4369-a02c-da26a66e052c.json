@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "id": "4fd86b76-76db-4369-a02c-da26a66e052c",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "78417276-e18c-411d-818b-e6ae3bf2c2d3",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "borderColor": "",
+        "hideBorders": false,
+        "mobileFrame": "preheader",
+        "sourceFrame": "preheader",
+        "tree": {
+          "type": "Section",
+          "style": {
+            "backgroundColor": "#000000",
+            "margin": "0 auto",
+            "maxWidth": 600,
+            "padding": "24px 40px 0px 40px",
+            "textAlign": "center",
+            "width": "100%"
+          },
+          "children": [
+            {
+              "type": "Text",
+              "content": "Can’t see this email? Click here to view online",
+              "html": "Can’t see this email? Click <span style=\"text-decoration:underline\">here</span> to view online",
+              "style": {
+                "color": "#efefef",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "12px",
+                "fontWeight": 400,
+                "lineHeight": "16px",
+                "margin": 0,
+                "marginBottom": 0,
+                "padding": 0,
+                "textAlign": "center",
+                "whiteSpace": "pre-line"
+              },
+              "mobileStyle": {
+                "lineHeight": "14px"
+              }
+            }
+          ]
+        }
+      },
+      "label": "preheader"
+    },
+    {
+      "id": "2c5d59e1-9651-4121-8f90-7bfe619bbf5a",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "borderColor": "",
+        "hideBorders": false,
+        "mobileFrame": "header",
+        "sourceFrame": "header",
+        "tree": {
+          "type": "Section",
+          "style": {
+            "backgroundColor": "#000000",
+            "margin": "0 auto",
+            "maxWidth": 600,
+            "width": "100%"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-fe81de29-adbc-4319-bf24-3e63329871ea.png",
+              "mobileSrc": "/images/uploads/figma-mob-f62a8122-1cd1-470e-b990-c044a1f97b81.png",
+              "width": 600,
+              "height": 160,
+              "alt": "header",
+              "className": "figma-frame-img-9b21aaf7-3612-40b4-a519-20696923ee31",
+              "align": "center",
+              "fullBleed": true
+            }
+          ]
+        }
+      },
+      "label": "header"
+    },
+    {
+      "id": "34be61ff-bd61-4187-83b1-45592c79b6a8",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "borderColor": "",
+        "hideBorders": false,
+        "mobileFrame": "KV",
+        "sourceFrame": "KV",
+        "tree": {
+          "type": "Section",
+          "style": {
+            "margin": "0 auto",
+            "maxWidth": 600,
+            "width": "100%"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-816e68d1-3b39-4957-9eae-dcf9acab46ea.png",
+              "mobileSrc": "/images/uploads/figma-mob-71f71b07-82c6-477e-ae7e-a0bc9cab3e62.png",
+              "width": 600,
+              "height": 480,
+              "alt": "KV",
+              "className": "figma-frame-img-ba1ee3f9-679e-4155-9000-8758e40e79aa",
+              "align": "center",
+              "fullBleed": true
+            }
+          ]
+        }
+      },
+      "label": "KV"
+    },
+    {
+      "id": "5a0ed816-dc7a-4d49-b939-cbf34dc475f4",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "borderColor": "",
+        "hideBorders": false,
+        "mobileFrame": "Hero",
+        "sourceFrame": "Opening",
+        "tree": {
+          "type": "Section",
+          "style": {
+            "backgroundColor": "#000000",
+            "margin": "0 auto",
+            "maxWidth": 600,
+            "width": "100%"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-73eca82f-3f93-476a-9c94-23c1172b1b08.png",
+              "mobileSrc": "/images/uploads/figma-mob-7b83b610-f71f-42cb-b703-09fee1eb6c80.png",
+              "width": 600,
+              "height": 575,
+              "alt": "Opening",
+              "className": "figma-frame-img-7213c193-d902-4f6e-bbb2-667b5442e022",
+              "align": "center",
+              "fullBleed": true
+            }
+          ]
+        }
+      },
+      "label": "Opening"
+    },
+    {
+      "id": "25caa68f-8c72-4487-b470-6eb60764874d",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "borderColor": "",
+        "hideBorders": false,
+        "mobileFrame": "🟢 1-up",
+        "sourceFrame": "🟢 1-up",
+        "tree": {
+          "type": "Section",
+          "style": {
+            "backgroundColor": "#000000",
+            "margin": "0 auto",
+            "maxWidth": 600,
+            "padding": "40px 0px 40px 0px",
+            "textAlign": "center",
+            "width": "100%"
+          },
+          "children": [
+            {
+              "type": "Row",
+              "children": [
+                {
+                  "type": "Column",
+                  "style": {
+                    "width": "33.333333%",
+                    "height": 40,
+                    "backgroundColor": "rgb(251,146,60,0.6)"
+                  },
+                  "align": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "1/3"
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "style": {
+                    "width": "33.333333%",
+                    "height": 40,
+                    "backgroundColor": "rgb(52,211,153,0.6)"
+                  },
+                  "align": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "1/3"
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "style": {
+                    "width": "33.333333%",
+                    "height": 40,
+                    "backgroundColor": "rgb(34,211,238,0.6)"
+                  },
+                  "align": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "1/3"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-export-d9e3c630-587f-4bf1-b406-2f16b691eaf2.png",
+              "width": 600,
+              "height": 338,
+              "alt": "Frame 1618868494",
+              "className": "figma-img-139-780",
+              "align": "center",
+              "fullBleed": true
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Section",
+              "style": {
+                "paddingLeft": 40,
+                "paddingRight": 40,
+                "width": "100%"
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "padding": "0px 12px 0px 12px",
+                    "textAlign": "center",
+                    "width": "100%"
+                  },
+                  "children": [
+                    {
+                      "type": "Heading",
+                      "content": "THE LATEST TECHNOLOGY  AT YOUR COMMAND",
+                      "html": "THE LATEST TECHNOLOGY  AT YOUR COMMAND<br>",
+                      "as": "h2",
+                      "style": {
+                        "color": "#caa185",
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "28px",
+                        "fontWeight": 700,
+                        "lineHeight": "34px",
+                        "margin": 0,
+                        "padding": 0,
+                        "textAlign": "center",
+                        "whiteSpace": "pre-line"
+                      },
+                      "mobileStyle": {
+                        "fontSize": "19.200000762939453px",
+                        "lineHeight": "23px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Spacer",
+                  "height": 16
+                },
+                {
+                  "type": "Section",
+                  "style": {
+                    "padding": "0px 12px 0px 12px",
+                    "textAlign": "center",
+                    "width": "100%"
+                  },
+                  "children": [
+                    {
+                      "type": "Heading",
+                      "content": "The Monolith display features dual 14.3-inch screens*, Google built-in^ and a Heads-Up Display* work together to put navigation, entertainment and essential driving information exactly where you need it.",
+                      "as": "h3",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "margin": 0,
+                        "padding": 0,
+                        "textAlign": "center",
+                        "whiteSpace": "pre-line"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "label": "🟢 1-up"
+    }
+  ],
+  "createdAt": "2026-08-18T09:03:57.816Z",
+  "updatedAt": "2026-08-18T09:09:55.307Z"
+}

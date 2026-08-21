@@ -1,8 +1,10 @@
 'use client';
 
+import { useCallback } from 'react';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { useTemplatePreview } from '@/builder/hooks/useTemplatePreview';
 import { usePreviewScrollRestore } from '@/builder/hooks/usePreviewScrollRestore';
+import { usePreviewSelectionBridge } from '@/builder/hooks/usePreviewSelectionBridge';
 
 /**
  * Read-only live preview for the code view's left pane.
@@ -17,10 +19,15 @@ export function CodePreviewPane() {
   const { html, loading, isPending, isStale, error, retry } = useTemplatePreview(
     template,
     400,
-    false
+    true
   );
 
   const { outerRef, iframeRef, onOuterScroll, handleIframeLoad } = usePreviewScrollRestore();
+  const { pushHighlight } = usePreviewSelectionBridge(iframeRef);
+
+  const onIframeLoad = useCallback(() => {
+    handleIframeLoad(pushHighlight);
+  }, [handleIframeLoad, pushHighlight]);
 
   const hasBlocks = (template?.blocks.length ?? 0) > 0;
   const showInitialLoad = (loading || isPending) && !html;
@@ -50,11 +57,7 @@ export function CodePreviewPane() {
         </div>
       </div>
 
-      <div
-        ref={outerRef}
-        className="code-modal-preview-stage"
-        onScroll={onOuterScroll}
-      >
+      <div ref={outerRef} className="code-modal-preview-stage" onScroll={onOuterScroll}>
         {error ? (
           <div className="code-modal-preview-error" role="alert">
             <span>{error}</span>
@@ -80,7 +83,7 @@ export function CodePreviewPane() {
                 ref={iframeRef}
                 srcDoc={html}
                 title="Template preview"
-                onLoad={() => handleIframeLoad()}
+                onLoad={onIframeLoad}
               />
             ) : null}
           </div>

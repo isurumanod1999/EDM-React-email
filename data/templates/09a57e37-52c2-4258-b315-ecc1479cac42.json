@@ -119,7 +119,7 @@
               "children": [
                 {
                   "type": "Heading",
-                  "content": "BLINK AND YOU’LL MISS IT.",
+                  "content": "BLINK AND YOU’LL MISS IT.121232131212321312",
                   "as": "h1",
                   "style": {
                     "color": "#ffffff",
@@ -872,5 +872,5 @@
     }
   ],
   "createdAt": "2026-08-17T13:07:18.448Z",
-  "updatedAt": "2026-08-17T15:53:41.049Z"
+  "updatedAt": "2026-08-18T06:32:26.718Z"
 }

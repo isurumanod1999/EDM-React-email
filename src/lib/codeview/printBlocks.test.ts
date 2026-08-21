@@ -105,7 +105,7 @@ describe('printBlocks', () => {
     expect(printBlocks(blocks)).toBe(printBlocks(blocks));
   });
 
-  it('covers all 16 node types and optional props', () => {
+  it('covers all 20 node types and optional props', () => {
     const tree: ReactEmailNode = {
       type: 'Section',
       mobileStyle: { padding: 4 },

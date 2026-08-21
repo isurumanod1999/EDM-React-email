@@ -104,6 +104,32 @@ function allNodesFixture(): ReactEmailNode {
                     themeName: 'dracula',
                     lineNumbers: true,
                   },
+                  {
+                    type: 'Html',
+                    lang: 'en',
+                    children: [
+                      {
+                        type: 'Head',
+                        children: [
+                          {
+                            type: 'Font',
+                            fontFamily: 'Inter',
+                            fallbackFontFamily: 'sans-serif',
+                          },
+                        ],
+                      },
+                      {
+                        type: 'Body',
+                        style: { margin: 0 },
+                        children: [
+                          {
+                            type: 'Tailwind',
+                            children: [{ type: 'Text', content: 'Tailwind body' }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
                 ],
               },
               {
@@ -119,7 +145,7 @@ function allNodesFixture(): ReactEmailNode {
 }
 
 describe('round-trip parse(print(doc))', () => {
-  it('is identity for all 16 node types + optional props', () => {
+  it('is identity for all 20 node types + optional props', () => {
     const blocks: TemplateBlock[] = [
       {
         id: 'all-nodes',

@@ -3,10 +3,37 @@ import type { CSSProperties } from 'react';
 /** Class applied to columns that should stack vertically on mobile (≤600px). */
 export const RESPONSIVE_COL_CLASS = 'figma-col-stack';
 
+/**
+ * Plain HTML attributes forwarded verbatim to the underlying element.
+ *
+ * React Email components are thin wrappers over real tags (`Row`/`Section` →
+ * `<table>`, `Column` → `<td>`, `Link` → `<a>`), so documented markup like
+ * `cellPadding`, `colSpan` or `target` must survive the AST untouched.
+ */
+export type HtmlAttrs = Record<string, string | number | boolean>;
+
 export type ReactEmailNode =
-  | { type: 'Section'; style?: CSSProperties; mobileStyle?: CSSProperties; children: ReactEmailNode[] }
-  | { type: 'Container'; style?: CSSProperties; mobileStyle?: CSSProperties; children: ReactEmailNode[] }
-  | { type: 'Row'; style?: CSSProperties; mobileStyle?: CSSProperties; children: ReactEmailNode[] }
+  | {
+      type: 'Section';
+      style?: CSSProperties;
+      mobileStyle?: CSSProperties;
+      attrs?: HtmlAttrs;
+      children: ReactEmailNode[];
+    }
+  | {
+      type: 'Container';
+      style?: CSSProperties;
+      mobileStyle?: CSSProperties;
+      attrs?: HtmlAttrs;
+      children: ReactEmailNode[];
+    }
+  | {
+      type: 'Row';
+      style?: CSSProperties;
+      mobileStyle?: CSSProperties;
+      attrs?: HtmlAttrs;
+      children: ReactEmailNode[];
+    }
   | {
       type: 'Column';
       style?: CSSProperties;
@@ -14,6 +41,7 @@ export type ReactEmailNode =
       className?: string;
       /** Horizontal alignment of cell content (maps to React Email Column `align`). */
       align?: 'left' | 'center' | 'right';
+      attrs?: HtmlAttrs;
       children: ReactEmailNode[];
     }
   | {
@@ -44,6 +72,7 @@ export type ReactEmailNode =
        * Figma mobile frame instead of inheriting desktop type.
        */
       mobileStyle?: CSSProperties;
+      attrs?: HtmlAttrs;
     }
   | {
       type: 'Heading';
@@ -56,6 +85,7 @@ export type ReactEmailNode =
       href?: string;
       style?: CSSProperties;
       mobileStyle?: CSSProperties;
+      attrs?: HtmlAttrs;
     }
   | {
       type: 'Img';
@@ -77,6 +107,7 @@ export type ReactEmailNode =
        */
       fullBleed?: boolean;
       mobileStyle?: CSSProperties;
+      attrs?: HtmlAttrs;
     }
   | {
       type: 'Link';
@@ -88,6 +119,7 @@ export type ReactEmailNode =
       mobileHtml?: string;
       style?: CSSProperties;
       mobileStyle?: CSSProperties;
+      attrs?: HtmlAttrs;
     }
   | {
       type: 'Button';
@@ -102,8 +134,9 @@ export type ReactEmailNode =
       style?: CSSProperties;
       containerStyle?: CSSProperties;
       mobileStyle?: CSSProperties;
+      attrs?: HtmlAttrs;
     }
-  | { type: 'Hr'; style?: CSSProperties; mobileStyle?: CSSProperties }
+  | { type: 'Hr'; style?: CSSProperties; mobileStyle?: CSSProperties; attrs?: HtmlAttrs }
   | { type: 'Spacer'; height: number }
   /** Inbox preview line — maps to React Email `<Preview>`. */
   | { type: 'Preview'; content: string }
@@ -134,6 +167,25 @@ export type ReactEmailNode =
       themeName?: string;
       lineNumbers?: boolean;
       fontFamily?: string;
+    }
+  /** Document root — maps to React Email `<Html>`. */
+  | {
+      type: 'Html';
+      lang?: string;
+      dir?: string;
+      style?: CSSProperties;
+      attrs?: HtmlAttrs;
+      children: ReactEmailNode[];
+    }
+  /** Document body — maps to React Email `<Body>`. */
+  | { type: 'Body'; style?: CSSProperties; attrs?: HtmlAttrs; children: ReactEmailNode[] }
+  /** Document head wrapper — maps to React Email `<Head>`. */
+  | { type: 'Head'; children: ReactEmailNode[] }
+  /** Tailwind utility wrapper — maps to React Email `<Tailwind>`. */
+  | {
+      type: 'Tailwind';
+      config?: Record<string, unknown>;
+      children: ReactEmailNode[];
     };
 
 export interface FigmaReactEmailBlockProps {

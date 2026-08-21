@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import type { CSSProperties } from 'react';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
@@ -79,6 +79,11 @@ export function ComponentCustomizer() {
     walkTree(tree, (node, path) => out.push({ node, path }));
     return out;
   }, [tree]);
+
+  useEffect(() => {
+    if (!isFigma || !block) return;
+    document.querySelector('.fc-layer.active')?.scrollIntoView({ block: 'nearest' });
+  }, [selectedNodePath, block?.id, isFigma]);
 
   if (!isFigma || !tree || !block) return null;
 

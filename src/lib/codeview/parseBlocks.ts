@@ -2,7 +2,7 @@ import * as acorn from 'acorn';
 import jsx from 'acorn-jsx';
 import type { CSSProperties } from 'react';
 import type { TemplateBlock } from '@/lib/schema/template';
-import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
+import type { HtmlAttrs, ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
 import { generateId } from '@/lib/utils/id';
 import { evaluateLiteral } from '@/lib/codeview/evaluateLiteral';
 import { fail, CodeViewParseError } from '@/lib/codeview/parseError';
@@ -13,6 +13,7 @@ import {
   NODE_ATTR_WHITELIST,
   REACT_EMAIL_COMPONENT_NAMES,
   STYLE_BAG_ATTRS,
+  isPassthroughAttr,
 } from '@/lib/codeview/nodeSchema';
 
 const JsxParser = acorn.Parser.extend(jsx() as never);
@@ -103,9 +104,26 @@ function elementChildren(node: AnyNode): AnyNode[] {
   });
 }
 
+/**
+ * Expand `<>...</>` wrappers in place. Fragments are pure grouping syntax with
+ * no email output, and docs snippets lean on them heavily, so they must not
+ * reach the node parser.
+ */
+function flattenFragments(nodes: AnyNode[]): AnyNode[] {
+  const out: AnyNode[] = [];
+  for (const node of nodes) {
+    if (node.type === 'JSXFragment') {
+      out.push(...flattenFragments(elementChildren(node)));
+      continue;
+    }
+    out.push(node);
+  }
+  return out;
+}
+
 function parseLayoutChildren(node: AnyNode, lineOffset: number): ReactEmailNode[] {
   const out: ReactEmailNode[] = [];
-  for (const raw of elementChildren(node)) {
+  for (const raw of flattenFragments(elementChildren(node))) {
     if (raw.type === 'JSXText') {
       const text = String(raw.value ?? '').replace(/\s+/g, ' ').trim();
       if (!text) continue;
@@ -143,17 +161,30 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
     fail(`Unknown element <${typeName}>. Allowed: ${REACT_EMAIL_COMPONENT_NAMES}`, n);
   }
 
-  const attrs = readAttrs(node.openingElement.attributes, lineOffset);
-  const whitelist = NODE_ATTR_WHITELIST[typeName as ReactEmailNode['type']];
-  for (const key of Object.keys(attrs)) {
-    if (!whitelist.has(key)) {
-      fail(`Attribute "${key}" is not allowed on <${typeName}>`, n);
+  const type = typeName as ReactEmailNode['type'];
+  const raw = readAttrs(node.openingElement.attributes, lineOffset);
+  const whitelist = NODE_ATTR_WHITELIST[type];
+
+  // First-class props stay in `attrs`; documented HTML props (cellPadding,
+  // colSpan, target, data-*) go to the pass-through bag instead of erroring.
+  const attrs: Record<string, unknown> = {};
+  const passthrough: HtmlAttrs = {};
+  for (const [key, value] of Object.entries(raw)) {
+    if (whitelist.has(key)) {
+      attrs[key] = value;
+      continue;
     }
+    if (isPassthroughAttr(type, key)) {
+      passthrough[key] = value as HtmlAttrs[string];
+      continue;
+    }
+    fail(`Attribute "${key}" is not allowed on <${typeName}>`, n);
   }
+  const htmlAttrs = Object.keys(passthrough).length ? passthrough : undefined;
 
   const kids = parseLayoutChildren(node, lineOffset);
 
-  switch (typeName as ReactEmailNode['type']) {
+  switch (type) {
     case 'Section':
     case 'Container':
     case 'Row':
@@ -161,6 +192,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         type: typeName as 'Section' | 'Container' | 'Row',
         style: styleOf(attrs.style),
         mobileStyle: styleOf(attrs.mobileStyle),
+        attrs: htmlAttrs,
         children: kids,
       });
     case 'Column':
@@ -170,6 +202,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         mobileStyle: styleOf(attrs.mobileStyle),
         className: attrs.className as string | undefined,
         align: columnAlign(attrs.align),
+        attrs: htmlAttrs,
         children: kids,
       });
     case 'Text':
@@ -183,6 +216,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         href: attrs.href as string | undefined,
         style: styleOf(attrs.style),
         mobileStyle: styleOf(attrs.mobileStyle),
+        attrs: htmlAttrs,
       });
     case 'Heading':
       if (kids.length) fail('<Heading> cannot have children — use content/html attributes', n);
@@ -196,6 +230,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         href: attrs.href as string | undefined,
         style: styleOf(attrs.style),
         mobileStyle: styleOf(attrs.mobileStyle),
+        attrs: htmlAttrs,
       });
     case 'Img':
       if (kids.length) fail('<Img> cannot have children', n);
@@ -213,6 +248,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         isIcon: attrs.isIcon as boolean | undefined,
         fullBleed: attrs.fullBleed as boolean | undefined,
         mobileStyle: styleOf(attrs.mobileStyle),
+        attrs: htmlAttrs,
       });
     case 'Link':
       if (kids.length) fail('<Link> cannot have children — use content/html attributes', n);
@@ -226,6 +262,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         mobileHtml: attrs.mobileHtml as string | undefined,
         style: styleOf(attrs.style),
         mobileStyle: styleOf(attrs.mobileStyle),
+        attrs: htmlAttrs,
       });
     case 'Button':
       if (kids.length) fail('<Button> cannot have children — use label attribute', n);
@@ -239,6 +276,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         style: styleOf(attrs.style),
         containerStyle: styleOf(attrs.containerStyle),
         mobileStyle: styleOf(attrs.mobileStyle),
+        attrs: htmlAttrs,
       });
     case 'Hr':
       if (kids.length) fail('<Hr> cannot have children', n);
@@ -246,6 +284,7 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         type: 'Hr',
         style: styleOf(attrs.style),
         mobileStyle: styleOf(attrs.mobileStyle),
+        attrs: htmlAttrs,
       });
     case 'Spacer':
       if (kids.length) fail('<Spacer> cannot have children', n);
@@ -314,6 +353,33 @@ function parseAstNode(node: AnyNode, lineOffset: number): ReactEmailNode {
         lineNumbers: attrs.lineNumbers as boolean | undefined,
         fontFamily: attrs.fontFamily as string | undefined,
       });
+    case 'Html':
+      return cleanNode({
+        type: 'Html',
+        lang: attrs.lang as string | undefined,
+        dir: attrs.dir as string | undefined,
+        style: styleOf(attrs.style),
+        attrs: htmlAttrs,
+        children: kids,
+      });
+    case 'Body':
+      return cleanNode({
+        type: 'Body',
+        style: styleOf(attrs.style),
+        attrs: htmlAttrs,
+        children: kids,
+      });
+    case 'Head':
+      return cleanNode({
+        type: 'Head',
+        children: kids,
+      });
+    case 'Tailwind':
+      return cleanNode({
+        type: 'Tailwind',
+        config: attrs.config as Record<string, unknown> | undefined,
+        children: kids,
+      });
     default:
       fail(`Unhandled element <${typeName}>`, n);
   }
@@ -360,7 +426,7 @@ function parseBlock(node: AnyNode, lineOffset: number, seenIds: Set<string>): Te
     props[key] = value;
   }
 
-  const kids = elementChildren(node);
+  const kids = flattenFragments(elementChildren(node));
 
   if (attrs.component === 'figma-react-email') {
     if (kids.length !== 1) {
@@ -387,6 +453,32 @@ function parseBlock(node: AnyNode, lineOffset: number, seenIds: Set<string>): Te
   };
   if (label !== undefined) block.label = label;
   return block;
+}
+
+function isBlockElement(node: AnyNode): boolean {
+  if (node.type !== 'JSXElement' || !node.openingElement) return false;
+  return elementName(node.openingElement.name) === BLOCK_ELEMENT_NAME;
+}
+
+/**
+ * Wrap a bare top-level React Email component in a synthetic block.
+ *
+ * Snippets copied from react.email are plain component markup with no `<Block>`
+ * envelope, so requiring one by hand would make every paste fail. Each bare root
+ * becomes its own block, matching how blocks are reordered in the builder.
+ * Re-printing emits the explicit `<Block>` form.
+ */
+function wrapBareNode(node: AnyNode, lineOffset: number, seenIds: Set<string>): TemplateBlock {
+  const tree = parseAstNode(node, lineOffset);
+  let id = generateId();
+  while (seenIds.has(id)) id = generateId();
+  seenIds.add(id);
+  return {
+    id,
+    componentId: 'figma-react-email',
+    componentVersion: 1,
+    props: { tree },
+  };
 }
 
 /**
@@ -418,7 +510,7 @@ export function parseBlocks(source: string): TemplateBlock[] {
 
   let roots: AnyNode[] = [];
   if (expr.type === 'JSXFragment') {
-    roots = elementChildren(expr);
+    roots = flattenFragments(elementChildren(expr));
   } else if (expr.type === 'JSXElement') {
     roots = [expr];
   } else {
@@ -426,7 +518,10 @@ export function parseBlocks(source: string): TemplateBlock[] {
   }
 
   const seenIds = new Set<string>();
-  return roots.map((r) => parseBlock(r, lineOffset, seenIds));
+  return roots.map((r) => {
+    if (isBlockElement(r)) return parseBlock(r, lineOffset, seenIds);
+    return wrapBareNode(r, lineOffset, seenIds);
+  });
 }
 
 export { CodeViewParseError };
