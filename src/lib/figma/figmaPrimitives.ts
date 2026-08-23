@@ -411,7 +411,14 @@ function unwrapSingleWrapper(node: ParsedFigmaNode): ParsedFigmaNode {
 
 function isHeading(node: ParsedFigmaNode): boolean {
   const name = node.name.toLowerCase();
-  if (/header|title|headline|heading|\bh[1-3]\b|hero|display|subject/.test(name)) return true;
+  // Only trust short layer labels — disclaimer blocks often use the full copy as
+  // the layer name, which falsely matched `/subject/` mid-sentence.
+  if (
+    name.length <= 80 &&
+    /\b(header|title|headline|heading|hero|display|subject)\b|\bh[1-3]\b/.test(name)
+  ) {
+    return true;
+  }
   const fs = node.fontSize ?? 16;
   const fw = node.fontWeight ?? 400;
   if (fs >= 28) return true;
@@ -1243,6 +1250,52 @@ function columnLooksLikeIconUnit(col: ParsedFigmaNode): boolean {
   return dim > 0 && dim <= ICON_MAX_DIMENSION;
 }
 
+/** Horizontal row of only small icons (e.g. social links) — stay in one row on mobile. */
+function isIconOnlyRow(kids: ParsedFigmaNode[]): boolean {
+  if (kids.length < 2) return false;
+  return kids.every((k) => isIconSized(k) || (isImageNode(k) && isIconSized(k)));
+}
+
+/**
+ * Email clients stretch the first `<td>` when a `<Row>` is full-width but its
+ * columns are tiny icons. Pack icons left with a fixed row width and explicit
+ * inter-icon gap — matching Figma auto-layout (e.g. 40px icons, 16px gap).
+ */
+function mapIconOnlyRow(
+  node: ParsedFigmaNode,
+  items: { child: ParsedFigmaNode; children: ReactEmailNode[] }[]
+): ReactEmailNode[] {
+  const gap = node.gap && node.gap > 0 ? Math.round(node.gap) : 16;
+  const widths = items.map((m) => m.child.width ?? 40);
+  const totalWidth = widths.reduce((sum, w) => sum + w, 0) + gap * Math.max(0, items.length - 1);
+
+  const columns: ReactEmailNode[] = items.map((m, i) => ({
+    type: 'Column',
+    align: 'left',
+    style: {
+      width: `${widths[i]}px`,
+      verticalAlign: 'top',
+      paddingRight: i < items.length - 1 ? gap : 0,
+    },
+    children: m.children.map((child) =>
+      child.type === 'Img' ? { ...child, align: 'left' as const } : child
+    ),
+  }));
+
+  const rowNode: ReactEmailNode = {
+    type: 'Row',
+    attrs: { cellSpacing: 0, cellPadding: 0, align: 'left' },
+    style: { width: `${totalWidth}px`, textAlign: 'left' },
+    children: columns,
+  };
+
+  const style = boxStyle(node);
+  if (!style) return [rowNode];
+  // Figma counter-axis center on a horizontal icon strip is vertical centring,
+  // not "centre the row in the email" — keep icons under left-aligned labels.
+  return [{ type: 'Section', style: { ...style, textAlign: 'left', width: '100%' }, children: [rowNode] }];
+}
+
 /**
  * Content-aware default (used ONLY when no mobile frame says otherwise): should a
  * desktop two-column Row stay 2-up on mobile?
@@ -1489,6 +1542,10 @@ function mapNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): Rea
       // Collapsed to a single real column → flatten inside the box, no Row.
       if (nonEmpty.length <= 1) {
         return wrapBox(node, nonEmpty.flatMap((m) => m.children));
+      }
+
+      if (isIconOnlyRow(nonEmpty.map((m) => m.child))) {
+        return mapIconOnlyRow(node, nonEmpty);
       }
 
       // Mobile column decision (strongest signal first):

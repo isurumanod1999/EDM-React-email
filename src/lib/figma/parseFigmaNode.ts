@@ -646,8 +646,15 @@ export function isBackgroundRect(child: ParsedFigmaNode, parent: ParsedFigmaNode
   if (child.imageRef) return false;
   if (!normalizeColor(child.backgroundColor)) return false;
 
+  // TEXT nodes carry a text-fill colour in Figma — never decorative backgrounds.
+  // Disclaimer layer names often contain "based", which falsely matched `/base/`.
+  if (child.type === 'TEXT') return false;
+
   const name = child.name.toLowerCase();
-  if (/background|^bg$|base|surface/.test(name)) return true;
+  if (/\bbackground\b|^bg$|\bbase\b|\bsurface\b/i.test(name)) {
+    if (child.type !== 'RECTANGLE' && child.type !== 'FRAME') return false;
+    return true;
+  }
 
   // Auto-layout button fills are full-size rectangles with rounded corners — not section backgrounds.
   const hasSiblingText = parent.children.some(

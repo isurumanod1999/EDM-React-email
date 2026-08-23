@@ -488,7 +488,7 @@ function renderNode(
           {...sel}
           {...extra}
           className={joinClasses(authorCls, rspCls)}
-          style={{ width: '100%', ...node.style }}
+          style={{ ...node.style, width: node.style?.width ?? '100%' }}
         >
           {node.children.map((child, i) => renderNode(child, `${key}-r-${i}`, [...path, i], ctx))}
         </Row>
