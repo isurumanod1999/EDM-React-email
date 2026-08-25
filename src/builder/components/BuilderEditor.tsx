@@ -32,9 +32,12 @@ interface BuilderEditorProps {
 export function BuilderEditor({ templateId }: BuilderEditorProps) {
   const loadTemplate = useBuilderStore((s) => s.loadTemplate);
   const loadRegistry = useBuilderStore((s) => s.loadRegistry);
+  const loadSavedComponents = useBuilderStore((s) => s.loadSavedComponents);
   const addBlock = useBuilderStore((s) => s.addBlock);
+  const addSavedComponent = useBuilderStore((s) => s.addSavedComponent);
   const reorderBlocks = useBuilderStore((s) => s.reorderBlocks);
   const registry = useBuilderStore((s) => s.registry);
+  const savedComponents = useBuilderStore((s) => s.savedComponents);
   const isLoading = useBuilderStore((s) => s.isLoading);
   const template = useBuilderStore((s) => s.template);
 
@@ -53,14 +56,14 @@ export function BuilderEditor({ templateId }: BuilderEditorProps) {
   useEffect(() => {
     async function init() {
       try {
-        await loadRegistry();
+        await Promise.all([loadRegistry(), loadSavedComponents()]);
         await loadTemplate(templateId);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load');
       }
     }
     init();
-  }, [templateId, loadRegistry, loadTemplate]);
+  }, [templateId, loadRegistry, loadSavedComponents, loadTemplate]);
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveDragId(String(event.active.id));
@@ -92,6 +95,23 @@ export function BuilderEditor({ templateId }: BuilderEditorProps) {
       return;
     }
 
+    if (activeData?.type === 'saved-component') {
+      const savedComponentId = activeData.savedComponentId as string;
+      if (over.id === 'canvas-drop-zone') {
+        addSavedComponent(savedComponentId);
+      } else {
+        const overData = over.data.current;
+        if (overData?.type === 'block') {
+          const template = useBuilderStore.getState().template;
+          const overIndex = template?.blocks.findIndex((block) => block.id === over.id) ?? -1;
+          addSavedComponent(savedComponentId, overIndex >= 0 ? overIndex : undefined);
+        } else {
+          addSavedComponent(savedComponentId);
+        }
+      }
+      return;
+    }
+
     if (activeData?.type === 'block' && active.id !== over.id) {
       reorderBlocks(String(active.id), String(over.id));
     }
@@ -100,6 +120,10 @@ export function BuilderEditor({ templateId }: BuilderEditorProps) {
   const activePaletteEntry =
     activeDragId?.startsWith('palette-')
       ? registry.find((c) => `palette-${c.id}` === activeDragId)
+      : null;
+  const activeSavedComponent =
+    activeDragId?.startsWith('saved-')
+      ? savedComponents.find((component) => `saved-${component.id}` === activeDragId)
       : null;
 
   if (error) {
@@ -162,6 +186,10 @@ export function BuilderEditor({ templateId }: BuilderEditorProps) {
         {activePaletteEntry ? (
           <div className="palette-item" style={{ width: 240, cursor: 'grabbing' }}>
             <span className="palette-item-name">{activePaletteEntry.name}</span>
+          </div>
+        ) : activeSavedComponent ? (
+          <div className="palette-item" style={{ width: 240, cursor: 'grabbing' }}>
+            <span className="palette-item-name">{activeSavedComponent.name}</span>
           </div>
         ) : null}
       </DragOverlay>

@@ -74,6 +74,7 @@ function blockAttrs(block: TemplateBlock, skip: Set<string>): AttrSpec[] {
     ['component', block.componentId],
     ['label', block.label],
     ['componentVersion', block.componentVersion],
+    ['sourceSavedComponentId', block.sourceSavedComponentId],
   ];
 
   for (const key of Object.keys(block.props).sort()) {

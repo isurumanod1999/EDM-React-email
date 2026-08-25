@@ -37,6 +37,9 @@ export function canonicalizeBlocks(blocks: TemplateBlock[]): TemplateBlock[] {
       props: stripUndefinedDeep(props),
     };
     if (block.label !== undefined) next.label = block.label;
+    if (block.sourceSavedComponentId !== undefined) {
+      next.sourceSavedComponentId = block.sourceSavedComponentId;
+    }
     return next;
   });
 }

@@ -59,6 +59,17 @@ Bottom nav: **Components | Canvas | Properties**. Palette and properties open as
 8. **Export** — **Export** downloads a ZIP with HTML + bundled images.
 9. **Send test** — requires `RESEND_API_KEY`; optional default recipient via `NEXT_PUBLIC_TEST_EMAIL_DEFAULT` in `.env.local`.
 
+### Reusable components
+
+The palette’s **Reusable Components** section is a shared library for this installation (not per-user). Built-in registry entries stay listed below it and cannot be deleted.
+
+1. On a canvas block, click **＋** (**Add to components**) immediately before **Duplicate**.
+2. Enter a unique name and optional description. Saving stores a snapshot of the block’s current props (Figma AST or customized built-in). The canvas block itself is unchanged and is **not** linked as a placement.
+3. Drag a reusable item onto the canvas, double-click it, or focus it and press **Enter**. Each placement gets a new block ID and `sourceSavedComponentId`. Later canvas edits do not update the library; later library deletes do not rewrite existing templates.
+4. Delete a reusable item from the palette (✕). Confirm by name. Deletion is blocked if this unsaved canvas or any **saved** template still has a placement from that item. Uploaded images are not garbage-collected.
+
+Names must be unique (case-insensitive). Duplicate names stay in the save dialog with an error.
+
 ### Unsaved changes
 
 - Browser warns on tab close when edits are unsaved.
@@ -135,7 +146,7 @@ Not done in the tool yet — see [NEXT-PLANS.md](./NEXT-PLANS.md):
 
 ## Storage
 
-Templates are JSON files under `data/templates/`. Uploaded images go to `public/images/uploads/`. No database or cloud storage in the current phase.
+Templates are JSON files under `data/templates/`. Reusable component snapshots are JSON files under `data/saved-components/`. Uploaded images go to `public/images/uploads/`. No database or cloud storage in the current phase.
 
 ---
 

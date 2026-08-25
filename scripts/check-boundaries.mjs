@@ -34,7 +34,7 @@ function walk(dir) {
     if (st.isDirectory()) {
       if (entry === 'node_modules' || entry === '.next') continue;
       walk(full);
-    } else if (/\.(ts|tsx)$/.test(entry)) {
+    } else if (/\.(ts|tsx)$/.test(entry) && !/\.test\.(ts|tsx)$/.test(entry)) {
       checkFile(full);
     }
   }

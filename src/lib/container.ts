@@ -1,6 +1,7 @@
 import { config } from '@/lib/config';
-import type { TemplateRepository, AssetStore } from '@/lib/ports';
+import type { TemplateRepository, SavedComponentRepository, AssetStore } from '@/lib/ports';
 import { createFilesystemTemplateRepository } from '@/lib/adapters/filesystem/templateRepository';
+import { createFilesystemSavedComponentRepository } from '@/lib/adapters/filesystem/savedComponentRepository';
 import { createLocalAssetStore } from '@/lib/adapters/local-assets/assetStore';
 
 /**
@@ -13,6 +14,7 @@ import { createLocalAssetStore } from '@/lib/adapters/local-assets/assetStore';
 
 export interface AppContainer {
   templateRepository: TemplateRepository;
+  savedComponentRepository: SavedComponentRepository;
   assetStore: AssetStore;
 }
 
@@ -47,6 +49,7 @@ export function getContainer(): AppContainer {
   if (!instance) {
     instance = {
       templateRepository: resolveTemplateRepository(),
+      savedComponentRepository: createFilesystemSavedComponentRepository(),
       assetStore: resolveAssetStore(),
     };
   }

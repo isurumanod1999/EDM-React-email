@@ -165,6 +165,7 @@ describe('round-trip parse(print(doc))', () => {
         componentId: 'header',
         componentVersion: 1,
         label: 'header',
+        sourceSavedComponentId: 'saved-header',
         props: { logoUrl: 'https://cdn.example/l.png', logoAlt: 'Logo' },
       },
     ];

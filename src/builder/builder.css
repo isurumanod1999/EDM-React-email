@@ -331,6 +331,36 @@
   line-height: 1.3;
 }
 
+.palette-category--reusable {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.saved-palette-row {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.saved-palette-item {
+  min-width: 0;
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.saved-palette-delete {
+  flex: 0 0 32px;
+  align-self: stretch;
+}
+
+.palette-error {
+  padding: 8px;
+  color: #fca5a5;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
 /* Canvas blocks */
 .canvas-empty {
   padding: 32px 16px;

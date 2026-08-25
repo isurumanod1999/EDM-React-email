@@ -452,6 +452,9 @@ function parseBlock(node: AnyNode, lineOffset: number, seenIds: Set<string>): Te
     props,
   };
   if (label !== undefined) block.label = label;
+  if (typeof attrs.sourceSavedComponentId === 'string' && attrs.sourceSavedComponentId) {
+    block.sourceSavedComponentId = attrs.sourceSavedComponentId;
+  }
   return block;
 }
 

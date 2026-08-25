@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { SCHEMA_VERSION } from './template';
+import { SAVED_COMPONENT_SCHEMA_VERSION } from './savedComponent';
 
 export const templateCategorySchema = z.enum([
   'promotional',
@@ -21,6 +22,32 @@ export const templateBlockSchema = z.object({
   componentVersion: z.number().int().positive(),
   props: z.record(z.unknown()),
   label: z.string().optional(),
+  sourceSavedComponentId: z.string().min(1).optional(),
+});
+
+export const componentCategorySchema = z.enum([
+  'layout',
+  'promotional',
+  'newsletter',
+  'transactional',
+  'product-showcase',
+]);
+
+export const createSavedComponentSchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(100),
+  description: z.string().trim().max(500).optional(),
+  category: componentCategorySchema.default('layout'),
+  componentId: z.string().min(1),
+  componentVersion: z.number().int().positive(),
+  props: z.record(z.unknown()),
+  label: z.string().optional(),
+});
+
+export const savedComponentDocumentSchema = createSavedComponentSchema.extend({
+  schemaVersion: z.literal(SAVED_COMPONENT_SCHEMA_VERSION),
+  id: z.string().min(1),
+  createdAt: z.string().min(1),
+  updatedAt: z.string().min(1),
 });
 
 export const emailTemplateDocumentSchema = z.object({

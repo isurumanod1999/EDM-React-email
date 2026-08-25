@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { TemplateBlock } from '@/lib/schema/template';
 import { useBuilderStore } from '@/builder/store/builderStore';
+import { SaveReusableComponentModal } from './SaveReusableComponentModal';
 
 interface BlockItemProps {
   block: TemplateBlock;
@@ -11,6 +13,7 @@ interface BlockItemProps {
 }
 
 export function BlockItem({ block, componentName }: BlockItemProps) {
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
   const selectedBlockId = useBuilderStore((s) => s.selectedBlockId);
   const selectBlock = useBuilderStore((s) => s.selectBlock);
   const removeBlock = useBuilderStore((s) => s.removeBlock);
@@ -64,6 +67,18 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
           className="btn btn-ghost btn-sm"
           onClick={(e) => {
             e.stopPropagation();
+            setSaveModalOpen(true);
+          }}
+          title="Add to components"
+          aria-label={`Add ${label} to reusable components`}
+        >
+          ＋
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          onClick={(e) => {
+            e.stopPropagation();
             duplicateBlock(block.id);
           }}
           title="Duplicate"
@@ -85,6 +100,11 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
           ✕
         </button>
       </div>
+      <SaveReusableComponentModal
+        block={block}
+        open={saveModalOpen}
+        onClose={() => setSaveModalOpen(false)}
+      />
     </div>
   );
 }

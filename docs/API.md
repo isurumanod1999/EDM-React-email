@@ -12,7 +12,7 @@ All routes live under `/api`. Responses include header **`x-correlation-id`** fo
 }
 ```
 
-Common codes: `validation_error`, `not_found`, `rate_limited`, `payload_too_large`, `internal_error`, `figma_not_configured`, `ai_unavailable`.
+Common codes: `validation_error`, `not_found`, `rate_limited`, `payload_too_large`, `internal_error`, `figma_not_configured`, `ai_unavailable`, `duplicate_name`, `component_in_use`.
 
 ---
 
@@ -28,6 +28,21 @@ Common codes: `validation_error`, `not_found`, `rate_limited`, `payload_too_larg
 | POST | `/api/templates/:id/duplicate` | Duplicate template |
 
 Storage: `data/templates/{id}.json` via `TemplateService` → filesystem adapter.
+
+---
+
+## Saved components
+
+Shared reusable-block library for the builder (installation-wide, not per-user).
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/saved-components` | List snapshots, newest first |
+| POST | `/api/saved-components` | Create snapshot (`name`, `componentId`, `componentVersion`, `props`, optional `description` / `label` / `category`) |
+| GET | `/api/saved-components/:id` | Get one snapshot |
+| DELETE | `/api/saved-components/:id` | Delete if unused; **409** `component_in_use` / `duplicate_name` as applicable |
+
+Storage: `data/saved-components/{id}.json` via `SavedComponentService` → filesystem adapter. Deletion does not remove uploaded images.
 
 ---
 

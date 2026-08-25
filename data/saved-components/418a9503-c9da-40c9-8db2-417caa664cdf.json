@@ -1,0 +1,39 @@
+{
+  "name": "Hero section",
+  "category": "layout",
+  "componentId": "figma-react-email",
+  "componentVersion": 1,
+  "props": {
+    "tree": {
+      "type": "Section",
+      "style": {
+        "width": "100%",
+        "maxWidth": 600,
+        "margin": "0 auto",
+        "backgroundColor": "#ffffff"
+      },
+      "children": [
+        {
+          "type": "Img",
+          "src": "/images/uploads/figma-desk-4a6d8e48-7d05-452e-9206-9cf5d5040a21.png",
+          "mobileSrc": "/images/uploads/figma-mob-1c239cdf-6b07-4265-9d7a-c4dc1da12db1.png",
+          "width": 600,
+          "height": 820,
+          "alt": "Hero section",
+          "align": "center",
+          "fullBleed": true,
+          "className": "figma-frame-img-8a73b00e-78b0-4f0b-950a-6b0079c707e1"
+        }
+      ]
+    },
+    "sourceFrame": "Hero section",
+    "mobileFrame": "Hero section",
+    "hideBorders": false,
+    "borderColor": ""
+  },
+  "label": "Hero section",
+  "schemaVersion": 1,
+  "id": "418a9503-c9da-40c9-8db2-417caa664cdf",
+  "createdAt": "2026-08-25T06:18:13.285Z",
+  "updatedAt": "2026-08-25T06:18:13.285Z"
+}

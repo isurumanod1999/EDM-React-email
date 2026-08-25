@@ -171,4 +171,10 @@ export function isPassthroughAttr(type: ReactEmailNode['type'], name: string): b
 }
 
 /** Block wrapper reserved + common printable attrs are open for registry props. */
-export const BLOCK_ATTR_RESERVED = new Set(['id', 'component', 'label', 'componentVersion']);
+export const BLOCK_ATTR_RESERVED = new Set([
+  'id',
+  'component',
+  'label',
+  'componentVersion',
+  'sourceSavedComponentId',
+]);

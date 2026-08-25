@@ -3,6 +3,8 @@ import type { CSSProperties } from 'react';
 import type { EmailTemplateDocument, EmailTemplateMeta, TemplateBlock } from '@/lib/schema/template';
 import type { ComponentRegistryEntry } from '@/lib/registry/types';
 import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
+import type { SavedComponentDocument } from '@/lib/schema/savedComponent';
+import { createBlockFromSavedComponent } from '@/lib/saved-components/placement';
 import { generateId } from '@/lib/utils/id';
 import { setNestedValue } from '@/builder/utils/props';
 import {
@@ -16,12 +18,16 @@ import type { FigmaSession } from '@/builder/types/figmaSession';
 
 /** Which CSSProperties bag on a node an edit targets. */
 export type StyleTarget = 'style' | 'containerStyle' | 'mobileStyle';
+export type SavedComponentActionResult = { ok: true } | { ok: false; error: string };
 
 interface BuilderState {
   template: EmailTemplateDocument | null;
   registry: ComponentRegistryEntry[];
   registryByCategory: Record<string, ComponentRegistryEntry[]>;
   paletteByCategory: Record<string, ComponentRegistryEntry[]>;
+  savedComponents: SavedComponentDocument[];
+  savedComponentsLoading: boolean;
+  savedComponentsError: string | null;
   selectedBlockId: string | null;
   selectedNodePath: string | null;
   figmaSession: FigmaSession | null;
@@ -40,6 +46,7 @@ interface BuilderState {
   clearFigmaSession: () => void;
   updateFigmaHint: (hint: string) => void;
   loadRegistry: () => Promise<void>;
+  loadSavedComponents: () => Promise<void>;
   loadTemplate: (id: string) => Promise<void>;
   selectBlock: (id: string | null) => void;
   selectNode: (blockId: string, nodePath: string | null) => void;
@@ -57,6 +64,12 @@ interface BuilderState {
   duplicateNode: (blockId: string, nodePath: string) => void;
   removeNode: (blockId: string, nodePath: string) => void;
   addBlock: (componentId: string, index?: number) => void;
+  addSavedComponent: (savedComponentId: string, index?: number) => void;
+  saveBlockAsReusable: (
+    blockId: string,
+    metadata: { name: string; description?: string }
+  ) => Promise<SavedComponentActionResult>;
+  deleteSavedComponent: (id: string) => Promise<SavedComponentActionResult>;
   addBlocksFromAi: (blocks: { componentId: string; props: Record<string, unknown>; label?: string }[]) => void;
   removeBlock: (id: string) => void;
   duplicateBlock: (id: string) => void;
@@ -93,6 +106,9 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   registry: [],
   registryByCategory: {},
   paletteByCategory: {},
+  savedComponents: [],
+  savedComponentsLoading: false,
+  savedComponentsError: null,
   selectedBlockId: null,
   selectedNodePath: null,
   figmaSession: null,
@@ -139,6 +155,24 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       registryByCategory: data.byCategory,
       paletteByCategory: data.paletteByCategory ?? data.byCategory,
     });
+  },
+
+  loadSavedComponents: async () => {
+    set({ savedComponentsLoading: true, savedComponentsError: null });
+    try {
+      const res = await fetch('/api/saved-components');
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(
+          typeof data.error === 'string' ? data.error : 'Failed to load reusable components'
+        );
+      }
+      set({ savedComponents: data.components ?? [], savedComponentsLoading: false });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to load reusable components';
+      set({ savedComponentsLoading: false, savedComponentsError: message });
+    }
   },
 
   loadTemplate: async (id: string) => {
@@ -264,6 +298,92 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       ...markDirty(get(), { blocks }),
       selectedBlockId: block.id,
     });
+  },
+
+  addSavedComponent: (savedComponentId, index) => {
+    const { savedComponents, template } = get();
+    if (!template) return;
+    const saved = savedComponents.find((component) => component.id === savedComponentId);
+    if (!saved) return;
+
+    const block = createBlockFromSavedComponent(saved);
+    const blocks = [...template.blocks];
+    const insertAt = index ?? blocks.length;
+    blocks.splice(insertAt, 0, block);
+    set({
+      ...markDirty(get(), { blocks }),
+      selectedBlockId: block.id,
+      selectedNodePath: null,
+    });
+  },
+
+  saveBlockAsReusable: async (blockId, metadata) => {
+    const { template, registry } = get();
+    const block = template?.blocks.find((candidate) => candidate.id === blockId);
+    if (!block) return { ok: false, error: 'Canvas component not found' };
+    const entry = registry.find((candidate) => candidate.id === block.componentId);
+
+    try {
+      const res = await fetch('/api/saved-components', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: metadata.name,
+          description: metadata.description || undefined,
+          category: entry?.category ?? 'layout',
+          componentId: block.componentId,
+          componentVersion: block.componentVersion,
+          props: structuredClone(block.props),
+          label: block.label,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(
+          typeof data.error === 'string' ? data.error : 'Failed to save reusable component'
+        );
+      }
+      set((state) => ({
+        savedComponents: [data.component, ...state.savedComponents],
+        savedComponentsError: null,
+      }));
+      return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : 'Failed to save reusable component',
+      };
+    }
+  },
+
+  deleteSavedComponent: async (id) => {
+    const { template } = get();
+    if (template?.blocks.some((block) => block.sourceSavedComponentId === id)) {
+      return {
+        ok: false,
+        error: `Remove this reusable component from "${template.name}" and save the template first.`,
+      };
+    }
+
+    try {
+      const res = await fetch(`/api/saved-components/${id}`, { method: 'DELETE' });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(
+          typeof data.error === 'string' ? data.error : 'Failed to delete reusable component'
+        );
+      }
+      set((state) => ({
+        savedComponents: state.savedComponents.filter((component) => component.id !== id),
+        savedComponentsError: null,
+      }));
+      return { ok: true };
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to delete reusable component';
+      set({ savedComponentsError: message });
+      return { ok: false, error: message };
+    }
   },
 
   addBlocksFromAi: (aiBlocks) => {

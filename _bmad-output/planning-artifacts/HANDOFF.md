@@ -2,7 +2,7 @@
 
 > Purpose: let a **new Cursor agent (new account)** resume this exact plan without the previous chat's memory. Everything needed is in the repo `.md` files listed below plus this status.
 
-Last updated: 2026-08-04
+Last updated: 2026-08-25
 
 ---
 
@@ -21,7 +21,7 @@ Last updated: 2026-08-04
 ## 2. Architectural rules being followed (do not violate)
 
 - **AD-1 / AR1:** Next.js route handlers only validate → call a service → shape response. No business logic or storage in handlers.
-- **AD-2 / AR2:** Persistence only through ports (`TemplateRepository`, `AssetStore`, `EventLog`, `JobQueue`). No `fs`/DB/SDK calls outside `src/lib/adapters/**` (legacy figma/export fs usage is allowlisted in `scripts/check-boundaries.mjs` until refactored).
+- **AD-2 / AR2:** Persistence only through ports (`TemplateRepository`, `SavedComponentRepository`, `AssetStore`, `EventLog`, `JobQueue`). No `fs`/DB/SDK calls outside `src/lib/adapters/**` (legacy figma/export fs usage is allowlisted in `scripts/check-boundaries.mjs` until refactored).
 - **AD-3 / AR3:** One composition root — `src/lib/container.ts` — binds adapters by `STORAGE_DRIVER` / `ASSET_DRIVER`.
 - **AD-8:** Zod-validate input before any side effect.
 - **AD-9:** Uniform error envelope + correlation-id logging (see deviation note in §5).
@@ -130,12 +130,15 @@ Environment note: **Windows / PowerShell**; Python is `py -3`.
 
 ### Next active phase
 
-**Builder polish is complete. Tagging URL import is complete.** Productization next (see [docs/NEXT-PLANS.md](../../docs/NEXT-PLANS.md)):
+**Builder polish, tagging URL import, and the reusable component library are complete.** Productization next (see [docs/NEXT-PLANS.md](../../docs/NEXT-PLANS.md)):
 
 1. **Render QA** — how templates render in real email clients on desktop + mobile (pending; browser preview only today)
 2. **Rendering fixes** — from render QA evidence (image flatten + primitives)
 
-**Done recently:** tagging Excel → match by URL Label → apply FINAL URL/alt → desk/mobile checklist ([docs/BUILDER.md](../../docs/BUILDER.md#tagging-urls-post-compose)).
+**Done recently:**
+
+- Reusable component library (Epic 3): save any canvas block, shared palette, drag/add, guarded delete. Stories `3-1`–`3-5` in `_bmad-output/implementation-artifacts/`.
+- Tagging Excel → match by URL Label → apply FINAL URL/alt → desk/mobile checklist ([docs/BUILDER.md](../../docs/BUILDER.md#tagging-urls-post-compose)).
 
 Also available if asked:
 

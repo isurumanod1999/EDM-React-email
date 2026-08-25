@@ -26,6 +26,8 @@ export interface TemplateBlock {
   componentVersion: number;
   props: Record<string, unknown>;
   label?: string;
+  /** Provenance for placements cloned from the shared reusable-component library. */
+  sourceSavedComponentId?: string;
 }
 
 export interface EmailTemplateDocument {
