@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "2f5d0c76-fe3c-42fb-9c6d-5a6265a0f20e",
-  "name": "Untitled Template",
+  "name": "Testing 2 cols Template",
   "category": "newsletter",
   "meta": {
     "previewText": "Preview your email",
@@ -1774,5 +1774,5 @@
     }
   ],
   "createdAt": "2026-08-24T15:56:37.579Z",
-  "updatedAt": "2026-08-25T06:59:52.700Z"
+  "updatedAt": "2026-08-25T07:10:33.111Z"
 }
