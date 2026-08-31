@@ -1,0 +1,15 @@
+Section backgroundColor=#000000 padding=40px width=100% 
+  Section backgroundColor=#292929 borderRadius=12 padding=40px width=100% 
+    Heading padding=0 TELL ME MORE
+    Spacer  
+    Text padding=0 In future emails, I’m most i
+    Spacer  
+    Row width=100% 
+      Column width=23% 
+        Button backgroundColor=transparent borderRadius=0 padding=0 width=103px Interior ›
+      Column width=34% 
+        Button backgroundColor=transparent borderRadius=0 padding=0 width=151px PERFORMANCE ›
+      Column width=32% 
+        Button backgroundColor=transparent borderRadius=0 padding=0 width=140px Technology ›
+    Spacer  
+    Button backgroundColor=#b42535 borderRadius=999 padding=12px 32px width=290px Register your interest

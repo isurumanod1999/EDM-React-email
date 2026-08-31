@@ -7,6 +7,7 @@ import {
   findButtonBackgroundShape,
   getContentChildren,
   getTopLevelSections,
+  hasOwnVisualSurface,
   hasTextDescendant,
   mapCounterAxisAlign,
   nodePath,
@@ -255,6 +256,15 @@ function unwrapContentWrapper(node: ParsedFigmaNode): ParsedFigmaNode {
   }
 
   if (!hasTextDescendant(wrapper)) {
+    return {
+      ...node,
+      children: node.children.map(unwrapContentWrapper),
+    };
+  }
+
+  // Independently styled surfaces stay nested so outer and inner fills, borders
+  // and radii each keep their own container (see `hasOwnVisualSurface`).
+  if (hasOwnVisualSurface(node) && hasOwnVisualSurface(wrapper)) {
     return {
       ...node,
       children: node.children.map(unwrapContentWrapper),

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from '@react-email/components';
 import { EDM_CLASS } from '@/lib/email/responsive';
 import { ResponsiveImg } from '@/lib/email/ResponsiveImg';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -142,6 +143,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
   ctaAlign = 'left',
   styles = {},
 }) => {
+  const rowsSel = useSelectable('rows');
   return (
     <table
       width={600}
@@ -198,6 +200,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                                 width={imgWidth}
                                 alt={item.altText || ''}
                                 style={{ borderRadius: item.imgBorderRadius }}
+                                selectAttrs={rowsSel}
                               />
                             </Link>
                           ) : (
@@ -207,6 +210,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                               width={imgWidth}
                               alt={item.altText || ''}
                               style={{ borderRadius: item.imgBorderRadius }}
+                              selectAttrs={rowsSel}
                             />
                           )}
                         </td>
@@ -217,6 +221,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                           <td
                             align={textAlign}
                             valign="top"
+                            {...rowsSel}
                             style={{
                               backgroundColor: itemBgColor,
                               ...defaultStyles.title,
@@ -247,6 +252,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                           <td
                             align={textAlign}
                             valign="top"
+                            {...rowsSel}
                             style={{
                               backgroundColor: itemBgColor,
                               ...defaultStyles.subtitle,
@@ -262,6 +268,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                           <td
                             align={textAlign}
                             valign="top"
+                            {...rowsSel}
                             style={{
                               backgroundColor: itemBgColor,
                               ...defaultStyles.price,
@@ -300,6 +307,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                             <Link
                               href={item.ctaUrl || item.url || '#'}
                               className={EDM_CLASS.cta}
+                              {...rowsSel}
                               style={{
                                 ...defaultStyles.cta,
                                 ...styles.cta,
@@ -327,6 +335,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                           >
                             <Link
                               href={item.ctaUrl || item.url || '#'}
+                              {...rowsSel}
                               style={{
                                 ...defaultStyles.ctaLink,
                                 ...styles.ctaLink,

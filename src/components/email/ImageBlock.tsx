@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from '@react-email/components';
 import { EDM_CLASS } from '@/lib/email/responsive';
 import { ResponsiveImg } from '@/lib/email/ResponsiveImg';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface ImageBlockProps {
   imgSrc: string;
@@ -28,6 +29,7 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
   align = 'center',
   imgBorderRadius = '0px',
 }) => {
+  const imgSel = useSelectable('imgSrc');
   const image = (
     <ResponsiveImg
       deskSrc={imgSrc}
@@ -36,6 +38,7 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
       height={imgHeight}
       alt={altText}
       style={{ borderRadius: imgBorderRadius }}
+      selectAttrs={imgSel}
     />
   );
 

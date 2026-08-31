@@ -1,11 +1,13 @@
 import type { CSSProperties } from 'react';
 import type { FigmaTextRun, ParsedFigmaNode } from './parseFigmaNode';
 import {
+  cornerRadiusCss,
   findAllTextNodes,
   findNodeByPath,
   getContentChildren,
   hasButtonDescendant,
   hasButtonVisualStructure,
+  hasOwnVisualSurface,
   hasTextDescendant,
   mapCounterAxisAlign,
   normalizeColor,
@@ -382,6 +384,11 @@ function unwrapSingleWrapper(node: ParsedFigmaNode): ParsedFigmaNode {
   }
   const wrapper = kids[0];
   if (!CONTAINER_TYPES.has(wrapper.type) || !hasTextDescendant(wrapper)) {
+    return { ...node, children: node.children.map(unwrapSingleWrapper) };
+  }
+  // Keep nested visual surfaces as nested React Email Sections. This preserves
+  // outer + inner fills, borders, radii and their independent padding.
+  if (hasOwnVisualSurface(node) && hasOwnVisualSurface(wrapper)) {
     return { ...node, children: node.children.map(unwrapSingleWrapper) };
   }
   const inner = getContentChildren(wrapper);
@@ -1212,7 +1219,8 @@ function boxStyle(node: ParsedFigmaNode): CSSProperties | undefined {
   } else if (pad) {
     style.padding = pad;
   }
-  if (node.cornerRadius && node.cornerRadius > 0) style.borderRadius = node.cornerRadius;
+  const radius = cornerRadiusCss(node);
+  if (radius !== undefined) style.borderRadius = radius;
   return style;
 }
 

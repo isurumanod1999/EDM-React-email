@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface DividerProps {
   backgroundColor?: string;
@@ -16,6 +17,7 @@ export const Divider: React.FC<DividerProps> = ({
   deskPadding = '20px 40px',
   width = 520,
 }) => {
+  const lineSel = useSelectable('lineColor');
   return (
     <table
       width={600}
@@ -37,6 +39,7 @@ export const Divider: React.FC<DividerProps> = ({
           >
             <tr>
               <td
+                {...lineSel}
                 style={{
                   borderTop: `${lineHeight}px solid ${lineColor}`,
                   fontSize: '0',

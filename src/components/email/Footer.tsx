@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
 import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -153,6 +154,15 @@ export const Footer: React.FC<FooterProps> = ({
   copyright,
   styles = {},
 }) => {
+  const logoSel = useSelectable('logoSrc');
+  const socialSel = useSelectable('socialLinks');
+  const legalSel = useSelectable('legalText');
+  const copyrightSel = useSelectable('copyright');
+  const addressSel = useSelectable('address');
+  const phoneSel = useSelectable('phone');
+  const unsubSel = useSelectable('unsubscribeUrl');
+  const prefsSel = useSelectable('preferencesUrl');
+  const privacySel = useSelectable('privacyUrl');
   const logoImg = logoSrc ? (
     <Img
       src={logoSrc}
@@ -160,6 +170,7 @@ export const Footer: React.FC<FooterProps> = ({
       height={logoHeight}
       alt={logoAlt}
       className={EDM_CLASS.imgFluid}
+      {...logoSel}
       style={{
         display: 'block',
         width: `${logoWidth}px`,
@@ -205,6 +216,7 @@ export const Footer: React.FC<FooterProps> = ({
                       <td
                         align="right"
                         valign="middle"
+                        {...socialSel}
                         style={{
                           ...defaultStyles.socialTitle,
                           ...styles.socialTitle,
@@ -238,6 +250,7 @@ export const Footer: React.FC<FooterProps> = ({
                                     width={socialIconSize}
                                     height={socialIconSize}
                                     alt={social.platform}
+                                    {...socialSel}
                                     style={{
                                       display: 'block',
                                       width: `${socialIconSize}px`,
@@ -286,6 +299,7 @@ export const Footer: React.FC<FooterProps> = ({
             align="left"
             valign="top"
             className={EDM_CLASS.pad}
+            {...legalSel}
             style={{
               ...defaultStyles.legalText,
               ...styles.legalText,
@@ -309,6 +323,7 @@ export const Footer: React.FC<FooterProps> = ({
             {preferencesUrl && (
               <Link
                 href={preferencesUrl}
+                {...prefsSel}
                 style={{ color: linkColor, textDecoration: 'underline' }}
                 target="_blank"
               >
@@ -319,6 +334,7 @@ export const Footer: React.FC<FooterProps> = ({
             {unsubscribeUrl && (
               <Link
                 href={unsubscribeUrl}
+                {...unsubSel}
                 style={{ color: linkColor, textDecoration: 'underline' }}
                 target="_blank"
               >
@@ -329,6 +345,7 @@ export const Footer: React.FC<FooterProps> = ({
             {privacyUrl && (
               <Link
                 href={privacyUrl}
+                {...privacySel}
                 style={{ color: linkColor, textDecoration: 'underline' }}
                 target="_blank"
               >
@@ -345,6 +362,7 @@ export const Footer: React.FC<FooterProps> = ({
             align="left"
             valign="top"
             className={EDM_CLASS.pad}
+            {...addressSel}
             style={{
               ...defaultStyles.address,
               ...styles.address,
@@ -360,6 +378,7 @@ export const Footer: React.FC<FooterProps> = ({
             align="left"
             valign="top"
             className={EDM_CLASS.pad}
+            {...phoneSel}
             style={{
               ...defaultStyles.phone,
               ...styles.phone,
@@ -382,6 +401,7 @@ export const Footer: React.FC<FooterProps> = ({
             align="left"
             valign="top"
             className={EDM_CLASS.pad}
+            {...copyrightSel}
             style={{
               ...defaultStyles.copyright,
               ...styles.copyright,

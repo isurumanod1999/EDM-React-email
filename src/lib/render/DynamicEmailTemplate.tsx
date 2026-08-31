@@ -7,6 +7,7 @@ import type { EmailTemplateMeta, TemplateBlock } from '@/lib/schema/template';
 import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
 import { getComponentDefinition } from '@/lib/registry';
 import type { ReactEmailNode } from '@/lib/figma/types/reactEmailAst';
+import { PreviewEditScope } from '@/builder/preview/PreviewEditContext';
 
 export interface DynamicEmailTemplateProps {
   meta?: Partial<EmailTemplateMeta>;
@@ -101,20 +102,20 @@ export function DynamicEmailTemplate({
 
             const rendered = <Component {...(block.props as object)} />;
 
-            // Built-in blocks aren't AST trees, so they're selectable at the
-            // block level: a wrapper carries data-block-id so a click in the
-            // preview opens this block's properties. Wrapper only in editor
-            // preview — export markup is never wrapped.
+            // Built-in blocks aren't AST trees. The wrapper is the block-level
+            // fallback; descendant images/text/buttons carry field:* paths via
+            // PreviewEditContext. Wrapper only in editor preview.
             if (editable) {
               return (
-                <div
-                  key={block.id}
-                  data-block-id={block.id}
-                  data-block-root="1"
-                  className="__fc-block"
-                >
-                  {rendered}
-                </div>
+                <PreviewEditScope key={block.id} blockId={block.id}>
+                  <div
+                    data-block-id={block.id}
+                    data-block-root="1"
+                    className="__fc-block"
+                  >
+                    {rendered}
+                  </div>
+                </PreviewEditScope>
               );
             }
 

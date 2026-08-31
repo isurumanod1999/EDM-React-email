@@ -52,6 +52,12 @@ export interface ParsedFigmaNode {
   primaryAxisAlign?: string;
   counterAxisAlign?: string;
   cornerRadius?: number;
+  /**
+   * Per-corner radii (top-left, top-right, bottom-right, bottom-left), set only
+   * when the corners differ. A card rounded on its top edge only must not become
+   * rounded on all four, and `cornerRadius` alone cannot express that.
+   */
+  cornerRadii?: [number, number, number, number];
   strokeColor?: string;
   strokeWeight?: number;
   /**
@@ -279,6 +285,7 @@ export function parseFigmaNode(
       : Array.isArray(node.rectangleCornerRadii)
         ? Math.max(...node.rectangleCornerRadii)
         : undefined;
+  const cornerRadii = asymmetricCornerRadii(node.rectangleCornerRadii);
 
   // A border can be lost three ways: the weight lives in `individualStrokeWeights`
   // (per-side), the weight is omitted entirely (Figma's implicit 1px default), or
@@ -317,6 +324,7 @@ export function parseFigmaNode(
     primaryAxisAlign: node.primaryAxisAlignItems,
     counterAxisAlign: node.counterAxisAlignItems,
     cornerRadius,
+    cornerRadii,
     strokeColor,
     strokeWeight,
     strokeSides: strokeSidesOf(node),
@@ -327,6 +335,19 @@ export function parseFigmaNode(
   };
 
   return parsed;
+}
+
+/**
+ * Figma's four corner radii, kept only when they actually differ. Uniform
+ * corners stay undefined so downstream keeps emitting the simpler shorthand.
+ */
+function asymmetricCornerRadii(
+  radii: number[] | undefined
+): [number, number, number, number] | undefined {
+  if (!Array.isArray(radii) || radii.length !== 4) return undefined;
+  const corners = radii.map((r) => (typeof r === 'number' && r > 0 ? r : 0));
+  if (corners.every((r) => r === corners[0])) return undefined;
+  return corners as [number, number, number, number];
 }
 
 /**
@@ -757,6 +778,32 @@ export function normalizeColor(color?: string): string | undefined {
   const compact = color.replace(/\s/g, '').toLowerCase();
   if (compact === 'rgba(0,0,0,0)' || compact === 'transparent') return undefined;
   return color;
+}
+
+/**
+ * Whether a frame paints its own surface (fill, visible border, or rounded
+ * corners).
+ *
+ * Two stacked surfaces are not interchangeable: the outer frame commonly
+ * provides the section background while the child is a contrasting rounded
+ * card. Merging them loses the inner fill and moves its radius onto the outer
+ * background, so every converter must consult this before collapsing a wrapper.
+ */
+export function hasOwnVisualSurface(node: ParsedFigmaNode): boolean {
+  return (
+    normalizeColor(node.backgroundColor) != null ||
+    (normalizeColor(node.strokeColor) != null && (node.strokeWeight ?? 0) > 0) ||
+    (node.cornerRadius ?? 0) > 0 ||
+    node.cornerRadii != null
+  );
+}
+
+/** CSS `border-radius` for a node, preserving asymmetric corners. */
+export function cornerRadiusCss(node: ParsedFigmaNode): string | number | undefined {
+  if (node.cornerRadii) {
+    return node.cornerRadii.map((r) => `${r}px`).join(' ');
+  }
+  return node.cornerRadius && node.cornerRadius > 0 ? node.cornerRadius : undefined;
 }
 
 export function resolveEffectiveBackground(node: ParsedFigmaNode): string | undefined {

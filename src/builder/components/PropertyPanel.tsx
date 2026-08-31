@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { FieldRenderer, getFieldValue } from './FieldRenderer';
 import type { TemplateCategory } from '@/lib/schema/template';
+import { parseFieldPath } from '@/lib/preview/selectionIdentity';
 
 const TEMPLATE_CATEGORIES: { value: TemplateCategory; label: string }[] = [
   { value: 'promotional', label: 'Promotional' },
@@ -16,6 +17,7 @@ const TEMPLATE_CATEGORIES: { value: TemplateCategory; label: string }[] = [
 export function PropertyPanel({ className }: { className?: string }) {
   const template = useBuilderStore((s) => s.template);
   const selectedBlockId = useBuilderStore((s) => s.selectedBlockId);
+  const selectedNodePath = useBuilderStore((s) => s.selectedNodePath);
   const registry = useBuilderStore((s) => s.registry);
   const showAdvanced = useBuilderStore((s) => s.showAdvanced);
   const updateBlockProp = useBuilderStore((s) => s.updateBlockProp);
@@ -23,6 +25,7 @@ export function PropertyPanel({ className }: { className?: string }) {
   const updateTemplateInfo = useBuilderStore((s) => s.updateTemplateInfo);
 
   const selectedBlock = template?.blocks.find((b) => b.id === selectedBlockId);
+  const selectedFieldKey = parseFieldPath(selectedNodePath);
   const componentDef = selectedBlock
     ? registry.find((c) => c.id === selectedBlock.componentId)
     : null;
@@ -136,6 +139,7 @@ export function PropertyPanel({ className }: { className?: string }) {
                   <FieldRenderer
                     key={field.key}
                     field={field}
+                    selected={selectedFieldKey === field.key}
                     value={getFieldValue(selectedBlock.props, field.key)}
                     onChange={(value) => updateBlockProp(selectedBlock.id, field.key, value)}
                   />

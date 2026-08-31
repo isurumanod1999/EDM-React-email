@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
 import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -87,6 +88,7 @@ const IconColumn: React.FC<{
   const width = column.width || 160;
   const iconWidth = column.iconWidth || 18;
   const iconHeight = column.iconHeight || 18;
+  const rowsSel = useSelectable('rows');
 
   return (
     <table
@@ -118,6 +120,7 @@ const IconColumn: React.FC<{
                 width={iconWidth}
                 height={iconHeight}
                 alt={column.altText || ''}
+                {...rowsSel}
                 style={{
                   display: 'block',
                   width: `${iconWidth}px`,
@@ -131,6 +134,7 @@ const IconColumn: React.FC<{
               width={iconWidth}
               height={iconHeight}
               alt={column.altText || ''}
+              {...rowsSel}
               style={{
                 display: 'block',
                 width: `${iconWidth}px`,
@@ -146,6 +150,7 @@ const IconColumn: React.FC<{
           align="left"
           valign="top"
           className={EDM_CLASS.stackCell}
+          {...rowsSel}
           style={{
             minHeight: `${textHeight}px`,
             backgroundColor: bgColor,

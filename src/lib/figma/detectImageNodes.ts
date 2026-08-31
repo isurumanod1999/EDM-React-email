@@ -73,7 +73,11 @@ function isGraphicOnlySubtree(node: ParsedFigmaNode): boolean {
       ok = false;
       return;
     }
-    if (n.type === 'IMAGE' || n.imageRef) {
+    // Only real raster content disqualifies a badge. Vector shapes legitimately
+    // carry an `imageRef`/export once the import has rendered each path, so
+    // testing `imageRef` alone would classify every already-imported icon as a
+    // photo — leaving only fragment-level exports of the glyph.
+    if (n.type === 'IMAGE' || (n.imageRef && !isGraphicShape(n))) {
       ok = false;
       return;
     }

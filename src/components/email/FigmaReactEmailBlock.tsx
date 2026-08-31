@@ -638,7 +638,7 @@ function renderNode(
 
       // When the image links somewhere, the anchor (not the <img>) carries the
       // selection attrs and click-through href; otherwise the <img> does.
-      const imgSel = node.href ? {} : sel;
+      const imgSel = sel;
 
       let imgContent: React.ReactNode;
       if (node.mobileSrc) {
@@ -775,7 +775,7 @@ function renderNode(
       // Text). The content is a non-breaking space *string* (text content, not
       // an HTML element) so the Text keeps its height across email clients.
       return (
-        <Section key={key} {...sel} style={{ height: node.height, lineHeight: '1px', fontSize: '1px' }}>
+        <Section key={key} {...sel} {...extra} className={joinClasses(authorCls, rspCls)} style={{ height: node.height, lineHeight: '1px', fontSize: '1px' }}>
           <Text style={{ margin: 0, fontSize: '1px', lineHeight: `${node.height}px` }}>
             {'\u00A0'}
           </Text>
@@ -808,7 +808,7 @@ function renderNode(
 
     case 'CodeInline':
       return (
-        <CodeInline key={key} {...sel} style={node.style}>
+        <CodeInline key={key} {...sel} {...extra} className={joinClasses(authorCls, rspCls)} style={node.style}>
           {node.content}
         </CodeInline>
       );
@@ -817,6 +817,7 @@ function renderNode(
       return (
         <Markdown
           key={key}
+          {...sel}
           markdownContainerStyles={node.markdownContainerStyles}
           markdownCustomStyles={node.markdownCustomStyles}
         >

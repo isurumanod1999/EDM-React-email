@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface StatItemProps {
   value: string;
@@ -36,6 +37,7 @@ function StatCell({
   defaultValueColor: string;
   labelColor: string;
 }) {
+  const statsSel = useSelectable('stats');
   return (
     <td
       align="center"
@@ -45,6 +47,7 @@ function StatCell({
       style={{ width: `${width}px`, fontFamily }}
     >
       <p
+        {...statsSel}
         style={{
           margin: '0 0 6px 0',
           fontSize: valueFontSize,
@@ -56,6 +59,7 @@ function StatCell({
         {stat.value}
       </p>
       <p
+        {...statsSel}
         style={{
           margin: 0,
           fontSize: labelFontSize,

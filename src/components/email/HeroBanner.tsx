@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
 import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface HeroBannerProps {
   imgSrc: string;
@@ -43,6 +44,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 }) => {
   const fontFamily =
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+  const imgSel = useSelectable('imgSrc');
+  const headlineSel = useSelectable('headline');
+  const subSel = useSelectable('subheadline');
+  const ctaSel = useSelectable('ctaText');
 
   const image = (
     <Img
@@ -54,6 +59,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       style={fluidImgStyle(imgWidth, {
         height: imgHeight ? `${imgHeight}px` : 'auto',
       })}
+      {...imgSel}
     />
   );
 
@@ -85,6 +91,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           >
             {headline && (
               <p
+                {...headlineSel}
                 style={{
                   margin: '0 0 12px 0',
                   fontSize: '28px',
@@ -98,6 +105,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             )}
             {subheadline && (
               <p
+                {...subSel}
                 style={{
                   margin: '0 0 20px 0',
                   fontSize: '16px',
@@ -112,6 +120,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <Link
                 href={ctaUrl}
                 className={EDM_CLASS.cta}
+                {...ctaSel}
                 style={{
                   display: 'inline-block',
                   maxWidth: '100%',

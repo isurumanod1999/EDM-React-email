@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, type ReactNode } from 'react';
 import type { FieldDefinition } from '@/lib/registry/types';
 import { getNestedValue } from '@/builder/utils/props';
 
@@ -7,14 +8,41 @@ interface FieldRendererProps {
   field: FieldDefinition;
   value: unknown;
   onChange: (value: unknown) => void;
+  selected?: boolean;
 }
 
-export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
+function FieldShell({
+  fieldKey,
+  selected,
+  children,
+}: {
+  fieldKey: string;
+  selected?: boolean;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!selected || !ref.current) return;
+    ref.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [selected]);
+
+  return (
+    <div
+      ref={ref}
+      className={selected ? 'field field--selected' : 'field'}
+      data-field-key={fieldKey}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function FieldRenderer({ field, value, onChange, selected }: FieldRendererProps) {
   const id = `field-${field.key.replace(/\./g, '-')}`;
 
   if (field.type === 'boolean') {
     return (
-      <div className="field">
+      <FieldShell fieldKey={field.key} selected={selected}>
         <label className="field-checkbox-row" htmlFor={id}>
           <input
             id={id}
@@ -26,13 +54,13 @@ export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
             {field.label}
           </span>
         </label>
-      </div>
+      </FieldShell>
     );
   }
 
   if (field.type === 'select' && field.options) {
     return (
-      <div className="field">
+      <FieldShell fieldKey={field.key} selected={selected}>
         <label className="field-label" htmlFor={id}>
           {field.label}
         </label>
@@ -48,13 +76,13 @@ export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
             </option>
           ))}
         </select>
-      </div>
+      </FieldShell>
     );
   }
 
   if (field.type === 'number') {
     return (
-      <div className="field">
+      <FieldShell fieldKey={field.key} selected={selected}>
         <label className="field-label" htmlFor={id}>
           {field.label}
         </label>
@@ -66,19 +94,18 @@ export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
           onChange={(e) => onChange(e.target.value === '' ? undefined : Number(e.target.value))}
           placeholder={field.placeholder}
         />
-      </div>
+      </FieldShell>
     );
   }
 
   if (field.type === 'color') {
     return (
-      <div className="field">
+      <FieldShell fieldKey={field.key} selected={selected}>
         <label className="field-label" htmlFor={id}>
           {field.label}
         </label>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <input
-            id={id}
             type="color"
             value={String(value ?? '#000000')}
             onChange={(e) => onChange(e.target.value)}
@@ -92,7 +119,7 @@ export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
             placeholder="#000000"
           />
         </div>
-      </div>
+      </FieldShell>
     );
   }
 
@@ -103,7 +130,7 @@ export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
         : String(value ?? '');
 
     return (
-      <div className="field">
+      <FieldShell fieldKey={field.key} selected={selected}>
         <label className="field-label" htmlFor={id}>
           {field.label}
         </label>
@@ -126,14 +153,14 @@ export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
           rows={field.type === 'json' ? 8 : 4}
         />
         {field.helpText && <p className="field-help">{field.helpText}</p>}
-      </div>
+      </FieldShell>
     );
   }
 
   const inputType = field.type === 'url' || field.type === 'image' ? 'url' : 'text';
 
   return (
-    <div className="field">
+    <FieldShell fieldKey={field.key} selected={selected}>
       <label className="field-label" htmlFor={id}>
         {field.label}
       </label>
@@ -146,7 +173,7 @@ export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
         placeholder={field.placeholder}
       />
       {field.helpText && <p className="field-help">{field.helpText}</p>}
-    </div>
+    </FieldShell>
   );
 }
 

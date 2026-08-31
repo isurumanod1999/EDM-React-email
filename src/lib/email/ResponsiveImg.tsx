@@ -11,6 +11,7 @@ export interface ResponsiveImgProps {
   alt?: string;
   style?: CSSProperties;
   className?: string;
+  selectAttrs?: Record<string, string>;
 }
 
 /** Swaps desktop/mobile image at 600px breakpoint when mobSrc is provided */
@@ -22,6 +23,7 @@ export const ResponsiveImg: React.FC<ResponsiveImgProps> = ({
   alt = '',
   style,
   className,
+  selectAttrs,
 }) => {
   const imgClass = `${EDM_CLASS.imgFluid}${className ? ` ${className}` : ''}`;
   const imgStyle = fluidImgStyle(width, {
@@ -38,6 +40,7 @@ export const ResponsiveImg: React.FC<ResponsiveImgProps> = ({
         alt={alt}
         className={imgClass}
         style={imgStyle}
+        {...selectAttrs}
       />
     );
   }
@@ -51,6 +54,7 @@ export const ResponsiveImg: React.FC<ResponsiveImgProps> = ({
         alt={alt}
         className={`${EDM_CLASS.deskImg} ${imgClass}`}
         style={imgStyle}
+        {...selectAttrs}
       />
       <Img
         src={mobSrc}
@@ -59,6 +63,7 @@ export const ResponsiveImg: React.FC<ResponsiveImgProps> = ({
         alt={alt}
         className={`${EDM_CLASS.mobImg} ${imgClass}`}
         style={imgStyle}
+        {...selectAttrs}
       />
     </>
   );

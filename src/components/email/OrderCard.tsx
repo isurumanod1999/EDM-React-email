@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -74,6 +75,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
   rowPadding = '16px 20px',
   styles = {},
 }) => {
+  const rowsSel = useSelectable('rows');
   return (
     <table
       width={600}
@@ -124,6 +126,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                           align="left"
                           valign="top"
                           className={EDM_CLASS.stackCellLeft}
+                          {...rowsSel}
                           style={{
                             width: '50%',
                             ...defaultStyles.label,
@@ -137,6 +140,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                           align="right"
                           valign="top"
                           className={EDM_CLASS.stackCellLeft}
+                          {...rowsSel}
                           style={{
                             width: '50%',
                             textAlign: 'right',

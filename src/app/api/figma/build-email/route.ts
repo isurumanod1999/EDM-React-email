@@ -41,6 +41,7 @@ const parsedFigmaNodeSchema: z.ZodType<ParsedFigmaNode, z.ZodTypeDef, unknown> =
     primaryAxisAlign: z.string().optional(),
     counterAxisAlign: z.string().optional(),
     cornerRadius: z.number().optional(),
+    cornerRadii: z.tuple([z.number(), z.number(), z.number(), z.number()]).optional(),
     strokeColor: z.string().optional(),
     strokeWeight: z.number().optional(),
     imageRef: z.string().optional(),

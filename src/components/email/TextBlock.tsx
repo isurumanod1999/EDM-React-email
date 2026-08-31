@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface TextBlockProps {
   content: string;
@@ -20,6 +21,7 @@ export const TextBlock: React.FC<TextBlockProps> = ({
   lineHeight = '26px',
   color = '#333333',
 }) => {
+  const contentSel = useSelectable('content');
   return (
     <table
       width={600}
@@ -42,6 +44,7 @@ export const TextBlock: React.FC<TextBlockProps> = ({
             lineHeight,
             color,
           }}
+          {...contentSel}
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </tr>

@@ -477,6 +477,8 @@ An editable build can still rasterize selected subtrees:
 - manually selected image nodes;
 - AI-suggested image nodes when the classifier is configured.
 
+An icon drawn from several vector paths is exported as one image of the whole glyph, so multi-path icons arrive complete rather than as separate fragments.
+
 This is useful for keeping copy and buttons editable while converting visual artwork that cannot be reproduced reliably with email-safe CSS.
 
 ### 13.5 Build as image
@@ -796,11 +798,11 @@ Some two-column and three-column Figma layouts still require manual correction. 
 
 ### 22.4 Nested backgrounds and border radius
 
-Nested Figma frames can carry separate outer and inner fills plus an inner corner radius. These values may be present in Figma data but may not always survive wrapper collapsing and primitive conversion exactly as designed.
+The primitive importer preserves independently styled nested frames as separate email sections. This keeps outer and inner fills, borders, corner radius, and padding on the correct containers instead of collapsing them into one box.
 
-**Impact:** the imported section may lose the outer background, inner panel background, or rounded inner container.
+**Current boundary:** asymmetric per-corner radii are reduced to one radius value, and Outlook for Windows may ignore CSS border radius on table-based email layouts.
 
-**Workarounds:** edit the Section/Container background and corner radius in the Figma customizer, use Code view for the generated node, or flatten the component. This is a known import-fidelity area, not an export-button failure.
+**Required review:** compare nested surfaces in browser preview and the agreed inbox matrix. Use the Figma customizer, Code view, or image mode when a target email client cannot reproduce the design reliably.
 
 ### 22.5 Unsupported interactive components
 
@@ -1358,7 +1360,7 @@ For Gemini, check provider selection, API key, model, quota, and organization ap
 
 - Improve Outlook for Windows rendering.
 - Improve complex two/three-column conversion.
-- Preserve nested outer/inner backgrounds and border radius more reliably.
+- Preserve asymmetric per-corner radii and improve rounded-container rendering in Outlook.
 - Re-test exported campaigns in the agreed inbox matrix.
 - Harden URL-tagging matching and review UX before restoring it as a recommended workflow.
 - Define image hosting/CDN and final deployment process.

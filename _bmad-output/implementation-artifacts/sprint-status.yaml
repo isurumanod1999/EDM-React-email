@@ -40,3 +40,11 @@ development_status:
   3-4-browse-add-drag-reusable-components: done
   3-5-delete-reusable-components-and-finish-ux: done
   epic-3-retrospective: optional
+
+  epic-4: in-progress
+  4-1-preview-selection-identity: done
+  4-2-figma-leaf-selection: done
+  4-3-builtin-leaf-selection: done
+  4-4-property-panel-routing: done
+  4-5-export-isolation: done
+  epic-4-retrospective: optional

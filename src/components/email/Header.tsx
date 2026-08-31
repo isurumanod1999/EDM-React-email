@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
 import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface HeaderProps {
   logoSrc: string;
@@ -23,6 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
   deskPadding = '25px 40px',
   align = 'center',
 }) => {
+  const logoSel = useSelectable('logoSrc');
   const img = (
     <Img
       src={logoSrc}
@@ -33,6 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
       style={fluidImgStyle(logoWidth, {
         height: logoHeight ? `${logoHeight}px` : 'auto',
       })}
+      {...logoSel}
     />
   );
 

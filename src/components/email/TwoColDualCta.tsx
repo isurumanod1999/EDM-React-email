@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
 import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -182,6 +183,7 @@ const ProductCard: React.FC<{
   const bgColor = product.backgroundColor || '#ffffff';
   const width = product.width || 250;
   const imgWidth = product.imgWidth || width;
+  const rowsSel = useSelectable('rows');
 
   return (
     <table
@@ -205,6 +207,7 @@ const ProductCard: React.FC<{
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.headerTitle,
@@ -221,6 +224,7 @@ const ProductCard: React.FC<{
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.headerSubtitle,
@@ -242,6 +246,7 @@ const ProductCard: React.FC<{
                 alt={product.altText || ''}
                 className={EDM_CLASS.imgFluid}
                 style={fluidImgStyle(imgWidth)}
+                {...rowsSel}
               />
             </Link>
           ) : (
@@ -251,6 +256,7 @@ const ProductCard: React.FC<{
               alt={product.altText || ''}
               className={EDM_CLASS.imgFluid}
               style={fluidImgStyle(imgWidth)}
+              {...rowsSel}
             />
           )}
         </td>
@@ -261,6 +267,7 @@ const ProductCard: React.FC<{
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.label,
@@ -277,6 +284,7 @@ const ProductCard: React.FC<{
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.title,
@@ -293,6 +301,7 @@ const ProductCard: React.FC<{
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.subtitle,
@@ -316,6 +325,7 @@ const ProductCard: React.FC<{
           <Link
             href={product.cta1Url || product.url || '#'}
             className={EDM_CLASS.cta}
+            {...rowsSel}
             style={{
               ...defaultStyles.cta1,
               ...styles.cta1,
@@ -339,6 +349,7 @@ const ProductCard: React.FC<{
           <Link
             href={product.cta2Url || product.url || '#'}
             className={EDM_CLASS.cta}
+            {...rowsSel}
             style={{
               ...defaultStyles.cta2,
               ...styles.cta2,

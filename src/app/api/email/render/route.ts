@@ -17,6 +17,10 @@ export const dynamic = 'force-dynamic';
 const EDITABLE_STYLE = `
 <style id="__fc-style">
   [data-node-path], [data-block-root] { cursor: pointer; }
+  [data-node-path] { pointer-events: auto; position: relative; z-index: 1; }
+  img[data-node-path], a[data-node-path], p[data-node-path], td[data-node-path], h1[data-node-path], h2[data-node-path], h3[data-node-path] {
+    pointer-events: auto;
+  }
   .__fc-hover { outline: 1px dashed #818cf8 !important; outline-offset: -1px; }
   .__fc-selected { outline: 2px solid #4f46e5 !important; outline-offset: -2px; }
 </style>`;

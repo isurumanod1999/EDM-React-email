@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Img } from '@react-email/components';
 import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface TestimonialProps {
   quote: string;
@@ -35,6 +36,10 @@ export const Testimonial: React.FC<TestimonialProps> = ({
 }) => {
   const fontFamily =
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+  const quoteSel = useSelectable('quote');
+  const avatarSel = useSelectable('avatarSrc');
+  const nameSel = useSelectable('authorName');
+  const titleSel = useSelectable('authorTitle');
 
   return (
     <table
@@ -63,6 +68,7 @@ export const Testimonial: React.FC<TestimonialProps> = ({
             <tr>
               <td style={{ padding: '28px 24px', fontFamily }}>
                 <p
+                  {...quoteSel}
                   style={{
                     margin: '0 0 20px 0',
                     fontSize: '18px',
@@ -81,6 +87,7 @@ export const Testimonial: React.FC<TestimonialProps> = ({
                           width={avatarWidth}
                           height={avatarWidth}
                           alt={authorName}
+                          {...avatarSel}
                           style={{
                             display: 'block',
                             width: `${avatarWidth}px`,
@@ -92,6 +99,7 @@ export const Testimonial: React.FC<TestimonialProps> = ({
                     )}
                     <td valign="middle" className={EDM_CLASS.stackCell}>
                       <p
+                        {...nameSel}
                         style={{
                           margin: 0,
                           fontSize: '15px',
@@ -103,6 +111,7 @@ export const Testimonial: React.FC<TestimonialProps> = ({
                       </p>
                       {authorTitle && (
                         <p
+                          {...titleSel}
                           style={{
                             margin: '4px 0 0 0',
                             fontSize: '13px',

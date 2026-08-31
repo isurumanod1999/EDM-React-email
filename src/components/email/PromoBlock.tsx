@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
 import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -110,6 +111,10 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
   ctaPadding = '0 20px 20px 20px',
   styles = {},
 }) => {
+  const imgSel = useSelectable('imgSrc');
+  const titleSel = useSelectable('title');
+  const subtitleSel = useSelectable('subtitle');
+  const ctaSel = useSelectable('ctaText');
   const finalCtaUrl = ctaUrl || url || '#';
 
   return (
@@ -152,6 +157,7 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                       style={fluidImgStyle(imgWidth, {
                         height: imgHeight ? `${imgHeight}px` : 'auto',
                       })}
+                      {...imgSel}
                     />
                   </Link>
                 ) : (
@@ -164,6 +170,7 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                     style={fluidImgStyle(imgWidth, {
                       height: imgHeight ? `${imgHeight}px` : 'auto',
                     })}
+                    {...imgSel}
                   />
                 )}
               </td>
@@ -175,6 +182,7 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                 <td
                   align="left"
                   valign="top"
+                  {...titleSel}
                   style={{
                     ...defaultStyles.title,
                     ...styles.title,
@@ -201,6 +209,7 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                 <td
                   align="left"
                   valign="top"
+                  {...subtitleSel}
                   style={{
                     ...defaultStyles.subtitle,
                     ...styles.subtitle,
@@ -217,6 +226,7 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                   <Link
                     href={finalCtaUrl}
                     className={EDM_CLASS.cta}
+                    {...ctaSel}
                     style={{
                       ...defaultStyles.cta,
                       ...styles.cta,

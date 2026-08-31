@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from '@react-email/components';
 import { EDM_CLASS } from '@/lib/email/responsive';
 import { ResponsiveImg } from '@/lib/email/ResponsiveImg';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -148,6 +149,7 @@ const SingleImageRow: React.FC<{
   backgroundColor?: string;
 }> = ({ row, backgroundColor = '#ffffff' }) => {
   const width = row.width || 520;
+  const rowsSel = useSelectable('rows');
 
   return (
     <tr>
@@ -172,6 +174,7 @@ const SingleImageRow: React.FC<{
                     height={row.height}
                     alt={row.altText || ''}
                     style={{ height: row.height ? `${row.height}px` : 'auto' }}
+                    selectAttrs={rowsSel}
                   />
                 </Link>
               ) : (
@@ -182,6 +185,7 @@ const SingleImageRow: React.FC<{
                   height={row.height}
                   alt={row.altText || ''}
                   style={{ height: row.height ? `${row.height}px` : 'auto' }}
+                  selectAttrs={rowsSel}
                 />
               )}
             </td>
@@ -204,6 +208,7 @@ const ProductColumn: React.FC<{
   const bgColor = product.backgroundColor || '#ffffff';
   const width = product.width || 250;
   const imgWidth = product.imgWidth || width;
+  const rowsSel = useSelectable('rows');
 
   return (
     <table
@@ -240,6 +245,7 @@ const ProductColumn: React.FC<{
                 width={imgWidth}
                 alt={product.altText || ''}
                 style={{ borderRadius: product.imgBorderRadius }}
+                selectAttrs={rowsSel}
               />
             </Link>
           ) : (
@@ -249,6 +255,7 @@ const ProductColumn: React.FC<{
               width={imgWidth}
               alt={product.altText || ''}
               style={{ borderRadius: product.imgBorderRadius }}
+              selectAttrs={rowsSel}
             />
           )}
         </td>
@@ -259,6 +266,7 @@ const ProductColumn: React.FC<{
           <td
             align="left"
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.title,
@@ -285,6 +293,7 @@ const ProductColumn: React.FC<{
           <td
             align="left"
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.subtitle,
@@ -301,6 +310,7 @@ const ProductColumn: React.FC<{
           <td
             align="left"
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.price,
@@ -335,6 +345,7 @@ const ProductColumn: React.FC<{
             <Link
               href={product.ctaUrl || product.url || '#'}
               className={EDM_CLASS.cta}
+              {...rowsSel}
               style={{
                 ...defaultStyles.cta,
                 ...styles.cta,
