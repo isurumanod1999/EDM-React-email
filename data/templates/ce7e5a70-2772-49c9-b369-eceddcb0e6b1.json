@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "id": "ce7e5a70-2772-49c9-b369-eceddcb0e6b1",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "e0a70a3b-c6ff-4eb8-9306-b96be233120f",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#0d0d0d",
+            "textAlign": "center",
+            "padding": "40px 68px 72px 68px",
+            "borderRadius": 12
+          },
+          "children": [
+            {
+              "type": "Text",
+              "content": "Be the first to know",
+              "style": {
+                "color": "#ffffff",
+                "fontSize": "22px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "30px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 16
+            },
+            {
+              "type": "Text",
+              "content": "Find out more about this refined, exhilarating, 100%-electric SUV, including:",
+              "style": {
+                "color": "#ffffff",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 40
+            },
+            {
+              "type": "Row",
+              "style": {
+                "width": "100%"
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "32%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 0,
+                    "paddingRight": 4
+                  },
+                  "children": [
+                    {
+                      "type": "Img",
+                      "src": "/images/uploads/figma-export-f1a22983-938c-4d73-9c30-31088d899ae8.png",
+                      "width": 27,
+                      "height": 12,
+                      "alt": "Vector 7 (Stroke)",
+                      "className": "figma-img-12974-1200",
+                      "align": "center"
+                    },
+                    {
+                      "type": "Spacer",
+                      "height": 16
+                    },
+                    {
+                      "type": "Text",
+                      "content": "How far can I go on a full charge?",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "24px",
+                        "whiteSpace": "pre-line"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "32%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 4,
+                    "paddingRight": 4
+                  },
+                  "children": [
+                    {
+                      "type": "Img",
+                      "src": "/images/uploads/figma-export-6dec21f6-60e1-4c64-bfe8-ff03057ccbf1.png",
+                      "width": 46,
+                      "height": 46,
+                      "alt": "Vector",
+                      "className": "figma-img-12974-1206",
+                      "align": "center",
+                      "isIcon": true
+                    },
+                    {
+                      "type": "Spacer",
+                      "height": 16
+                    },
+                    {
+                      "type": "Text",
+                      "content": "What’s the charging time?",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "24px",
+                        "whiteSpace": "pre-line"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "32%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 4,
+                    "paddingRight": 0
+                  },
+                  "children": [
+                    {
+                      "type": "Img",
+                      "src": "/images/uploads/figma-export-0f02bf22-1fa8-44d2-8867-d2c88534b921.png",
+                      "width": 50,
+                      "alt": "Union",
+                      "align": "center",
+                      "className": "figma-img-12974-1211",
+                      "isIcon": true
+                    },
+                    {
+                      "type": "Spacer",
+                      "height": 16
+                    },
+                    {
+                      "type": "Text",
+                      "content": "What's the right grade for me?",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "24px",
+                        "whiteSpace": "pre-line"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 40
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Sign up for updates",
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#e7b287",
+                "color": "#3a1610",
+                "borderRadius": 999,
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 40px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "Icon CTA banner",
+        "mobileFrame": "Icon CTA banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "Icon CTA banner"
+    }
+  ],
+  "createdAt": "2026-08-31T11:26:44.189Z",
+  "updatedAt": "2026-08-31T11:33:41.777Z"
+}

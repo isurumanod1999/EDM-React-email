@@ -1,6 +1,6 @@
 # Documentation Index
 
-Last updated: 2026-08-10
+Last updated: 2026-08-31
 
 This folder and the planning artifacts describe the **EDM React Email Tool** as it exists today: a Next.js drag-and-drop email builder for an internal developer team.
 
@@ -9,12 +9,13 @@ This folder and the planning artifacts describe the **EDM React Email Tool** as 
 | Document | Audience | Contents |
 |----------|----------|----------|
 | [../README.md](../README.md) | Everyone | Quick start, scripts, repo layout |
+| [EDM-REACT-EMAIL-TOOL-A-TO-Z.md](./EDM-REACT-EMAIL-TOOL-A-TO-Z.md) | **Clients, technical leads, delivery, dev, QA** | **Complete product, usage, feature, architecture, operations, QA, and limitations guide** |
 | [BUILDER.md](./BUILDER.md) | Developers using the tool | Gallery, editor, Figma/AI, tagging URLs, export, send |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Developers extending the app | Ports/adapters, middleware, key modules |
 | [API.md](./API.md) | API consumers | Route list, error shape, limits |
 | [maintenance-upgrades.md](./maintenance-upgrades.md) | Maintainers | Next.js / PostgreSQL upgrade track |
 | [PHASE-HISTORY.md](./PHASE-HISTORY.md) | Handoff | Epic 1–2, builder polish, tagging completion log |
-| [NEXT-PLANS.md](./NEXT-PLANS.md) | **Next work** | Email client testing (**pending**); tagging URLs **done** |
+| [NEXT-PLANS.md](./NEXT-PLANS.md) | **Next work** | Email client testing; tagging is implemented in the tool but stakeholder docs still treat production tagging as **on hold** |
 | [CONFLUENCE-EDM-React-Email-Tool.md](./CONFLUENCE-EDM-React-Email-Tool.md) | **Confluence / stakeholders** | [Live page](https://akqa.atlassian.net/wiki/x/AgDCfQ) — status, how it works, what’s next |
 | [DEMO-PRESENTATION.md](./DEMO-PRESENTATION.md) | Demo talking points | Extra Mermaid, live demo script |
 | [demo-diagrams.html](./demo-diagrams.html) | Optional local slides | Same story as HTML (prefer Confluence doc for sharing) |

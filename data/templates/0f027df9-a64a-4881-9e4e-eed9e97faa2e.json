@@ -1061,8 +1061,466 @@
         "borderColor": ""
       },
       "label": "🟢 Footer"
+    },
+    {
+      "id": "5fa109d5-c064-4e87-8c2a-0282e71c6ceb",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "80px",
+            "borderRadius": 0
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "TELL ME MORE",
+              "as": "h2",
+              "style": {
+                "color": "#c2997f",
+                "fontSize": "28px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "34px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 16
+            },
+            {
+              "type": "Text",
+              "content": "In future emails, I’m most interested in knowing  more about the (please select one):",
+              "style": {
+                "color": "#ffffff",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Row",
+              "style": {
+                "width": "100%"
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "23%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 0,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Interior ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "103px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "34%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "PERFORMANCE ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "151px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "32%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 0
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Technology ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "140px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Register your interest",
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "CTA Banner",
+        "mobileFrame": "CTA Banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "CTA Banner"
+    },
+    {
+      "id": "97270127-9b4d-4465-808e-1d2e61525cb3",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "80px",
+            "borderRadius": 12
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "TELL ME MORE",
+              "as": "h2",
+              "style": {
+                "color": "#c2997f",
+                "fontSize": "28px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "34px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 16
+            },
+            {
+              "type": "Text",
+              "content": "In future emails, I’m most interested in knowing  more about the (please select one):",
+              "style": {
+                "color": "#ffffff",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Row",
+              "style": {
+                "width": "100%"
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "23%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 0,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Interior ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "103px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "34%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "PERFORMANCE ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "151px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "32%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 0
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Technology ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "140px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Register your interest",
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "CTA Banner",
+        "mobileFrame": "CTA Banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "CTA Banner"
     }
   ],
   "createdAt": "2026-08-25T08:06:20.671Z",
-  "updatedAt": "2026-08-25T08:16:13.036Z"
+  "updatedAt": "2026-08-25T08:58:32.932Z"
 }

@@ -72,6 +72,7 @@ public/images/uploads/        # Uploaded assets
 | Doc | Description |
 |-----|-------------|
 | [docs/README.md](./docs/README.md) | **Documentation index** |
+| [docs/EDM-REACT-EMAIL-TOOL-A-TO-Z.md](./docs/EDM-REACT-EMAIL-TOOL-A-TO-Z.md) | Complete client and technical-lead guide |
 | [docs/BUILDER.md](./docs/BUILDER.md) | How to use the builder |
 | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | Architecture summary |
 | [docs/API.md](./docs/API.md) | API routes reference |
