@@ -276,6 +276,9 @@ export interface ImageNodeOutlineEntry {
   width?: number;
   height?: number;
   text?: string;
+  /** Depth below the imported root (root itself is never included). */
+  depth: number;
+  childCount: number;
 }
 
 export function collectImageNodeOutline(
@@ -285,26 +288,31 @@ export function collectImageNodeOutline(
   const maxNodes = opts?.maxNodes ?? 400;
   const maxText = opts?.maxTextLength ?? 60;
   const out: ImageNodeOutlineEntry[] = [];
-  const exportIds = new Set([
-    ...detectImageNodeIds(root),
-    ...flattenMergeClusterIds(detectImageMergeClusters(root)),
-  ]);
+
+  const textPreview = (node: ParsedFigmaNode): string | undefined => {
+    if (node.text?.trim()) return node.text.trim().slice(0, maxText);
+    for (const child of node.children) {
+      const preview = textPreview(child);
+      if (preview) return preview;
+    }
+    return undefined;
+  };
 
   const walk = (node: ParsedFigmaNode, depth: number) => {
     if (out.length >= maxNodes) return;
     if (!node.visible) return;
     const id = nodeId(node);
     if (depth > 0 && id) {
-      if (exportIds.has(id) || CONTAINER_TYPES.has(node.type) || isGraphicShape(node)) {
-        out.push({
-          id,
-          name: node.name,
-          type: node.type,
-          width: node.width,
-          height: node.height,
-          text: node.text?.trim() ? node.text.trim().slice(0, maxText) : undefined,
-        });
-      }
+      out.push({
+        id,
+        name: node.name,
+        type: node.type,
+        width: node.width,
+        height: node.height,
+        text: textPreview(node),
+        depth,
+        childCount: node.children.filter((child) => child.visible).length,
+      });
     }
     for (const child of node.children) walk(child, depth + 1);
   };

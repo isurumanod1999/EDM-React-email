@@ -53,6 +53,9 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
   const [suggestError, setSuggestError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<ImageNodeOutlineEntry[]>([]);
   const [selectedImageIds, setSelectedImageIds] = useState<string[]>([]);
+  const [initialImageIds, setInitialImageIds] = useState<string[]>([]);
+  const [explicitLayerIds, setExplicitLayerIds] = useState<string[]>([]);
+  const [layerSearch, setLayerSearch] = useState('');
 
   const busy = isBuilding || suggesting;
 
@@ -60,10 +63,18 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
     if (!figmaSession?.desktopNode) return [] as string[];
     return findNodeIdsFromDesignHints(
       figmaSession.desktopNode,
-      figmaSession.designContext,
+      figmaSession.designContext
+    );
+  }, [figmaSession?.desktopNode, figmaSession?.designContext]);
+
+  const instructionHintIds = useMemo(() => {
+    if (!figmaSession?.desktopNode || !imageInstructions.trim()) return [] as string[];
+    return findNodeIdsFromDesignHints(
+      figmaSession.desktopNode,
+      undefined,
       imageInstructions
     );
-  }, [figmaSession?.desktopNode, figmaSession?.designContext, imageInstructions]);
+  }, [figmaSession?.desktopNode, imageInstructions]);
 
   const detectedImageIds = useMemo(() => {
     if (!figmaSession?.desktopNode) return [] as string[];
@@ -74,18 +85,30 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
     return [...new Set([...badges, ...mergeAnchors, ...contextHintIds])];
   }, [figmaSession?.desktopNode, contextHintIds]);
 
-  const outlineById = useMemo(() => {
-    if (!figmaSession?.desktopNode) return new Map<string, ImageNodeOutlineEntry>();
-    const outline = collectImageNodeOutline(figmaSession.desktopNode);
-    return new Map(outline.map((n) => [n.id, n] as const));
+  const layerOutline = useMemo(() => {
+    if (!figmaSession?.desktopNode) return [] as ImageNodeOutlineEntry[];
+    return collectImageNodeOutline(figmaSession.desktopNode);
   }, [figmaSession?.desktopNode]);
 
+  const outlineById = useMemo(
+    () => new Map(layerOutline.map((node) => [node.id, node] as const)),
+    [layerOutline]
+  );
+
+  const effectiveSelectedImageIds = useMemo(
+    () => [...new Set([...selectedImageIds, ...instructionHintIds])],
+    [instructionHintIds, selectedImageIds]
+  );
+
   const imageExportChoices = useMemo(() => {
-    const ids = new Set<string>([...detectedImageIds, ...selectedImageIds, ...suggestions.map((s) => s.id)]);
-    return [...ids]
-      .map((id) => outlineById.get(id))
-      .filter((n): n is ImageNodeOutlineEntry => Boolean(n));
-  }, [detectedImageIds, selectedImageIds, suggestions, outlineById]);
+    const query = layerSearch.trim().toLowerCase();
+    if (!query) return layerOutline;
+    return layerOutline.filter((node) =>
+      [node.name, node.type, node.id, node.text ?? ''].some((value) =>
+        value.toLowerCase().includes(query)
+      )
+    );
+  }, [layerOutline, layerSearch]);
 
   useEffect(() => {
     if (open && figmaSession?.buildAs) setBuildAs(figmaSession.buildAs);
@@ -101,9 +124,13 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
       figmaSession.desktopNode,
       figmaSession.designContext
     );
-    setSelectedImageIds([...new Set([...badges, ...mergeAnchors, ...hints])]);
+    const defaults = [...new Set([...badges, ...mergeAnchors, ...hints])];
+    setInitialImageIds(defaults);
+    setSelectedImageIds(defaults);
+    setExplicitLayerIds([]);
     setSuggestions([]);
     setSuggestError(null);
+    setLayerSearch('');
   }, [open, figmaSession]);
 
   const reset = useCallback(() => {
@@ -118,13 +145,26 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
     setSuggestError(null);
     setSuggestions([]);
     setSelectedImageIds([]);
+    setInitialImageIds([]);
+    setExplicitLayerIds([]);
+    setLayerSearch('');
   }, []);
 
-  const toggleImageId = useCallback((id: string) => {
-    setSelectedImageIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
-  }, []);
+  const toggleImageId = useCallback(
+    (id: string) => {
+      const nextIsImage = !selectedImageIds.includes(id);
+      const defaultIsImage = initialImageIds.includes(id);
+      setSelectedImageIds((prev) =>
+        nextIsImage ? [...prev, id] : prev.filter((value) => value !== id)
+      );
+      setExplicitLayerIds((prev) =>
+        nextIsImage === defaultIsImage
+          ? prev.filter((value) => value !== id)
+          : [...new Set([...prev, id])]
+      );
+    },
+    [initialImageIds, selectedImageIds]
+  );
 
   const handleSuggest = useCallback(async () => {
     if (!figmaSession) return;
@@ -188,7 +228,12 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
         designContext: figmaSession.designContext,
         autoDetectImages: false,
         imageInstructions: imageInstructions.trim() || undefined,
-        imageNodeIds: selectedImageIds.length > 0 ? selectedImageIds : undefined,
+        imageNodeIds:
+          effectiveSelectedImageIds.length > 0 ? effectiveSelectedImageIds : undefined,
+        forcePrimitiveBuild:
+          explicitLayerIds.length > 0 ||
+          Boolean(imageInstructions.trim()) ||
+          suggestions.length > 0,
       });
     } catch {
       setError('Could not serialize the Figma design for build. Re-fetch the frame and try again.');
@@ -369,10 +414,14 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
                           const mergeAnchors = detectImageMergeClusters(figmaSession.desktopNode)
                             .map((c) => c.nodeIds[0])
                             .filter((id): id is string => Boolean(id));
-                          setSelectedImageIds([...new Set([...badges, ...mergeAnchors])]);
+                          const defaults = [...new Set([...badges, ...mergeAnchors])];
+                          setInitialImageIds(defaults);
+                          setSelectedImageIds(defaults);
                         } else if (!on) {
+                          setInitialImageIds([]);
                           setSelectedImageIds([]);
                         }
+                        setExplicitLayerIds([]);
                       }}
                     />
                     Auto-detect icons &amp; SVGs → 2× images
@@ -402,32 +451,77 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
                     <p className="import-field-hint figma-smart-image-error">{suggestError}</p>
                   )}
 
-                  {imageExportChoices.length > 0 && (
-                    <div className="figma-smart-image-list">
-                      <div className="figma-smart-image-list-title">Export as 2× PNG</div>
-                      {imageExportChoices.map((n) => (
-                        <label key={n.id} className="figma-smart-image-item">
-                          <input
-                            type="checkbox"
-                            checked={selectedImageIds.includes(n.id)}
-                            onChange={() => toggleImageId(n.id)}
-                            disabled={busy}
-                          />
-                          <span className="figma-smart-image-name">{n.name}</span>
-                          <span className="figma-smart-image-meta">
-                            {n.type} · {Math.round(n.width ?? 0)}×{Math.round(n.height ?? 0)}
-                            {detectedImageIds.includes(n.id) ? ' · auto' : ''}
-                          </span>
-                        </label>
-                      ))}
+                  <div className="figma-smart-image-list">
+                    <label className="figma-smart-image-list-title" htmlFor="figma-layer-search">
+                      Choose layers to flatten
+                    </label>
+                    <input
+                      id="figma-layer-search"
+                      type="search"
+                      className="import-modal-input figma-layer-search"
+                      placeholder="Search name, type, text, or node ID"
+                      value={layerSearch}
+                      onChange={(event) => setLayerSearch(event.target.value)}
+                      disabled={busy}
+                    />
+                    <div className="figma-smart-image-list-head" aria-hidden="true">
+                      <span>Mode / layer</span>
+                      <span>{imageExportChoices.length} shown</span>
                     </div>
-                  )}
+                    {imageExportChoices.length > 0 ? (
+                      imageExportChoices.map((n) => {
+                        const imageMode = effectiveSelectedImageIds.includes(n.id);
+                        const instructionSelected = instructionHintIds.includes(n.id);
+                        return (
+                          <label
+                            key={n.id}
+                            className={`figma-smart-image-item${imageMode ? ' is-image' : ''}`}
+                            style={{ paddingLeft: 10 + Math.min(n.depth - 1, 8) * 14 }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={imageMode}
+                              onChange={() => toggleImageId(n.id)}
+                              disabled={busy || instructionSelected}
+                              aria-label={`${imageMode ? 'Image' : 'Design'} mode for ${n.name}`}
+                              title={
+                                instructionSelected
+                                  ? 'Selected by the image instruction; remove that instruction to use Design.'
+                                  : undefined
+                              }
+                            />
+                            <span className="figma-smart-image-copy">
+                              <span className="figma-smart-image-name">
+                                {n.name || '(unnamed layer)'}
+                              </span>
+                              <span className="figma-smart-image-meta">
+                                <strong>{imageMode ? 'Image' : 'Design'}</strong> · {n.type} ·{' '}
+                                {Math.round(n.width ?? 0)}×{Math.round(n.height ?? 0)} · {n.id}
+                                {detectedImageIds.includes(n.id) ? ' · auto' : ''}
+                                {instructionSelected ? ' · instruction' : ''}
+                                {n.childCount > 0 ? ` · ${n.childCount} children` : ''}
+                              </span>
+                              {n.text && (
+                                <span className="figma-smart-image-text" title={n.text}>
+                                  {n.text}
+                                </span>
+                              )}
+                            </span>
+                          </label>
+                        );
+                      })
+                    ) : (
+                      <p className="import-field-hint figma-layer-empty">
+                        No layers match “{layerSearch}”.
+                      </p>
+                    )}
+                  </div>
 
                   <p className="import-field-hint">
-                    Layers from design context (e.g.{' '}
-                    <code>INSTANCE &quot;Icon-badge&quot; 56×56px</code>) are matched automatically on
-                    build. Each match exports as one crisp 2× PNG; text and CTAs stay HTML. Re-build
-                    re-exports icons from Figma.
+                    Unchecked layers stay editable Design. Checked layers become one crisp 2× PNG,
+                    including their children, and their text is no longer editable. Selecting a
+                    parent makes selected descendants part of that parent image. Auto-detected icons
+                    are preselected; re-build re-exports chosen layers from Figma.
                   </p>
                 </div>
               )}

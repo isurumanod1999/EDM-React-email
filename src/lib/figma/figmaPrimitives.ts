@@ -52,6 +52,16 @@ function forcedImageSrc(node: ParsedFigmaNode): string | undefined {
   return node.exportUrl ?? node.forcedExportUrl;
 }
 
+function forcedImageAlt(node: ParsedFigmaNode): string {
+  const text = findAllTextNodes(node)
+    .map((child) => child.text?.trim())
+    .filter((value): value is string => Boolean(value))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return text ? text.slice(0, 240) : node.name;
+}
+
 /**
  * Fallback mobile behavior for a two-column Row when there is NO mobile Figma
  * frame AND the content-aware heuristic (columnsAreSymmetricGrid) can't decide
@@ -1444,9 +1454,9 @@ function mapNode(node: ParsedFigmaNode, align?: CSSProperties['textAlign']): Rea
           type: 'Img',
           src: forcedSrc,
           width: node.width != null ? Math.min(node.width, 600) : undefined,
-          alt: node.name,
+          alt: forcedImageAlt(node),
           align: 'center',
-          className: `figma-img-${forceKey.replace(/[:;]/g, '-')}`,
+          className: `figma-forced-img-${forceKey.replace(/[:;]/g, '-')}`,
           isIcon: isIconSized(node) || undefined,
         },
       ];
@@ -1684,6 +1694,11 @@ function mergeMobileImages(
 
   function walk(node: ReactEmailNode): ReactEmailNode {
     if (node.type === 'Img') {
+      // Per-node Image choices are keyed to the desktop source tree. Their
+      // generated class is the durable marker that prevents an unrelated
+      // same-name/path node from the optional mobile frame replacing the
+      // explicitly selected desktop PNG.
+      if (node.className?.startsWith('figma-forced-img-')) return node;
       const matchPath = paths.find((p) => findNodeByPath(desktopRoot, p)?.name === node.alt);
       if (matchPath) {
         const mob = findNodeByPath(mobile, matchPath);

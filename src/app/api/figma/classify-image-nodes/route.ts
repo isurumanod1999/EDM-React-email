@@ -22,6 +22,8 @@ const schema = z.object({
       width: z.number().optional(),
       height: z.number().optional(),
       text: z.string().optional(),
+      depth: z.number().int().nonnegative().optional().default(0),
+      childCount: z.number().int().nonnegative().optional().default(0),
     })
   ),
   instruction: z.string().optional().default(''),

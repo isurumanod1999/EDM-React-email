@@ -19,6 +19,7 @@ const schema = z.object({
   imageInstructions: z.string().optional(),
   imageNodeIds: z.array(z.string()).optional(),
   useRegistryLinks: z.boolean().optional(),
+  forcePrimitiveBuild: z.boolean().optional(),
 });
 
 export async function POST(request: Request) {
@@ -33,6 +34,7 @@ export async function POST(request: Request) {
       imageInstructions,
       imageNodeIds,
       useRegistryLinks,
+      forcePrimitiveBuild,
     } = schema.parse(body);
 
     const imported = await importFromFigma({ figmaUrl, mobileFigmaUrl });
@@ -52,6 +54,7 @@ export async function POST(request: Request) {
       fileKey: imported.fileKey,
       designContext: imported.designContext,
       useRegistryLinks,
+      forcePrimitiveBuild,
     });
 
     const block = built.blocks[0];

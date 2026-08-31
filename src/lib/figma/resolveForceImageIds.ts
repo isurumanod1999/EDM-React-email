@@ -21,6 +21,33 @@ export interface ForceImageResolution {
   mergeClusters: ImageMergeCluster[];
 }
 
+/**
+ * Resolve a possibly unordered/overlapping set of choices against the source
+ * tree. The root belongs to whole-frame Image mode, and once a parent is Image
+ * its descendants are already baked into that export.
+ */
+export function normalizeOutermostImageNodeIds(
+  root: ParsedFigmaNode,
+  selectedIds: Iterable<string>
+): string[] {
+  const selected = new Set([...selectedIds].filter(Boolean));
+  const normalized: string[] = [];
+
+  const walk = (node: ParsedFigmaNode, depth: number, underSelected: boolean) => {
+    if (!node.visible || underSelected) return;
+    const key = node.nodeId ?? node.id;
+    const isSelected = depth > 0 && Boolean(key && selected.has(key));
+    if (isSelected && key) {
+      normalized.push(key);
+      return;
+    }
+    for (const child of node.children) walk(child, depth + 1, isSelected);
+  };
+
+  walk(root, 0, false);
+  return normalized;
+}
+
 export async function computeForceImageIds(
   root: ParsedFigmaNode,
   opts: ForceImageOptions
@@ -66,5 +93,13 @@ export async function resolveForceImageIds(
     for (const id of aiIds) ids.add(id);
   }
 
-  return { forceImageIds: [...ids], mergeClusters };
+  const forceImageIds = normalizeOutermostImageNodeIds(root, ids);
+  const forceSet = new Set(forceImageIds);
+  return {
+    forceImageIds,
+    mergeClusters: mergeClusters.filter((cluster) => {
+      const anchor = cluster.nodeIds[0];
+      return Boolean(anchor && forceSet.has(anchor));
+    }),
+  };
 }

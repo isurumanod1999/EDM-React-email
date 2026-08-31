@@ -70,6 +70,7 @@ const buildEmailSchema = z.object({
   designContext: z.string().optional(),
   /** Try Figma component links → registry blocks before AST fallback (default true). */
   useRegistryLinks: z.boolean().optional(),
+  forcePrimitiveBuild: z.boolean().optional(),
 });
 
 export async function POST(request: Request) {
@@ -91,6 +92,7 @@ export async function POST(request: Request) {
       fileKey: parsed.fileKey,
       designContext: parsed.designContext,
       useRegistryLinks: parsed.useRegistryLinks,
+      forcePrimitiveBuild: parsed.forcePrimitiveBuild,
     });
 
     const templateBlocks = built.blocks.map((block) => ({

@@ -110,6 +110,7 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
         buildAs: row.buildAs,
         autoDetectImages: row.autoDetectImages,
         imageInstructions: row.imageInstructions.trim() || undefined,
+        forcePrimitiveBuild: Boolean(row.imageInstructions.trim()),
       }),
     });
     const data = (await res.json()) as {

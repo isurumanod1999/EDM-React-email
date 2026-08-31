@@ -6,7 +6,7 @@ import { attachMissingForcedExports } from './attachMissingForcedExports';
 import { downloadForcedExportToUploads } from './importFromFigma';
 import { tryFigmaToRegistryBlocks } from './figmaToRegistryBlocks';
 import type { ReactEmailNode } from './types/reactEmailAst';
-import type { ParsedFigmaNode } from './parseFigmaNode';
+import { findNodeByNodeId, type ParsedFigmaNode } from './parseFigmaNode';
 import type { AiBlock } from '@/lib/ai/schemas/analyzeResult';
 
 export interface BuildFigmaDesignInput {
@@ -24,6 +24,8 @@ export interface BuildFigmaDesignInput {
   designContext?: string;
   /** When true (default), try registry component links before AST primitives. */
   useRegistryLinks?: boolean;
+  /** Explicit layer Image choices must not be swallowed by registry inference. */
+  forcePrimitiveBuild?: boolean;
 }
 
 export interface BuildFigmaDesignResult {
@@ -33,6 +35,13 @@ export interface BuildFigmaDesignResult {
   warnings: string[];
   nodeCount: number;
   mappingMode: 'registry' | 'primitives' | 'image';
+}
+
+export function shouldTryRegistryLinks(
+  useRegistryLinks: boolean,
+  forcePrimitiveBuild: boolean
+): boolean {
+  return useRegistryLinks && !forcePrimitiveBuild;
 }
 
 export async function buildFigmaDesign(
@@ -74,7 +83,7 @@ export async function buildFigmaDesign(
     };
   }
 
-  if (useRegistryLinks) {
+  if (shouldTryRegistryLinks(useRegistryLinks, Boolean(input.forcePrimitiveBuild))) {
     const registryResult = tryFigmaToRegistryBlocks(input.desktopNode, input.mobileNode, {
       desktopUrl: input.desktopUrl,
       mobileUrl: input.mobileUrl,
@@ -107,6 +116,18 @@ export async function buildFigmaDesign(
       downloadForcedExportToUploads,
       mergeClusters
     );
+  }
+
+  if (input.forcePrimitiveBuild) {
+    const missingForcedIds = forceImageIds.filter((id) => {
+      const node = findNodeByNodeId(desktopNode, id);
+      return !node?.exportUrl && !node?.forcedExportUrl;
+    });
+    if (missingForcedIds.length > 0) {
+      throw new Error(
+        `Could not flatten ${missingForcedIds.length} selected layer(s) because Figma returned no PNG: ${missingForcedIds.join(', ')}. Re-fetch the frame or choose Design for those layers.`
+      );
+    }
   }
 
   const built = figmaToReactEmailTree(desktopNode, input.mobileNode, {

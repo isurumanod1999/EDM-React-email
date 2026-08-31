@@ -474,12 +474,21 @@ An editable build can still rasterize selected subtrees:
 
 - auto-detected badge/icon/image candidates;
 - nodes discovered from design-context hints;
-- manually selected image nodes;
+- any manually selected source layer, including a text leaf, heading, group, frame, tag, or banner;
 - AI-suggested image nodes when the classifier is configured.
 
 An icon drawn from several vector paths is exported as one image of the whole glyph, so multi-path icons arrive complete rather than as separate fragments.
 
 This is useful for keeping copy and buttons editable while converting visual artwork that cannot be reproduced reliably with email-safe CSS.
+
+Use **Choose layers to flatten** in the Design build step:
+
+1. Search by layer name, type, visible text, or Figma node ID.
+2. Leave a layer unchecked for **Design** (structured, editable output).
+3. Check a layer for **Image** (one pixel-accurate 2× PNG rendered at its 1× design size).
+4. Select the outer group or frame when a complete banner must include its fill, border, icon, heading, and subheading. Selecting the parent includes its descendants.
+
+For example, a product title and subtitle can remain editable while two offer Tag frames are checked as Image and the final CTA remains a structured button. Explicit layer choices take precedence over registry inference. Flattened text is no longer editable and should have suitable alternative text where the generated image represents meaningful content.
 
 ### 13.5 Build as image
 

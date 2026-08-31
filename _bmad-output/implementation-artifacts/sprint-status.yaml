@@ -48,3 +48,11 @@ development_status:
   4-4-property-panel-routing: done
   4-5-export-isolation: done
   epic-4-retrospective: optional
+
+  # Per-node Figma flatten selection
+  epic-5: in-progress
+  5-1-source-layer-outline-and-normalization: review
+  5-2-searchable-design-image-selector: review
+  5-3-explicit-flatten-build-authority: review
+  5-4-mixed-output-regression-and-handoff: review
+  epic-5-retrospective: optional
