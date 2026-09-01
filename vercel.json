@@ -2,16 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "functions": {
-    "src/app/api/figma/**/*.ts": {
+    "src/app/api/[...path]/route.ts": {
       "maxDuration": 60,
       "memory": 1024
-    },
-    "src/app/api/ai/**/*.ts": {
-      "maxDuration": 60,
-      "memory": 1024
-    },
-    "src/app/api/email/**/*.ts": {
-      "maxDuration": 60
     }
   }
 }
