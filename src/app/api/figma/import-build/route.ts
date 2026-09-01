@@ -5,6 +5,7 @@ import { buildFigmaDesign } from '@/lib/figma/buildFigmaDesign';
 import { errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 /**
  * Single-shot import + build for ONE component: fetches the Figma frame(s) and

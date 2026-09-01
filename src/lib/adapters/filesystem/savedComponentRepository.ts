@@ -3,6 +3,7 @@ import path from 'path';
 import type { SavedComponentDocument } from '@/lib/schema/savedComponent';
 import { savedComponentDocumentSchema } from '@/lib/schema/validators';
 import type { SavedComponentRepository } from '@/lib/ports';
+import { isVercelRuntime, writableRoot } from '@/lib/runtimePaths';
 
 export const DEFAULT_SAVED_COMPONENTS_DIR = path.join(
   process.cwd(),
@@ -13,23 +14,51 @@ export const DEFAULT_SAVED_COMPONENTS_DIR = path.join(
 export function createFilesystemSavedComponentRepository(
   componentsDir: string = DEFAULT_SAVED_COMPONENTS_DIR
 ): SavedComponentRepository {
+  const writeDir =
+    componentsDir === DEFAULT_SAVED_COMPONENTS_DIR && isVercelRuntime()
+      ? path.join(writableRoot(), 'data', 'saved-components')
+      : componentsDir;
+
   async function ensureDir(): Promise<void> {
-    await fs.mkdir(componentsDir, { recursive: true });
+    await fs.mkdir(writeDir, { recursive: true });
   }
 
   function filePath(id: string): string {
-    return path.join(componentsDir, `${id}.json`);
+    return path.join(writeDir, `${id}.json`);
+  }
+
+  async function readFrom(id: string): Promise<string | null> {
+    for (const candidate of [path.join(writeDir, `${id}.json`), path.join(componentsDir, `${id}.json`)]) {
+      try {
+        return await fs.readFile(candidate, 'utf-8');
+      } catch {
+        // try next
+      }
+    }
+    return null;
   }
 
   return {
     async list() {
       await ensureDir();
-      const files = (await fs.readdir(componentsDir)).filter((file) => file.endsWith('.json'));
+      const names = new Set<string>();
+      for (const dir of writeDir === componentsDir ? [componentsDir] : [componentsDir, writeDir]) {
+        try {
+          for (const file of await fs.readdir(dir)) {
+            if (file.endsWith('.json')) names.add(file);
+          }
+        } catch {
+          // missing dir
+        }
+      }
+      const files = [...names];
       const components: SavedComponentDocument[] = [];
 
       for (const file of files) {
         try {
-          const raw = await fs.readFile(path.join(componentsDir, file), 'utf-8');
+          const raw =
+            (await readFrom(file.replace(/\.json$/, ''))) ??
+            (await fs.readFile(path.join(componentsDir, file), 'utf-8'));
           components.push(savedComponentDocumentSchema.parse(JSON.parse(raw)));
         } catch {
           // Invalid records are skipped consistently with TemplateRepository.
@@ -42,8 +71,9 @@ export function createFilesystemSavedComponentRepository(
     },
 
     async get(id) {
+      const raw = await readFrom(id);
+      if (!raw) return null;
       try {
-        const raw = await fs.readFile(filePath(id), 'utf-8');
         return savedComponentDocumentSchema.parse(JSON.parse(raw));
       } catch {
         return null;

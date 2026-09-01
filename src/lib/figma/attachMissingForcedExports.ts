@@ -4,10 +4,11 @@ import { findNodeByNodeId, resolveForcedExportUrls, type ParsedFigmaNode } from 
 import path from 'path';
 import { promises as fs } from 'fs';
 import { generateId } from '@/lib/utils/id';
+import { resolveUploadFilePath, uploadDirectory } from '@/lib/runtimePaths';
 
 /** Same scale as `importFromFigma` — retina 2× PNGs shown at 1× layout width. */
 const FIGMA_EXPORT_SCALE = 2;
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'uploads');
+const UPLOAD_DIR = uploadDirectory();
 
 function nodeKey(node: ParsedFigmaNode): string | undefined {
   return node.nodeId ?? node.id;
@@ -107,7 +108,7 @@ async function mergeClusterToUploads(
     for (const n of positioned) {
       const local = layerPaths.get(n.nodeId ?? n.id);
       if (!local) continue;
-      const filePath = path.join(process.cwd(), 'public', local.replace(/^\//, ''));
+      const filePath = resolveUploadFilePath(local);
       const buf = await fs.readFile(filePath);
       composites.push({
         input: buf,

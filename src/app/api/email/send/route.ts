@@ -8,6 +8,7 @@ import { getTemplate } from '@/lib/templates/fileStorage';
 import { handleRouteError, notFound, errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 /**
  * Resolve the public base URL used to absolutise relative image paths. Email

@@ -15,6 +15,15 @@ const nextConfig = {
       { protocol: 'http', hostname: '**' },
     ],
   },
+  async rewrites() {
+    if (!process.env.VERCEL) return [];
+    return [
+      {
+        source: '/images/uploads/:filename',
+        destination: '/api/assets/file/:filename',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

@@ -7,6 +7,7 @@ import { getTemplate } from '@/lib/templates/fileStorage';
 import { handleRouteError, notFound } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 /**
  * Editor-only highlight CSS + a click/hover bridge that maps `data-node-path`

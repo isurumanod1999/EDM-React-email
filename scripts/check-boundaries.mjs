@@ -17,6 +17,7 @@ const SRC = join(ROOT, 'src');
 const LIB_FS_ALLOWLIST = new Set([
   'lib/adapters/filesystem/templateRepository.ts',
   'lib/adapters/local-assets/assetStore.ts',
+  'lib/runtimePaths.ts',
   'lib/figma/importFromFigma.ts',
   'lib/figma/attachMissingForcedExports.ts',
   'lib/ai/analyzeComponent.ts',

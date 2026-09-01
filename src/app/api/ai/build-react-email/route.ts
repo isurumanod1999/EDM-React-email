@@ -6,6 +6,7 @@ import type { ParsedFigmaNode } from '@/lib/figma/parseFigmaNode';
 import { errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 const parsedFigmaNodeSchema: z.ZodType<ParsedFigmaNode> = z.lazy(() =>
   z.object({

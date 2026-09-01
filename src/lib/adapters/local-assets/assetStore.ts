@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { generateId } from '@/lib/utils/id';
 import type { AssetStore, AssetInput, StoredAsset } from '@/lib/ports';
+import { bundledUploadDirectory, uploadDirectory } from '@/lib/runtimePaths';
 
 /**
  * Local filesystem implementation of AssetStore (Story 1.4 / AD-2).
@@ -11,7 +12,7 @@ import type { AssetStore, AssetInput, StoredAsset } from '@/lib/ports';
  * builder already uses.
  */
 
-export const DEFAULT_UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'uploads');
+export const DEFAULT_UPLOAD_DIR = uploadDirectory();
 const PUBLIC_URL_PREFIX = '/images/uploads';
 
 const EXT_BY_MIME: Record<string, string> = {
@@ -55,4 +56,27 @@ export function createLocalAssetStore(uploadDir: string = DEFAULT_UPLOAD_DIR): A
       }
     },
   };
+}
+
+const MIME_BY_EXT: Record<string, string> = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.gif': 'image/gif',
+};
+
+export async function readUploadedAsset(
+  filename: string
+): Promise<{ data: Uint8Array; contentType: string } | null> {
+  for (const dir of [uploadDirectory(), bundledUploadDirectory()]) {
+    try {
+      const data = new Uint8Array(await fs.readFile(path.join(dir, filename)));
+      const contentType = MIME_BY_EXT[path.extname(filename).toLowerCase()] ?? 'application/octet-stream';
+      return { data, contentType };
+    } catch {
+      // try next directory
+    }
+  }
+  return null;
 }

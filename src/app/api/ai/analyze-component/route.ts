@@ -7,6 +7,7 @@ import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
 import { errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   try {

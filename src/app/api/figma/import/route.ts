@@ -4,6 +4,7 @@ import { importFromFigma } from '@/lib/figma/importFromFigma';
 import { errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 const figmaImportSchema = z.object({
   figmaUrl: z.string().url(),

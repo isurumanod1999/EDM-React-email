@@ -21,9 +21,10 @@ import {
 } from './parseFigmaNode';
 import { detectImageNodeIds } from './detectImageNodes';
 import { parseFigmaUrl } from './parseUrl';
+import { figmaDebugDirectory, uploadDirectory } from '@/lib/runtimePaths';
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'uploads');
-const DEBUG_DIR = path.join(process.cwd(), 'data', 'figma-debug');
+const UPLOAD_DIR = uploadDirectory();
+const DEBUG_DIR = figmaDebugDirectory();
 
 /**
  * All Figma renders (whole-frame "flatten to image" exports AND individual

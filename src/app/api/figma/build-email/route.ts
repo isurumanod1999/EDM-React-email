@@ -9,7 +9,7 @@ import { DEFAULT_TEMPLATE_META } from '@/lib/schema/template';
 import { errorResponse } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 const parsedFigmaNodeSchema: z.ZodType<ParsedFigmaNode, z.ZodTypeDef, unknown> = z.lazy(() =>
   z

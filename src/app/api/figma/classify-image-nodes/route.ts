@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { classifyImageNodeIds } from '@/lib/ai/classifyImageNodes';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 /**
  * AI image-node classifier endpoint (mixed-mode export).
