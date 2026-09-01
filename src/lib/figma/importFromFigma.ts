@@ -6,6 +6,8 @@ import {
   getFigmaImages,
   getFigmaNodes,
   getFigmaVariables,
+  type FigmaNodeDocument,
+  type FigmaNodesResponse,
 } from './client';
 import { extractDesignContext } from './extractDesignContext';
 import {
@@ -238,6 +240,33 @@ async function resolveTreeAssets(
   return resolved;
 }
 
+/**
+ * Figma answers `/nodes` with HTTP 200 and a `null` entry for an id that is not
+ * in the file, so a missing frame is indistinguishable from a typo unless the
+ * failure names the id, the file it was looked up in, and the way to recover.
+ */
+export function requireNodeDocument(
+  nodesResponse: Pick<FigmaNodesResponse, 'name' | 'nodes'>,
+  nodeId: string,
+  label: 'desktop' | 'mobile'
+): FigmaNodeDocument {
+  const document = nodesResponse.nodes?.[nodeId]?.document;
+  if (document) return document;
+
+  const fileName = nodesResponse.name ? `"${nodesResponse.name}"` : 'the linked Figma file';
+  const available = Object.entries(nodesResponse.nodes ?? {})
+    .filter(([, entry]) => entry?.document)
+    .map(([id]) => id);
+  const alsoFailed =
+    available.length === 0 && Object.keys(nodesResponse.nodes ?? {}).length > 1
+      ? ' Neither the desktop nor the mobile frame resolved, so the link is probably from a different file.'
+      : '';
+
+  throw new Error(
+    `The ${label} frame (node-id ${nodeId}) is not in ${fileName}. It was deleted, or the link came from a different file — a "(Copy)" duplicate has different node ids to the original.${alsoFailed} Open the frame in Figma, right-click it and choose Copy link to selection, then paste that URL.`
+  );
+}
+
 export interface FigmaImportInput {
   figmaUrl: string;
   mobileFigmaUrl?: string;
@@ -291,10 +320,7 @@ export async function importFromFigma(input: FigmaImportInput): Promise<FigmaImp
 
   const variables = variablesMeta?.variables;
 
-  const desktopNodeDoc = nodesResponse.nodes[desktop.nodeId]?.document;
-  if (!desktopNodeDoc) {
-    throw new Error('Could not load the selected Figma frame. Check the node-id in the URL.');
-  }
+  const desktopNodeDoc = requireNodeDocument(nodesResponse, desktop.nodeId, 'desktop');
 
   // The frame-preview render is a nice-to-have (used as a pixel-accurate
   // fallback for image-heavy heroes). It must never block the import — a
@@ -313,13 +339,14 @@ export async function importFromFigma(input: FigmaImportInput): Promise<FigmaImp
   let parsedMobile: ParsedFigmaNode | undefined;
 
   if (mobile) {
-    const mobileNodeDoc = nodesResponse.nodes[mobile.nodeId]?.document;
+    // A mobile URL is an explicit request for a paired responsive build, so a
+    // missing mobile frame must fail loudly instead of silently producing a
+    // desktop-only import the user did not ask for.
+    const mobileNodeDoc = requireNodeDocument(nodesResponse, mobile.nodeId, 'mobile');
     const mobileImageUrl = frameImages[mobile.nodeId];
 
-    if (mobileNodeDoc) {
-      designContext += `\n\n--- Mobile frame ---\n${extractDesignContext(mobileNodeDoc)}`;
-      parsedMobile = parseFigmaNode(mobileNodeDoc, variables);
-    }
+    designContext += `\n\n--- Mobile frame ---\n${extractDesignContext(mobileNodeDoc)}`;
+    parsedMobile = parseFigmaNode(mobileNodeDoc, variables);
 
     if (mobileImageUrl) {
       savedMobileUrl = await safeDownloadToUploads(mobileImageUrl, 'figma-mob');
