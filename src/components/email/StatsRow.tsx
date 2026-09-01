@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface StatItemProps {
   value: string;
@@ -35,14 +37,17 @@ function StatCell({
   defaultValueColor: string;
   labelColor: string;
 }) {
+  const statsSel = useSelectable('stats');
   return (
     <td
       align="center"
       valign="top"
       width={width}
+      className={EDM_CLASS.stackCell}
       style={{ width: `${width}px`, fontFamily }}
     >
       <p
+        {...statsSel}
         style={{
           margin: '0 0 6px 0',
           fontSize: valueFontSize,
@@ -54,6 +59,7 @@ function StatCell({
         {stat.value}
       </p>
       <p
+        {...statsSel}
         style={{
           margin: 0,
           fontSize: labelFontSize,
@@ -84,19 +90,21 @@ export const StatsRow: React.FC<StatsRowProps> = ({
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{ width: '600px', backgroundColor }}
       role="presentation"
     >
       <tr>
-        <td align="center" valign="top" style={{ padding: deskPadding }}>
+        <td align="center" valign="top" className={EDM_CLASS.pad} style={{ padding: deskPadding }}>
           <table
             width={520}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.fluid}
             style={{ width: '520px' }}
             role="presentation"
           >
-            <tr>
+            <tr className={EDM_CLASS.stackRow}>
               <StatCell
                 stat={stats[0]}
                 width={colWidth}
@@ -105,7 +113,11 @@ export const StatsRow: React.FC<StatsRowProps> = ({
                 defaultValueColor={defaultValueColor}
                 labelColor={labelColor}
               />
-              <td width={gutterWidth} style={{ width: `${gutterWidth}px` }} />
+              <td
+                width={gutterWidth}
+                className={EDM_CLASS.colHide}
+                style={{ width: `${gutterWidth}px` }}
+              />
               <StatCell
                 stat={stats[1]}
                 width={colWidth}
@@ -114,7 +126,11 @@ export const StatsRow: React.FC<StatsRowProps> = ({
                 defaultValueColor={defaultValueColor}
                 labelColor={labelColor}
               />
-              <td width={gutterWidth} style={{ width: `${gutterWidth}px` }} />
+              <td
+                width={gutterWidth}
+                className={EDM_CLASS.colHide}
+                style={{ width: `${gutterWidth}px` }}
+              />
               <StatCell
                 stat={stats[2]}
                 width={colWidth}

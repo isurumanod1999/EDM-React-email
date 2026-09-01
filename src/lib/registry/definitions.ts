@@ -18,6 +18,7 @@ import {
   TextBlock,
   Spacer,
   StatsRow,
+  FigmaReactEmailBlock,
 } from '@/components/email';
 import type { ComponentDefinition } from './types';
 import {
@@ -46,7 +47,8 @@ export const componentDefinitions: ComponentDefinition[] = [
     },
     fields: [
       { key: 'logoSrc', label: 'Logo URL', type: 'image', required: true, group: 'Content' },
-      { key: 'logoWidth', label: 'Logo Width', type: 'number', group: 'Layout' },
+      { key: 'logoWidth', label: 'Logo Width (px)', type: 'number', group: 'Layout' },
+      { key: 'logoHeight', label: 'Logo Height (px)', type: 'number', group: 'Layout', placeholder: 'Auto' },
       { key: 'logoAlt', label: 'Alt Text', type: 'text', group: 'Content' },
       { key: 'logoUrl', label: 'Logo Link', type: 'url', group: 'Content' },
       { key: 'backgroundColor', label: 'Background', type: 'color', group: 'Style' },
@@ -126,6 +128,8 @@ export const componentDefinitions: ComponentDefinition[] = [
     },
     fields: [
       { key: 'imgSrc', label: 'Image URL', type: 'image', required: true, group: 'Content' },
+      { key: 'imgWidth', label: 'Image Width (px)', type: 'number', group: 'Layout' },
+      { key: 'imgHeight', label: 'Image Height (px)', type: 'number', group: 'Layout', placeholder: 'Auto' },
       { key: 'title', label: 'Title', type: 'text', group: 'Content' },
       { key: 'subtitle', label: 'Subtitle', type: 'richtext', group: 'Content' },
       { key: 'ctaText', label: 'Button Text', type: 'text', group: 'Content' },
@@ -186,6 +190,11 @@ export const componentDefinitions: ComponentDefinition[] = [
       copyright: '© 2026 Nissan Motor Corporation. All rights reserved.',
     },
     fields: [
+      { key: 'logoSrc', label: 'Logo URL', type: 'image', group: 'Content' },
+      { key: 'logoWidth', label: 'Logo Width (px)', type: 'number', group: 'Layout' },
+      { key: 'logoHeight', label: 'Logo Height (px)', type: 'number', group: 'Layout', placeholder: 'Auto' },
+      { key: 'logoAlt', label: 'Logo Alt Text', type: 'text', group: 'Content' },
+      { key: 'logoUrl', label: 'Logo Link', type: 'url', group: 'Content' },
       { key: 'copyright', label: 'Copyright', type: 'text', group: 'Content' },
       { key: 'legalText', label: 'Legal Text', type: 'richtext', group: 'Content' },
       { key: 'unsubscribeUrl', label: 'Unsubscribe URL', type: 'url', group: 'Links' },
@@ -327,6 +336,8 @@ export const componentDefinitions: ComponentDefinition[] = [
     },
     fields: [
       { key: 'imgSrc', label: 'Hero Image', type: 'image', required: true, group: 'Content' },
+      { key: 'imgWidth', label: 'Image Width (px)', type: 'number', group: 'Layout' },
+      { key: 'imgHeight', label: 'Image Height (px)', type: 'number', group: 'Layout', placeholder: 'Auto' },
       { key: 'headline', label: 'Headline', type: 'text', group: 'Content' },
       { key: 'subheadline', label: 'Subheadline', type: 'text', group: 'Content' },
       { key: 'ctaText', label: 'Button Text', type: 'text', group: 'Content' },
@@ -404,7 +415,9 @@ export const componentDefinitions: ComponentDefinition[] = [
     },
     fields: [
       { key: 'imgSrc', label: 'Image URL', type: 'image', required: true, group: 'Content' },
+      { key: 'mobileSrc', label: 'Mobile Image URL', type: 'image', group: 'Content', advanced: true },
       { key: 'imgWidth', label: 'Width (px)', type: 'number', group: 'Layout' },
+      { key: 'imgHeight', label: 'Height (px)', type: 'number', group: 'Layout', placeholder: 'Auto' },
       { key: 'altText', label: 'Alt Text', type: 'text', group: 'Content' },
       { key: 'url', label: 'Link URL', type: 'url', group: 'Content' },
       { key: 'backgroundColor', label: 'Background', type: 'color', group: 'Style' },
@@ -430,6 +443,7 @@ export const componentDefinitions: ComponentDefinition[] = [
       { key: 'authorName', label: 'Author Name', type: 'text', required: true, group: 'Content' },
       { key: 'authorTitle', label: 'Author Title', type: 'text', group: 'Content' },
       { key: 'avatarSrc', label: 'Avatar URL', type: 'image', group: 'Content' },
+      { key: 'avatarWidth', label: 'Avatar Size (px)', type: 'number', group: 'Layout' },
       { key: 'cardBackgroundColor', label: 'Card Background', type: 'color', group: 'Style' },
     ],
   },
@@ -499,6 +513,70 @@ export const componentDefinitions: ComponentDefinition[] = [
         helpText: 'Array of 3 items: { value, label, valueColor? }' },
       { key: 'backgroundColor', label: 'Background', type: 'color', group: 'Style' },
       { key: 'defaultValueColor', label: 'Value Color', type: 'color', group: 'Style' },
+    ],
+  },
+  {
+    id: 'figma-react-email',
+    name: 'Figma React Email',
+    category: 'layout',
+    description: 'Component built from Figma using React Email primitives',
+    version: 1,
+    hideFromPalette: true,
+    component: FigmaReactEmailBlock,
+    defaultProps: {
+      tree: {
+        type: 'Section',
+        style: { maxWidth: 600, padding: 20 },
+        children: [
+          {
+            type: 'Text',
+            content: 'Figma import placeholder',
+            style: { color: '#666666', fontFamily: 'sans-serif' },
+          },
+        ],
+      },
+      sourceFrame: '',
+      mobileFrame: '',
+      hideBorders: false,
+      borderColor: '',
+    },
+    fields: [
+      {
+        key: 'sourceFrame',
+        label: 'Source Frame',
+        type: 'text',
+        group: 'Content',
+        advanced: true,
+      },
+      {
+        key: 'hideBorders',
+        label: 'Hide Borders',
+        type: 'boolean',
+        group: 'Style',
+        helpText: 'Remove every border the Figma design carries',
+      },
+      {
+        key: 'borderColor',
+        label: 'Border Color',
+        type: 'color',
+        group: 'Style',
+        helpText: 'Recolor the borders from the Figma design. Leave empty to keep the original.',
+      },
+      {
+        key: 'mobileFrame',
+        label: 'Mobile Frame',
+        type: 'text',
+        group: 'Content',
+        advanced: true,
+      },
+      {
+        key: 'tree',
+        label: 'React Email Tree',
+        type: 'json',
+        group: 'Advanced',
+        advanced: true,
+        helpText: 'Serialized React Email AST from Figma import',
+      },
     ],
   },
 ];

@@ -1,0 +1,50 @@
+{
+  "name": "preheader",
+  "category": "layout",
+  "componentId": "figma-react-email",
+  "componentVersion": 1,
+  "props": {
+    "tree": {
+      "type": "Section",
+      "style": {
+        "maxWidth": 600,
+        "width": "100%",
+        "margin": "0 auto",
+        "backgroundColor": "#000000",
+        "textAlign": "center",
+        "padding": "24px 40px 0px 40px"
+      },
+      "children": [
+        {
+          "type": "Text",
+          "content": "Can’t see this email? Click here to view online",
+          "html": "Can’t see this email? Click <span style=\"text-decoration:underline\">here</span> to view online",
+          "style": {
+            "color": "#efefef",
+            "fontSize": "12px",
+            "fontWeight": 400,
+            "textAlign": "center",
+            "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+            "margin": 0,
+            "padding": 0,
+            "lineHeight": "16px",
+            "whiteSpace": "pre-line",
+            "marginBottom": 0
+          },
+          "mobileStyle": {
+            "lineHeight": "14px"
+          }
+        }
+      ]
+    },
+    "sourceFrame": "preheader",
+    "mobileFrame": "preheader",
+    "hideBorders": false,
+    "borderColor": ""
+  },
+  "label": "preheader",
+  "schemaVersion": 1,
+  "id": "2ff85dca-e747-4d2d-87e6-ddb28ed5c083",
+  "createdAt": "2026-08-25T06:10:34.716Z",
+  "updatedAt": "2026-08-25T06:10:34.716Z"
+}

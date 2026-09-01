@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
   Html,
-  Head,
   Body,
   Container,
   Preview,
   Img,
 } from '@react-email/components';
-import { IntroCopy, TwoColDualCta, TwoColStacked, Footer } from '@/components/email';
+import { IntroCopy, TwoColDualCta, TwoColStacked, Footer, EmailResponsiveHead } from '@/components/email';
+import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
 
 import { NISSAN_IMAGES, NISSAN_COLORS, NISSAN_ICONS, NISSAN_SOCIAL_ICONS } from '@/lib/constants/nissanAssets';
 
@@ -18,7 +18,7 @@ import { NISSAN_IMAGES, NISSAN_COLORS, NISSAN_ICONS, NISSAN_SOCIAL_ICONS } from 
 export const CompleteEmail: React.FC = () => {
   return (
     <Html>
-      <Head />
+      <EmailResponsiveHead />
       <Preview>Nissan MORE - Up to 10 Years of Warranty on Selected Models</Preview>
       <Body style={{ backgroundColor: '#f4f4f4', margin: 0, padding: 0 }}>
         <Container style={{ maxWidth: '600px', margin: '0 auto' }}>
@@ -28,16 +28,18 @@ export const CompleteEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#ffffff' }}
             role="presentation"
           >
             <tr>
-              <td align="center" valign="middle" style={{ padding: '25px 40px' }}>
+              <td align="center" valign="middle" className={EDM_CLASS.pad} style={{ padding: '25px 40px' }}>
                 <Img
                   src={NISSAN_IMAGES.logo}
                   width={250}
                   alt="Nissan Motor Corporation"
-                  style={{ display: 'block', width: '250px', height: 'auto' }}
+                  className={EDM_CLASS.imgFluid}
+                  style={fluidImgStyle(250)}
                 />
               </td>
             </tr>
@@ -48,6 +50,7 @@ export const CompleteEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#000000' }}
             role="presentation"
           >
@@ -57,7 +60,8 @@ export const CompleteEmail: React.FC = () => {
                   src={NISSAN_IMAGES.moreBanner}
                   width={600}
                   alt="Nissan MORE - Up to 10 Years of Warranty"
-                  style={{ display: 'block', width: '600px', height: 'auto' }}
+                  className={EDM_CLASS.imgFluid}
+                  style={fluidImgStyle(600)}
                 />
               </td>
             </tr>
@@ -87,6 +91,7 @@ export const CompleteEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#f7f8f8' }}
             role="presentation"
           >
@@ -94,6 +99,7 @@ export const CompleteEmail: React.FC = () => {
               <td
                 align="center"
                 valign="top"
+                className={EDM_CLASS.pad}
                 style={{
                   padding: '30px 40px 10px 40px',
                   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",

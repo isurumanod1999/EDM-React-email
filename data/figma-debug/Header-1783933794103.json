@@ -1,0 +1,905 @@
+{
+  "label": "Header",
+  "rawNodeDoc": {
+    "id": "8687:5547",
+    "name": "Header",
+    "type": "INSTANCE",
+    "scrollBehavior": "SCROLLS",
+    "boundVariables": {
+      "fills": [
+        {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:4720:119"
+        }
+      ]
+    },
+    "componentId": "6711:1865",
+    "componentProperties": {
+      "size": {
+        "value": "Desktop",
+        "type": "VARIANT",
+        "boundVariables": {}
+      }
+    },
+    "overrides": [
+      {
+        "id": "8687:5547",
+        "overriddenFields": [
+          "exportSettings",
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5547;6711:1733;4710:645",
+        "overriddenFields": [
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5547;6711:1733;4710:646",
+        "overriddenFields": [
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5547;6711:1733;4710:647",
+        "overriddenFields": [
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5547;6711:1733;4710:648",
+        "overriddenFields": [
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5547;6711:1733;4710:649",
+        "overriddenFields": [
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5547;6711:1733;4710:650",
+        "overriddenFields": [
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5547;6711:1733;4710:651",
+        "overriddenFields": [
+          "fills"
+        ]
+      },
+      {
+        "id": "I8687:5547;6711:1733;4710:652",
+        "overriddenFields": [
+          "fills"
+        ]
+      }
+    ],
+    "children": [
+      {
+        "id": "I8687:5547;6711:1733",
+        "name": "NISSAN_Logo",
+        "type": "INSTANCE",
+        "scrollBehavior": "SCROLLS",
+        "componentId": "4710:653",
+        "overrides": [
+          {
+            "id": "I8687:5547;6711:1733;4710:645",
+            "overriddenFields": [
+              "fills"
+            ]
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:646",
+            "overriddenFields": [
+              "fills"
+            ]
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:647",
+            "overriddenFields": [
+              "fills"
+            ]
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:648",
+            "overriddenFields": [
+              "fills"
+            ]
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:649",
+            "overriddenFields": [
+              "fills"
+            ]
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:650",
+            "overriddenFields": [
+              "fills"
+            ]
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:651",
+            "overriddenFields": [
+              "fills"
+            ]
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:652",
+            "overriddenFields": [
+              "fills"
+            ]
+          }
+        ],
+        "children": [
+          {
+            "id": "I8687:5547;6711:1733;4710:645",
+            "name": "Vector",
+            "type": "VECTOR",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:4710:635"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.7545454502105713,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 10942.2138671875,
+              "y": -2656.217041015625,
+              "width": 14.371002197265625,
+              "height": 11.423836708068848
+            },
+            "absoluteRenderBounds": {
+              "x": 10942.2138671875,
+              "y": -2656.217041015625,
+              "width": 14.37109375,
+              "height": 11.423828125
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:646",
+            "name": "Vector",
+            "type": "VECTOR",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:4710:635"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.7545454502105713,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 10923.19140625,
+              "y": -2656.217041015625,
+              "width": 14.373061180114746,
+              "height": 11.423836708068848
+            },
+            "absoluteRenderBounds": {
+              "x": 10923.19140625,
+              "y": -2656.217041015625,
+              "width": 14.373046875,
+              "height": 11.423828125
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:647",
+            "name": "Vector",
+            "type": "VECTOR",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:4710:635"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.7545454502105713,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 10915.7373046875,
+              "y": -2656.277587890625,
+              "width": 2.5246634483337402,
+              "height": 11.54891300201416
+            },
+            "absoluteRenderBounds": {
+              "x": 10915.7373046875,
+              "y": -2656.277587890625,
+              "width": 2.5244140625,
+              "height": 11.548828125
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:648",
+            "name": "Vector",
+            "type": "VECTOR",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:4710:635"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.7545454502105713,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 10895.9541015625,
+              "y": -2656.277587890625,
+              "width": 14.193761825561523,
+              "height": 11.546829223632812
+            },
+            "absoluteRenderBounds": {
+              "x": 10895.9541015625,
+              "y": -2656.277587890625,
+              "width": 14.193359375,
+              "height": 11.546875
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:649",
+            "name": "Vector",
+            "type": "VECTOR",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:4710:635"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.7545454502105713,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 10979.8486328125,
+              "y": -2656.277587890625,
+              "width": 14.195822715759277,
+              "height": 11.546829223632812
+            },
+            "absoluteRenderBounds": {
+              "x": 10979.8486328125,
+              "y": -2656.277587890625,
+              "width": 14.1962890625,
+              "height": 11.546875
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:650",
+            "name": "Vector",
+            "type": "VECTOR",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:4710:635"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.7545454502105713,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 10959.5556640625,
+              "y": -2656.277587890625,
+              "width": 16.973979949951172,
+              "height": 11.54891300201416
+            },
+            "absoluteRenderBounds": {
+              "x": 10959.5556640625,
+              "y": -2656.277587890625,
+              "width": 16.9736328125,
+              "height": 11.548828125
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:651",
+            "name": "Vector",
+            "type": "VECTOR",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:4710:635"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.7545454502105713,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 10898.8251953125,
+              "y": -2692,
+              "width": 92.37383270263672,
+              "height": 29.28713035583496
+            },
+            "absoluteRenderBounds": {
+              "x": 10898.8251953125,
+              "y": -2692,
+              "width": 92.3740234375,
+              "height": 29.287109375
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:652",
+            "name": "Vector",
+            "type": "VECTOR",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:4710:635"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:4710:635"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.7545454502105713,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 10898.8251953125,
+              "y": -2638.289306640625,
+              "width": 92.37383270263672,
+              "height": 29.291297912597656
+            },
+            "absoluteRenderBounds": {
+              "x": 10898.8251953125,
+              "y": -2638.289306640625,
+              "width": 92.3740234375,
+              "height": 29.289306640625
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          }
+        ],
+        "blendMode": "PASS_THROUGH",
+        "clipsContent": true,
+        "background": [],
+        "fills": [],
+        "strokes": [],
+        "strokeWeight": 0.7545454502105713,
+        "strokeAlign": "INSIDE",
+        "backgroundColor": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "absoluteBoundingBox": {
+          "x": 10895.9541015625,
+          "y": -2692,
+          "width": 98.09091186523438,
+          "height": 83
+        },
+        "absoluteRenderBounds": {
+          "x": 10895.9541015625,
+          "y": -2692,
+          "width": 98.09091186523438,
+          "height": 83
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "layoutAlign": "INHERIT",
+        "layoutGrow": 0,
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      }
+    ],
+    "blendMode": "PASS_THROUGH",
+    "clipsContent": false,
+    "background": [
+      {
+        "blendMode": "NORMAL",
+        "type": "SOLID",
+        "color": {
+          "r": 0.07450980693101883,
+          "g": 0.09019608050584793,
+          "b": 0.13333334028720856,
+          "a": 1
+        },
+        "boundVariables": {
+          "color": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:4720:119"
+          }
+        }
+      }
+    ],
+    "fills": [
+      {
+        "blendMode": "NORMAL",
+        "type": "SOLID",
+        "color": {
+          "r": 0.07450980693101883,
+          "g": 0.09019608050584793,
+          "b": 0.13333334028720856,
+          "a": 1
+        },
+        "boundVariables": {
+          "color": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:4720:119"
+          }
+        }
+      }
+    ],
+    "strokes": [
+      {
+        "blendMode": "NORMAL",
+        "visible": false,
+        "type": "SOLID",
+        "color": {
+          "r": 0.5803921818733215,
+          "g": 0.6941176652908325,
+          "b": 0.7450980544090271,
+          "a": 1
+        }
+      }
+    ],
+    "strokeWeight": 1,
+    "individualStrokeWeights": {
+      "top": 0,
+      "right": 0,
+      "bottom": 1,
+      "left": 0
+    },
+    "strokeAlign": "INSIDE",
+    "backgroundColor": {
+      "r": 0.07450980693101883,
+      "g": 0.09019608050584793,
+      "b": 0.13333334028720856,
+      "a": 1
+    },
+    "layoutMode": "HORIZONTAL",
+    "primaryAxisSizingMode": "FIXED",
+    "counterAxisAlignItems": "CENTER",
+    "primaryAxisAlignItems": "SPACE_BETWEEN",
+    "paddingLeft": 55,
+    "paddingRight": 55,
+    "paddingTop": 40,
+    "paddingBottom": 40,
+    "itemSpacing": 10,
+    "layoutWrap": "NO_WRAP",
+    "absoluteBoundingBox": {
+      "x": 10645,
+      "y": -2732,
+      "width": 600,
+      "height": 163
+    },
+    "absoluteRenderBounds": {
+      "x": 10645,
+      "y": -2732,
+      "width": 600,
+      "height": 163
+    },
+    "constraints": {
+      "vertical": "TOP",
+      "horizontal": "LEFT"
+    },
+    "layoutAlign": "STRETCH",
+    "layoutGrow": 0,
+    "layoutSizingHorizontal": "FILL",
+    "layoutSizingVertical": "HUG",
+    "exportSettings": [
+      {
+        "suffix": "",
+        "format": "PNG",
+        "constraint": {
+          "type": "SCALE",
+          "value": 1
+        }
+      }
+    ],
+    "effects": [],
+    "interactions": [],
+    "complexStrokeProperties": {
+      "strokeType": "BASIC"
+    }
+  },
+  "parsed": {
+    "id": "8687:5547",
+    "type": "INSTANCE",
+    "name": "Header",
+    "width": 600,
+    "height": 163,
+    "visible": true,
+    "backgroundColor": "#131722",
+    "paddingTop": 40,
+    "paddingRight": 55,
+    "paddingBottom": 40,
+    "paddingLeft": 55,
+    "gap": 10,
+    "layoutMode": "HORIZONTAL",
+    "primaryAxisAlign": "SPACE_BETWEEN",
+    "counterAxisAlign": "CENTER",
+    "strokeWeight": 1,
+    "componentId": "6711:1865",
+    "nodeId": "8687:5547",
+    "children": [
+      {
+        "id": "I8687:5547;6711:1733",
+        "type": "INSTANCE",
+        "name": "NISSAN_Logo",
+        "width": 98,
+        "height": 83,
+        "visible": true,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "strokeWeight": 0.7545454502105713,
+        "componentId": "4710:653",
+        "nodeId": "I8687:5547;6711:1733",
+        "children": [
+          {
+            "id": "I8687:5547;6711:1733;4710:645",
+            "type": "VECTOR",
+            "name": "Vector",
+            "width": 14,
+            "height": 11,
+            "visible": true,
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 0.7545454502105713,
+            "imageRef": "/images/uploads/figma-export-ee0d7cf8-00d1-43eb-99fe-498c30ae8c31.png",
+            "nodeId": "I8687:5547;6711:1733;4710:645",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-ee0d7cf8-00d1-43eb-99fe-498c30ae8c31.png"
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:646",
+            "type": "VECTOR",
+            "name": "Vector",
+            "width": 14,
+            "height": 11,
+            "visible": true,
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 0.7545454502105713,
+            "imageRef": "/images/uploads/figma-export-a9b6ad66-2db8-4f3d-b499-1129872ba485.png",
+            "nodeId": "I8687:5547;6711:1733;4710:646",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-a9b6ad66-2db8-4f3d-b499-1129872ba485.png"
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:647",
+            "type": "VECTOR",
+            "name": "Vector",
+            "width": 3,
+            "height": 12,
+            "visible": true,
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 0.7545454502105713,
+            "imageRef": "/images/uploads/figma-export-0fc02587-0df4-4bce-b936-9321ffc92c80.png",
+            "nodeId": "I8687:5547;6711:1733;4710:647",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-0fc02587-0df4-4bce-b936-9321ffc92c80.png"
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:648",
+            "type": "VECTOR",
+            "name": "Vector",
+            "width": 14,
+            "height": 12,
+            "visible": true,
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 0.7545454502105713,
+            "imageRef": "/images/uploads/figma-export-128ef8f3-71d4-4720-81b0-4a67984ae0d3.png",
+            "nodeId": "I8687:5547;6711:1733;4710:648",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-128ef8f3-71d4-4720-81b0-4a67984ae0d3.png"
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:649",
+            "type": "VECTOR",
+            "name": "Vector",
+            "width": 14,
+            "height": 12,
+            "visible": true,
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 0.7545454502105713,
+            "imageRef": "/images/uploads/figma-export-74589d64-7c9d-4652-91ae-5d59f1d193b3.png",
+            "nodeId": "I8687:5547;6711:1733;4710:649",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-74589d64-7c9d-4652-91ae-5d59f1d193b3.png"
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:650",
+            "type": "VECTOR",
+            "name": "Vector",
+            "width": 17,
+            "height": 12,
+            "visible": true,
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 0.7545454502105713,
+            "imageRef": "/images/uploads/figma-export-b9cf193e-f1db-4c51-ba67-7f1f50fe626e.png",
+            "nodeId": "I8687:5547;6711:1733;4710:650",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-b9cf193e-f1db-4c51-ba67-7f1f50fe626e.png"
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:651",
+            "type": "VECTOR",
+            "name": "Vector",
+            "width": 92,
+            "height": 29,
+            "visible": true,
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 0.7545454502105713,
+            "imageRef": "/images/uploads/figma-export-05a62753-f6e7-4353-ad38-e61ceaf1a119.png",
+            "nodeId": "I8687:5547;6711:1733;4710:651",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-05a62753-f6e7-4353-ad38-e61ceaf1a119.png"
+          },
+          {
+            "id": "I8687:5547;6711:1733;4710:652",
+            "type": "VECTOR",
+            "name": "Vector",
+            "width": 92,
+            "height": 29,
+            "visible": true,
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 0.7545454502105713,
+            "imageRef": "/images/uploads/figma-export-9d907e0c-c136-46e2-9240-a433dc0fe552.png",
+            "nodeId": "I8687:5547;6711:1733;4710:652",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-9d907e0c-c136-46e2-9240-a433dc0fe552.png"
+          }
+        ],
+        "exportUrl": "/images/uploads/figma-export-3a60fb3c-d13a-4c04-bb7c-06798c19d29e.png"
+      }
+    ],
+    "exportUrl": "/images/uploads/figma-desk-aa0e48c6-13bd-4690-82d6-aa0073a04000.png"
+  }
+}

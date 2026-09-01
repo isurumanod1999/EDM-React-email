@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
+import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -81,6 +83,8 @@ const defaultStyles = {
     fontWeight: 600,
     backgroundColor: '#000000',
     width: '140px',
+    maxWidth: '100%',
+    boxSizing: 'border-box' as const,
   } as React.CSSProperties,
 };
 
@@ -107,6 +111,10 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
   ctaPadding = '0 20px 20px 20px',
   styles = {},
 }) => {
+  const imgSel = useSelectable('imgSrc');
+  const titleSel = useSelectable('title');
+  const subtitleSel = useSelectable('subtitle');
+  const ctaSel = useSelectable('ctaText');
   const finalCtaUrl = ctaUrl || url || '#';
 
   return (
@@ -114,6 +122,7 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{
         width: '600px',
         backgroundColor: backgroundColor,
@@ -121,12 +130,12 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
       role="presentation"
     >
       <tr>
-        <td align="center" valign="top" style={{ padding: deskPadding }}>
-          {/* Card Container */}
+        <td align="center" valign="top" className={EDM_CLASS.pad} style={{ padding: deskPadding }}>
           <table
             width={cardWidth}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.fluid}
             style={{
               width: `${cardWidth}px`,
               border: cardBorder,
@@ -142,24 +151,26 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                     <Img
                       src={imgSrc}
                       width={imgWidth}
+                      height={imgHeight}
                       alt={altText}
-                      style={{
-                        display: 'block',
-                        width: `${imgWidth}px`,
-                        height: 'auto',
-                      }}
+                      className={EDM_CLASS.imgFluid}
+                      style={fluidImgStyle(imgWidth, {
+                        height: imgHeight ? `${imgHeight}px` : 'auto',
+                      })}
+                      {...imgSel}
                     />
                   </Link>
                 ) : (
                   <Img
                     src={imgSrc}
                     width={imgWidth}
+                    height={imgHeight}
                     alt={altText}
-                    style={{
-                      display: 'block',
-                      width: `${imgWidth}px`,
-                      height: 'auto',
-                    }}
+                    className={EDM_CLASS.imgFluid}
+                    style={fluidImgStyle(imgWidth, {
+                      height: imgHeight ? `${imgHeight}px` : 'auto',
+                    })}
+                    {...imgSel}
                   />
                 )}
               </td>
@@ -171,6 +182,7 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                 <td
                   align="left"
                   valign="top"
+                  {...titleSel}
                   style={{
                     ...defaultStyles.title,
                     ...styles.title,
@@ -197,6 +209,7 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                 <td
                   align="left"
                   valign="top"
+                  {...subtitleSel}
                   style={{
                     ...defaultStyles.subtitle,
                     ...styles.subtitle,
@@ -212,6 +225,8 @@ export const PromoBlock: React.FC<PromoBlockProps> = ({
                 <td align="left" valign="top" style={{ padding: ctaPadding }}>
                   <Link
                     href={finalCtaUrl}
+                    className={EDM_CLASS.cta}
+                    {...ctaSel}
                     style={{
                       ...defaultStyles.cta,
                       ...styles.cta,

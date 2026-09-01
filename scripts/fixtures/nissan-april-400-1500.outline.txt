@@ -1,0 +1,25 @@
+FRAME "Hero" lm=VERTICAL 600x1524 bg=#efefef (3 kids)
+  INSTANCE "preheader" lm=HORIZONTAL 600x64 bg=rgba(0, 0, 0, 0) (1 kids)
+    TEXT "Can’t see this email? Click here to view online" 520x16 bg=#656565 txt="Can’t see this email? Click here to view"
+  INSTANCE "KV 600px" 600x900 bg=#ffffff (7 kids)
+    RECTANGLE "BG 2" 600x1067 imageRef
+    RECTANGLE "KV1 (2) 1" 528x854 imageRef
+    RECTANGLE "KV1 (2) 2" 72x900 imageRef
+    RECTANGLE "NissanNext_2D_Logo_w_Shadow_Vector_FINAL 1 (1) 1" 260x231 imageRef
+    GROUP "Price" 540x151 bg=rgba(0, 0, 0, 0) (4 kids)
+      TEXT "$" 55x55 bg=#ffffff txt="$"
+      TEXT "DRIVEAWAY" 158x18 bg=#ffffff txt="DRIVEAWAY"
+      TEXT "^" 11x24 bg=#ffffff txt="^"
+      TEXT "38,888" 494x107 bg=#ffffff txt="38,888"
+    RECTANGLE "Group 13 1" 306x38 imageRef
+    RECTANGLE "Subheading 1" 326x79 imageRef
+  FRAME "Opening" lm=VERTICAL 600x560 bg=rgba(0, 0, 0, 0) (2 kids)
+    FRAME "Frame 48098941" lm=VERTICAL 520x320 bg=rgba(0, 0, 0, 0) (2 kids)
+      TEXT "Demo clearance. Don't miss out. " 496x96 bg=#000000 txt="Demo clearance. Don't miss out."
+      TEXT "<Name>, once they're gone, they're gone. Don't miss your chance to drive away in a MY26 X-TRAIL ST 2WD demonstrator vehicle for just $38,8881. With great finance offers across the all-new Navara, ARIYA and X-TRAIL, now is the time to make your move. Click below to see all offers. " 496x192 bg=#3d3d3d txt="<Name>, once they're gone, they're gone."
+    FRAME "CTA" lm=VERTICAL 294x120 bg=rgba(0, 0, 0, 0) (2 kids)
+      INSTANCE "CTA" lm=HORIZONTAL 290x48 bg=#b42535 r=9999 (2 kids)
+        TEXT "VERB TOPIC (15-20 ch.)" 133x24 bg=#ffffff txt="See all offers"
+        FRAME "arrow_forward_24dp_E8EAED_FILL0_wght400_GRAD-25_opsz24 1" 24x24 bg=rgba(0, 0, 0, 0) (1 kids)
+      INSTANCE "CTA" lm=HORIZONTAL 294x48 bg=rgba(0, 0, 0, 0) stroke=#000000/1.5 r=9999 (1 kids)
+        TEXT "VERB TOPIC (15-20 ch.)" 162x24 bg=#000000 txt="book a test drive"

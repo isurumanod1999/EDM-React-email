@@ -1,0 +1,58 @@
+# generated: 2026-08-09
+# last_updated: 2026-08-17
+# project: EDM react email tool
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: "_bmad-output/implementation-artifacts"
+
+generated: 2026-08-09
+last_updated: 2026-08-25
+project: EDM react email tool
+project_key: NOKEY
+tracking_system: file-system
+story_location: "_bmad-output/implementation-artifacts"
+
+development_status:
+  epic-1: done
+  1-1-parse-tagging-excel-to-structured-rows: done
+  1-2-discover-linkable-targets-and-propose-url-label-matches: done
+  1-3-tagging-panel-review-rematch-and-confirm: done
+  1-4-apply-confirmed-mappings-to-block-props-and-save: done
+  1-5-prove-applied-urls-in-preview-and-exported-html: done
+  1-6-in-tool-click-checklist-desktop-mobile: done
+  epic-1-retrospective: optional
+
+  # React code editor (Epic 1 in epics-react-code-editor.md; tracked as epic-2)
+  epic-2: done
+  2-1-print-the-template-as-react-email-jsx: done
+  2-2-parse-edited-jsx-back-into-template-blocks: done
+  2-3-prove-the-round-trip: done
+  2-4-code-panel-in-the-builder: done
+  2-5-apply-valid-edits-to-the-canvas: done
+  2-6-restructure-across-blocks-and-columns: done
+  epic-2-retrospective: optional
+
+  # Reusable component library
+  epic-3: done
+  3-1-persist-reusable-component-snapshots: done
+  3-2-expose-crud-with-safe-deletion: done
+  3-3-save-any-canvas-block-to-library: done
+  3-4-browse-add-drag-reusable-components: done
+  3-5-delete-reusable-components-and-finish-ux: done
+  epic-3-retrospective: optional
+
+  epic-4: in-progress
+  4-1-preview-selection-identity: done
+  4-2-figma-leaf-selection: done
+  4-3-builtin-leaf-selection: done
+  4-4-property-panel-routing: done
+  4-5-export-isolation: done
+  epic-4-retrospective: optional
+
+  # Per-node Figma flatten selection
+  epic-5: in-progress
+  5-1-source-layer-outline-and-normalization: review
+  5-2-searchable-design-image-selector: review
+  5-3-explicit-flatten-build-authority: review
+  5-4-mixed-output-regression-and-handoff: review
+  epic-5-retrospective: optional

@@ -1,0 +1,366 @@
+{
+  "label": "Frame 1618868494",
+  "rawNodeDoc": {
+    "id": "139:780",
+    "name": "Frame 1618868494",
+    "type": "FRAME",
+    "scrollBehavior": "SCROLLS",
+    "children": [
+      {
+        "id": "139:781",
+        "name": "Image",
+        "type": "INSTANCE",
+        "scrollBehavior": "SCROLLS",
+        "componentId": "1:64",
+        "componentProperties": {
+          "Aspect ratio": {
+            "value": "16:9",
+            "type": "VARIANT",
+            "boundVariables": {}
+          },
+          "Portrait": {
+            "value": "No",
+            "type": "VARIANT",
+            "boundVariables": {}
+          },
+          "50% height": {
+            "value": "No",
+            "type": "VARIANT",
+            "boundVariables": {}
+          }
+        },
+        "overrides": [
+          {
+            "id": "139:781",
+            "overriddenFields": [
+              "exportSettings",
+              "fills",
+              "height",
+              "primaryAxisSizingMode",
+              "targetAspectRatio",
+              "width"
+            ]
+          }
+        ],
+        "children": [
+          {
+            "id": "I139:781;12:2358",
+            "name": "Aspect ratio keeper # Rotated Auto Layout",
+            "type": "FRAME",
+            "locked": true,
+            "scrollBehavior": "SCROLLS",
+            "rotation": -0.5974261927641179,
+            "children": [],
+            "blendMode": "PASS_THROUGH",
+            "clipsContent": false,
+            "background": [],
+            "fills": [],
+            "strokes": [
+              {
+                "opacity": 0.4000000059604645,
+                "blendMode": "NORMAL",
+                "visible": false,
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                }
+              }
+            ],
+            "strokeWeight": 1,
+            "strokeAlign": "CENTER",
+            "backgroundColor": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 0
+            },
+            "layoutMode": "VERTICAL",
+            "counterAxisSizingMode": "FIXED",
+            "counterAxisAlignItems": "CENTER",
+            "layoutWrap": "NO_WRAP",
+            "absoluteBoundingBox": {
+              "x": 13894.9638671875,
+              "y": -371.99118471045585,
+              "width": 496.07169283152325,
+              "height": 337.5098169688376
+            },
+            "absoluteRenderBounds": {
+              "x": 13894.9638671875,
+              "y": -371.99118471045585,
+              "width": 496.07169283152325,
+              "height": 337.5098004331121
+            },
+            "constraints": {
+              "vertical": "BOTTOM",
+              "horizontal": "RIGHT"
+            },
+            "layoutAlign": "STRETCH",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "FILL",
+            "layoutSizingVertical": "HUG",
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          }
+        ],
+        "blendMode": "PASS_THROUGH",
+        "clipsContent": true,
+        "background": [
+          {
+            "blendMode": "NORMAL",
+            "visible": false,
+            "type": "IMAGE",
+            "scaleMode": "FIT",
+            "imageRef": "95137a66af981fda95a74322d3173b55c4dc81b7"
+          },
+          {
+            "blendMode": "NORMAL",
+            "visible": false,
+            "type": "IMAGE",
+            "scaleMode": "FILL",
+            "imageRef": "94e73e1f26d4d8c28ccab2648a8013b8aec2cc6c"
+          },
+          {
+            "blendMode": "NORMAL",
+            "visible": false,
+            "type": "IMAGE",
+            "scaleMode": "STRETCH",
+            "imageRef": "1786fcc443acce406661479feeda6a384d7202b7",
+            "imageTransform": [
+              [
+                0.35253527760505676,
+                0,
+                0.037809014320373535
+              ],
+              [
+                0,
+                0.3192256987094879,
+                0.12381493300199509
+              ]
+            ]
+          },
+          {
+            "blendMode": "NORMAL",
+            "type": "IMAGE",
+            "scaleMode": "STRETCH",
+            "imageRef": "5bd0fade71e8bf42881545159707978cd14b605c",
+            "imageTransform": [
+              [
+                0.8379888534545898,
+                0,
+                0.048882681876420975
+              ],
+              [
+                0,
+                0.7077551484107971,
+                0.14443731307983398
+              ]
+            ]
+          }
+        ],
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "visible": false,
+            "type": "IMAGE",
+            "scaleMode": "FIT",
+            "imageRef": "95137a66af981fda95a74322d3173b55c4dc81b7"
+          },
+          {
+            "blendMode": "NORMAL",
+            "visible": false,
+            "type": "IMAGE",
+            "scaleMode": "FILL",
+            "imageRef": "94e73e1f26d4d8c28ccab2648a8013b8aec2cc6c"
+          },
+          {
+            "blendMode": "NORMAL",
+            "visible": false,
+            "type": "IMAGE",
+            "scaleMode": "STRETCH",
+            "imageRef": "1786fcc443acce406661479feeda6a384d7202b7",
+            "imageTransform": [
+              [
+                0.35253527760505676,
+                0,
+                0.037809014320373535
+              ],
+              [
+                0,
+                0.3192256987094879,
+                0.12381493300199509
+              ]
+            ]
+          },
+          {
+            "blendMode": "NORMAL",
+            "type": "IMAGE",
+            "scaleMode": "STRETCH",
+            "imageRef": "5bd0fade71e8bf42881545159707978cd14b605c",
+            "imageTransform": [
+              [
+                0.8379888534545898,
+                0,
+                0.048882681876420975
+              ],
+              [
+                0,
+                0.7077551484107971,
+                0.14443731307983398
+              ]
+            ]
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE",
+        "backgroundColor": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "layoutMode": "VERTICAL",
+        "counterAxisSizingMode": "FIXED",
+        "layoutWrap": "NO_WRAP",
+        "absoluteBoundingBox": {
+          "x": 13843,
+          "y": -371.9912109375,
+          "width": 600,
+          "height": 337.50982666015625
+        },
+        "absoluteRenderBounds": {
+          "x": 13843,
+          "y": -371.9912109375,
+          "width": 600,
+          "height": 337.50982666015625
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "layoutAlign": "INHERIT",
+        "layoutGrow": 0,
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "HUG",
+        "exportSettings": [
+          {
+            "suffix": "",
+            "format": "PNG",
+            "constraint": {
+              "type": "SCALE",
+              "value": 2
+            }
+          }
+        ],
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      }
+    ],
+    "blendMode": "PASS_THROUGH",
+    "clipsContent": false,
+    "background": [],
+    "fills": [],
+    "strokes": [],
+    "strokeWeight": 1,
+    "strokeAlign": "INSIDE",
+    "backgroundColor": {
+      "r": 0,
+      "g": 0,
+      "b": 0,
+      "a": 0
+    },
+    "layoutMode": "VERTICAL",
+    "counterAxisSizingMode": "FIXED",
+    "counterAxisAlignItems": "MAX",
+    "itemSpacing": 8,
+    "layoutWrap": "NO_WRAP",
+    "absoluteBoundingBox": {
+      "x": 13843,
+      "y": -371.9912109375,
+      "width": 600,
+      "height": 337.50982666015625
+    },
+    "absoluteRenderBounds": {
+      "x": 13843,
+      "y": -371.9912109375,
+      "width": 600,
+      "height": 337.50982666015625
+    },
+    "constraints": {
+      "vertical": "TOP",
+      "horizontal": "LEFT"
+    },
+    "layoutAlign": "INHERIT",
+    "layoutGrow": 0,
+    "layoutSizingHorizontal": "FIXED",
+    "layoutSizingVertical": "HUG",
+    "effects": [],
+    "interactions": [],
+    "complexStrokeProperties": {
+      "strokeType": "BASIC"
+    }
+  },
+  "parsed": {
+    "id": "139:780",
+    "type": "FRAME",
+    "name": "Frame 1618868494",
+    "width": 600,
+    "height": 338,
+    "x": 13843,
+    "y": -372,
+    "visible": true,
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "gap": 8,
+    "layoutMode": "VERTICAL",
+    "counterAxisAlign": "MAX",
+    "strokeWeight": 1,
+    "nodeId": "139:780",
+    "children": [
+      {
+        "id": "139:781",
+        "type": "INSTANCE",
+        "name": "Image",
+        "width": 600,
+        "height": 338,
+        "x": 13843,
+        "y": -372,
+        "visible": true,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "layoutMode": "VERTICAL",
+        "strokeWeight": 1,
+        "imageRef": "5bd0fade71e8bf42881545159707978cd14b605c",
+        "componentId": "1:64",
+        "nodeId": "139:781",
+        "children": [
+          {
+            "id": "I139:781;12:2358",
+            "type": "FRAME",
+            "name": "Aspect ratio keeper # Rotated Auto Layout",
+            "width": 496,
+            "height": 338,
+            "x": 13895,
+            "y": -372,
+            "visible": true,
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "layoutMode": "VERTICAL",
+            "counterAxisAlign": "CENTER",
+            "strokeWeight": 1,
+            "nodeId": "I139:781;12:2358",
+            "children": []
+          }
+        ],
+        "exportUrl": "/images/uploads/figma-export-6d870a9a-e909-4c03-b163-8ab9bbfe0c9b.png"
+      }
+    ],
+    "exportUrl": "/images/uploads/figma-desk-fcf515de-da51-40fb-a2c0-c1243d373f8e.png"
+  }
+}

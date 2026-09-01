@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface CtaBannerProps {
   headline: string;
@@ -27,18 +29,23 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({
 }) => {
   const fontFamily =
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+  const headlineSel = useSelectable('headline');
+  const subtextSel = useSelectable('subtext');
+  const buttonSel = useSelectable('buttonText');
 
   return (
     <table
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{ width: '600px', backgroundColor }}
       role="presentation"
     >
       <tr>
-        <td align="center" valign="top" style={{ padding: deskPadding, fontFamily }}>
+        <td align="center" valign="top" className={EDM_CLASS.pad} style={{ padding: deskPadding, fontFamily }}>
           <p
+            {...headlineSel}
             style={{
               fontSize: '24px',
               fontWeight: 700,
@@ -52,6 +59,7 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({
           </p>
           {subtext && (
             <p
+              {...subtextSel}
               style={{
                 fontSize: '16px',
                 color: subtextColor,
@@ -63,6 +71,8 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({
           )}
           <a
             href={buttonUrl}
+            className={EDM_CLASS.cta}
+            {...buttonSel}
             style={{
               display: 'inline-block',
               fontFamily,
@@ -74,6 +84,8 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({
               textDecoration: 'none',
               textTransform: 'uppercase',
               letterSpacing: '1px',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
             }}
           >
             {buttonText}

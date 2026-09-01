@@ -1,0 +1,1149 @@
+{
+  "label": "Frame 1618868352",
+  "rawNodeDoc": {
+    "id": "154:1212",
+    "name": "Frame 1618868352",
+    "type": "FRAME",
+    "scrollBehavior": "SCROLLS",
+    "boundVariables": {
+      "itemSpacing": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:854205135f56ed42aadbca20d6d895d9339ceb8d/668:272"
+      },
+      "paddingLeft": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:189e2a97c058e8a5c2aa8a7ec9807228544fda7b/841:0"
+      },
+      "paddingTop": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:e3c600398255ff1985ce1dd21a107960dbbe7c7a/668:183"
+      },
+      "paddingRight": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:189e2a97c058e8a5c2aa8a7ec9807228544fda7b/841:0"
+      },
+      "paddingBottom": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:e3c600398255ff1985ce1dd21a107960dbbe7c7a/668:183"
+      }
+    },
+    "children": [
+      {
+        "id": "154:1213",
+        "name": "Frame 1618868353",
+        "type": "FRAME",
+        "scrollBehavior": "SCROLLS",
+        "boundVariables": {
+          "itemSpacing": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:808fc9744e5a8e4136aec90b14c72e2b5b57128a/668:141"
+          },
+          "paddingTop": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:eab9dbc7d11212347cfe851995b41cda37c24730/668:115"
+          },
+          "paddingBottom": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:eab9dbc7d11212347cfe851995b41cda37c24730/668:115"
+          },
+          "strokes": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:c7337a6dffe8f54d4afecfd9f6da73455e4a02ef/668:326"
+            }
+          ]
+        },
+        "children": [
+          {
+            "id": "154:1214",
+            "name": "Banner",
+            "visible": false,
+            "type": "FRAME",
+            "scrollBehavior": "SCROLLS",
+            "children": [],
+            "blendMode": "PASS_THROUGH",
+            "clipsContent": true,
+            "background": [
+              {
+                "blendMode": "NORMAL",
+                "type": "IMAGE",
+                "scaleMode": "FILL",
+                "imageRef": "8a87d621f797d015196453b00c86cdc5db4409b2"
+              }
+            ],
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "IMAGE",
+                "scaleMode": "FILL",
+                "imageRef": "8a87d621f797d015196453b00c86cdc5db4409b2"
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 1,
+            "strokeAlign": "INSIDE",
+            "backgroundColor": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 0
+            },
+            "layoutMode": "HORIZONTAL",
+            "counterAxisSizingMode": "FIXED",
+            "primaryAxisSizingMode": "FIXED",
+            "paddingLeft": 55,
+            "paddingRight": 55,
+            "paddingTop": 10,
+            "paddingBottom": 10,
+            "itemSpacing": 10,
+            "layoutWrap": "NO_WRAP",
+            "absoluteBoundingBox": {
+              "x": 14607,
+              "y": 5704,
+              "width": 520,
+              "height": 290
+            },
+            "absoluteRenderBounds": null,
+            "targetAspectRatio": {
+              "x": 520,
+              "y": 290
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "layoutAlign": "STRETCH",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "FIXED",
+            "layoutSizingVertical": "FIXED",
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "154:1215",
+            "name": "Social Icon",
+            "visible": false,
+            "type": "FRAME",
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "paddingLeft": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:e3c600398255ff1985ce1dd21a107960dbbe7c7a/668:183"
+              },
+              "paddingTop": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:e3c600398255ff1985ce1dd21a107960dbbe7c7a/668:183"
+              },
+              "paddingRight": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:e3c600398255ff1985ce1dd21a107960dbbe7c7a/668:183"
+              },
+              "paddingBottom": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:e3c600398255ff1985ce1dd21a107960dbbe7c7a/668:183"
+              }
+            },
+            "children": [
+              {
+                "id": "154:1216",
+                "name": "Social Icon",
+                "type": "INSTANCE",
+                "scrollBehavior": "SCROLLS",
+                "boundVariables": {
+                  "fills": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                    }
+                  ]
+                },
+                "componentId": "2:750",
+                "componentProperties": {
+                  "Property 1": {
+                    "value": "Component 1",
+                    "type": "VARIANT",
+                    "boundVariables": {}
+                  }
+                },
+                "overrides": [
+                  {
+                    "id": "154:1216",
+                    "overriddenFields": [
+                      "height",
+                      "width"
+                    ]
+                  }
+                ],
+                "children": [
+                  {
+                    "id": "I154:1216;504:4885",
+                    "name": "facebook-f",
+                    "type": "FRAME",
+                    "scrollBehavior": "SCROLLS",
+                    "children": [
+                      {
+                        "id": "I154:1216;504:4886",
+                        "name": "Vector",
+                        "type": "VECTOR",
+                        "scrollBehavior": "SCROLLS",
+                        "boundVariables": {
+                          "fills": [
+                            {
+                              "type": "VARIABLE_ALIAS",
+                              "id": "VariableID:f9e854513ede79846ee71f80b2ced71d13bf3d99/668:226"
+                            }
+                          ]
+                        },
+                        "blendMode": "PASS_THROUGH",
+                        "fills": [
+                          {
+                            "blendMode": "NORMAL",
+                            "type": "SOLID",
+                            "color": {
+                              "r": 0.9372549057006836,
+                              "g": 0.9372549057006836,
+                              "b": 0.9372549057006836,
+                              "a": 1
+                            },
+                            "boundVariables": {
+                              "color": {
+                                "type": "VARIABLE_ALIAS",
+                                "id": "VariableID:f9e854513ede79846ee71f80b2ced71d13bf3d99/668:226"
+                              }
+                            }
+                          }
+                        ],
+                        "strokes": [],
+                        "strokeWeight": 1,
+                        "strokeAlign": "INSIDE",
+                        "absoluteBoundingBox": {
+                          "x": 14622.1796875,
+                          "y": 5715,
+                          "width": 9.640544891357422,
+                          "height": 18
+                        },
+                        "absoluteRenderBounds": null,
+                        "constraints": {
+                          "vertical": "SCALE",
+                          "horizontal": "SCALE"
+                        },
+                        "effects": [],
+                        "interactions": [],
+                        "complexStrokeProperties": {
+                          "strokeType": "BASIC"
+                        }
+                      }
+                    ],
+                    "blendMode": "PASS_THROUGH",
+                    "clipsContent": true,
+                    "background": [
+                      {
+                        "blendMode": "NORMAL",
+                        "visible": false,
+                        "type": "SOLID",
+                        "color": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ],
+                    "fills": [
+                      {
+                        "blendMode": "NORMAL",
+                        "visible": false,
+                        "type": "SOLID",
+                        "color": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ],
+                    "strokes": [],
+                    "strokeWeight": 1,
+                    "strokeAlign": "INSIDE",
+                    "backgroundColor": {
+                      "r": 0,
+                      "g": 0,
+                      "b": 0,
+                      "a": 0
+                    },
+                    "absoluteBoundingBox": {
+                      "x": 14621.375,
+                      "y": 5715,
+                      "width": 11.25,
+                      "height": 18
+                    },
+                    "absoluteRenderBounds": null,
+                    "constraints": {
+                      "vertical": "TOP",
+                      "horizontal": "LEFT"
+                    },
+                    "layoutAlign": "INHERIT",
+                    "layoutGrow": 0,
+                    "layoutSizingHorizontal": "FIXED",
+                    "layoutSizingVertical": "FIXED",
+                    "effects": [],
+                    "interactions": [],
+                    "complexStrokeProperties": {
+                      "strokeType": "BASIC"
+                    }
+                  }
+                ],
+                "blendMode": "PASS_THROUGH",
+                "clipsContent": false,
+                "background": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.16078431904315948,
+                      "g": 0.16078431904315948,
+                      "b": 0.16078431904315948,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                      }
+                    }
+                  }
+                ],
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.16078431904315948,
+                      "g": 0.16078431904315948,
+                      "b": 0.16078431904315948,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                      }
+                    }
+                  }
+                ],
+                "strokes": [],
+                "cornerRadius": 60,
+                "cornerSmoothing": 0,
+                "strokeWeight": 1,
+                "strokeAlign": "INSIDE",
+                "backgroundColor": {
+                  "r": 0.16078431904315948,
+                  "g": 0.16078431904315948,
+                  "b": 0.16078431904315948,
+                  "a": 1
+                },
+                "layoutMode": "HORIZONTAL",
+                "counterAxisSizingMode": "FIXED",
+                "primaryAxisSizingMode": "FIXED",
+                "counterAxisAlignItems": "CENTER",
+                "primaryAxisAlignItems": "CENTER",
+                "itemSpacing": 8,
+                "layoutWrap": "NO_WRAP",
+                "absoluteBoundingBox": {
+                  "x": 14607,
+                  "y": 5704,
+                  "width": 40,
+                  "height": 40
+                },
+                "absoluteRenderBounds": null,
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "layoutAlign": "INHERIT",
+                "layoutGrow": 0,
+                "layoutSizingHorizontal": "FIXED",
+                "layoutSizingVertical": "FIXED",
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              },
+              {
+                "id": "154:1217",
+                "name": "Social Icon",
+                "type": "INSTANCE",
+                "scrollBehavior": "SCROLLS",
+                "boundVariables": {
+                  "fills": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                    }
+                  ]
+                },
+                "componentId": "2:753",
+                "componentProperties": {
+                  "Property 1": {
+                    "value": "Component 2",
+                    "type": "VARIANT",
+                    "boundVariables": {}
+                  }
+                },
+                "overrides": [
+                  {
+                    "id": "154:1217",
+                    "overriddenFields": [
+                      "height",
+                      "width"
+                    ]
+                  }
+                ],
+                "children": [
+                  {
+                    "id": "I154:1217;504:4875",
+                    "name": "Instagram",
+                    "type": "VECTOR",
+                    "scrollBehavior": "SCROLLS",
+                    "boundVariables": {
+                      "fills": [
+                        {
+                          "type": "VARIABLE_ALIAS",
+                          "id": "VariableID:f9e854513ede79846ee71f80b2ced71d13bf3d99/668:226"
+                        }
+                      ]
+                    },
+                    "blendMode": "PASS_THROUGH",
+                    "fills": [
+                      {
+                        "blendMode": "NORMAL",
+                        "type": "SOLID",
+                        "color": {
+                          "r": 0.9372549057006836,
+                          "g": 0.9372549057006836,
+                          "b": 0.9372549057006836,
+                          "a": 1
+                        },
+                        "boundVariables": {
+                          "color": {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:f9e854513ede79846ee71f80b2ced71d13bf3d99/668:226"
+                          }
+                        }
+                      }
+                    ],
+                    "fillOverrideTable": {
+                      "1": null
+                    },
+                    "strokes": [],
+                    "strokeWeight": 0,
+                    "strokeAlign": "CENTER",
+                    "absoluteBoundingBox": {
+                      "x": 14674,
+                      "y": 5715,
+                      "width": 18,
+                      "height": 18
+                    },
+                    "absoluteRenderBounds": null,
+                    "constraints": {
+                      "vertical": "TOP",
+                      "horizontal": "LEFT"
+                    },
+                    "layoutAlign": "INHERIT",
+                    "layoutGrow": 0,
+                    "layoutSizingHorizontal": "FIXED",
+                    "layoutSizingVertical": "FIXED",
+                    "effects": [],
+                    "interactions": [],
+                    "complexStrokeProperties": {
+                      "strokeType": "BASIC"
+                    }
+                  }
+                ],
+                "blendMode": "PASS_THROUGH",
+                "clipsContent": false,
+                "background": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.16078431904315948,
+                      "g": 0.16078431904315948,
+                      "b": 0.16078431904315948,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                      }
+                    }
+                  }
+                ],
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.16078431904315948,
+                      "g": 0.16078431904315948,
+                      "b": 0.16078431904315948,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                      }
+                    }
+                  }
+                ],
+                "strokes": [],
+                "cornerRadius": 60,
+                "cornerSmoothing": 0,
+                "strokeWeight": 1,
+                "strokeAlign": "INSIDE",
+                "backgroundColor": {
+                  "r": 0.16078431904315948,
+                  "g": 0.16078431904315948,
+                  "b": 0.16078431904315948,
+                  "a": 1
+                },
+                "layoutMode": "VERTICAL",
+                "counterAxisSizingMode": "FIXED",
+                "primaryAxisSizingMode": "FIXED",
+                "counterAxisAlignItems": "CENTER",
+                "primaryAxisAlignItems": "CENTER",
+                "itemSpacing": 10,
+                "layoutWrap": "NO_WRAP",
+                "absoluteBoundingBox": {
+                  "x": 14663,
+                  "y": 5704,
+                  "width": 40,
+                  "height": 40
+                },
+                "absoluteRenderBounds": null,
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "layoutAlign": "INHERIT",
+                "layoutGrow": 0,
+                "layoutSizingHorizontal": "FIXED",
+                "layoutSizingVertical": "FIXED",
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              },
+              {
+                "id": "154:1218",
+                "name": "Social Icon",
+                "type": "INSTANCE",
+                "scrollBehavior": "SCROLLS",
+                "boundVariables": {
+                  "fills": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                    }
+                  ]
+                },
+                "componentId": "2:757",
+                "componentProperties": {
+                  "Property 1": {
+                    "value": "Variant4",
+                    "type": "VARIANT",
+                    "boundVariables": {}
+                  }
+                },
+                "overrides": [
+                  {
+                    "id": "154:1218",
+                    "overriddenFields": [
+                      "height",
+                      "width"
+                    ]
+                  }
+                ],
+                "children": [
+                  {
+                    "id": "I154:1218;1124:8010",
+                    "name": "Youtube",
+                    "type": "BOOLEAN_OPERATION",
+                    "scrollBehavior": "SCROLLS",
+                    "boundVariables": {
+                      "fills": [
+                        {
+                          "type": "VARIABLE_ALIAS",
+                          "id": "VariableID:f9e854513ede79846ee71f80b2ced71d13bf3d99/668:226"
+                        }
+                      ]
+                    },
+                    "children": [
+                      {
+                        "id": "I154:1218;1124:8011",
+                        "name": "Path",
+                        "type": "VECTOR",
+                        "scrollBehavior": "SCROLLS",
+                        "blendMode": "PASS_THROUGH",
+                        "fills": [
+                          {
+                            "blendMode": "NORMAL",
+                            "type": "SOLID",
+                            "color": {
+                              "r": 1,
+                              "g": 1,
+                              "b": 1,
+                              "a": 1
+                            }
+                          }
+                        ],
+                        "strokes": [],
+                        "strokeWeight": 0,
+                        "strokeAlign": "CENTER",
+                        "absoluteBoundingBox": {
+                          "x": 14736.884765625,
+                          "y": 5721.251953125,
+                          "width": 5.180891513824463,
+                          "height": 5.98259973526001
+                        },
+                        "absoluteRenderBounds": null,
+                        "constraints": {
+                          "vertical": "SCALE",
+                          "horizontal": "SCALE"
+                        },
+                        "effects": [],
+                        "interactions": [],
+                        "complexStrokeProperties": {
+                          "strokeType": "BASIC"
+                        }
+                      },
+                      {
+                        "id": "I154:1218;1124:8012",
+                        "name": "Path",
+                        "type": "VECTOR",
+                        "scrollBehavior": "SCROLLS",
+                        "blendMode": "PASS_THROUGH",
+                        "fills": [
+                          {
+                            "blendMode": "NORMAL",
+                            "type": "SOLID",
+                            "color": {
+                              "r": 1,
+                              "g": 1,
+                              "b": 1,
+                              "a": 1
+                            }
+                          }
+                        ],
+                        "strokes": [],
+                        "strokeWeight": 0,
+                        "strokeAlign": "CENTER",
+                        "absoluteBoundingBox": {
+                          "x": 14729.029296875,
+                          "y": 5717.0205078125,
+                          "width": 19.941720962524414,
+                          "height": 13.959285736083984
+                        },
+                        "absoluteRenderBounds": null,
+                        "constraints": {
+                          "vertical": "SCALE",
+                          "horizontal": "SCALE"
+                        },
+                        "effects": [],
+                        "interactions": [],
+                        "complexStrokeProperties": {
+                          "strokeType": "BASIC"
+                        }
+                      }
+                    ],
+                    "blendMode": "PASS_THROUGH",
+                    "fills": [
+                      {
+                        "blendMode": "NORMAL",
+                        "type": "SOLID",
+                        "color": {
+                          "r": 0.9372549057006836,
+                          "g": 0.9372549057006836,
+                          "b": 0.9372549057006836,
+                          "a": 1
+                        },
+                        "boundVariables": {
+                          "color": {
+                            "type": "VARIABLE_ALIAS",
+                            "id": "VariableID:f9e854513ede79846ee71f80b2ced71d13bf3d99/668:226"
+                          }
+                        }
+                      }
+                    ],
+                    "strokes": [],
+                    "strokeWeight": 0,
+                    "strokeAlign": "CENTER",
+                    "booleanOperation": "EXCLUDE",
+                    "absoluteBoundingBox": {
+                      "x": 14729.029296875,
+                      "y": 5717.0205078125,
+                      "width": 19.941720962524414,
+                      "height": 13.959285736083984
+                    },
+                    "absoluteRenderBounds": null,
+                    "constraints": {
+                      "vertical": "TOP",
+                      "horizontal": "LEFT"
+                    },
+                    "layoutAlign": "INHERIT",
+                    "layoutGrow": 0,
+                    "layoutSizingHorizontal": "FIXED",
+                    "layoutSizingVertical": "FIXED",
+                    "effects": [],
+                    "interactions": []
+                  }
+                ],
+                "blendMode": "PASS_THROUGH",
+                "clipsContent": false,
+                "background": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.16078431904315948,
+                      "g": 0.16078431904315948,
+                      "b": 0.16078431904315948,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                      }
+                    }
+                  }
+                ],
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.16078431904315948,
+                      "g": 0.16078431904315948,
+                      "b": 0.16078431904315948,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:6d0cf1beab426d4722a2ef01d61142b49245c3f5/668:147"
+                      }
+                    }
+                  }
+                ],
+                "strokes": [],
+                "cornerRadius": 60,
+                "cornerSmoothing": 0,
+                "strokeWeight": 1,
+                "strokeAlign": "INSIDE",
+                "backgroundColor": {
+                  "r": 0.16078431904315948,
+                  "g": 0.16078431904315948,
+                  "b": 0.16078431904315948,
+                  "a": 1
+                },
+                "layoutMode": "VERTICAL",
+                "counterAxisSizingMode": "FIXED",
+                "primaryAxisSizingMode": "FIXED",
+                "counterAxisAlignItems": "CENTER",
+                "primaryAxisAlignItems": "CENTER",
+                "itemSpacing": 10,
+                "layoutWrap": "NO_WRAP",
+                "absoluteBoundingBox": {
+                  "x": 14719,
+                  "y": 5704,
+                  "width": 40,
+                  "height": 40
+                },
+                "absoluteRenderBounds": null,
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "layoutAlign": "INHERIT",
+                "layoutGrow": 0,
+                "layoutSizingHorizontal": "FIXED",
+                "layoutSizingVertical": "FIXED",
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              }
+            ],
+            "blendMode": "PASS_THROUGH",
+            "clipsContent": false,
+            "background": [],
+            "fills": [],
+            "strokes": [],
+            "strokeWeight": 1,
+            "individualStrokeWeights": {
+              "top": 1,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "strokeAlign": "INSIDE",
+            "backgroundColor": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 0
+            },
+            "layoutMode": "HORIZONTAL",
+            "primaryAxisSizingMode": "FIXED",
+            "counterAxisAlignItems": "CENTER",
+            "itemSpacing": 16,
+            "layoutWrap": "NO_WRAP",
+            "absoluteBoundingBox": {
+              "x": 14607,
+              "y": 5704,
+              "width": 520,
+              "height": 40
+            },
+            "absoluteRenderBounds": null,
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "layoutAlign": "STRETCH",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "FIXED",
+            "layoutSizingVertical": "HUG",
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "154:1219",
+            "name": "1. Cashback offer available at participating Nissan dealers on new and demonstrator Nissan ARIYA, MY26 Navara and MY26 X-TRAIL vehicles purchased between 18/06/2026 and 20/06/2026, while stocks last. Cashback offer is applied at the point of sale as a reduction from the vehicle purchase price and is not transferable, exchangeable or redeemable for cash. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. 2. Optional No Repayments for up to six months offer is available to approved applicants of Nissan Financial Services (Australian Credit Licence Number 391464) only across new and demonstrator Nissan ARIYA, MY26 Navara and MY26 X-TRAIL vehicles purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). Advertised weekly repayment is based on a standard loan with no deferral. If the deferred repayment option is selected, interest will accrue and be capitalised, resulting in higher repayments. 3. The X-TRAIL ST 2WD loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Offer available on new and demonstrator MY26 Nissan X-TRAIL ST 2WD vehicles (excluding demonstrators over 5,000km or 6 months from date of registration) purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). Approved applicants of Nissan Financial Services (Australian Credit Licence Number 391464). 1.9% Comparison rate for approved personal applicants and 1.9% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464) (NFS). Max 36 month term. Terms and conditions apply. Comparison rate based on a 5 year secured loan of $30,000. WARNING: This comparison rate is true only for the example given and may not include all fees and charges. Different terms, fees or other loan amounts might result in a different comparison rate. $41,490 financed over 36 monthly repayments of $533.77 and a final payment of $19,400 equal to the pre-agreed future value (NFV). Total amount payable over the term $43,115.72. If you return your vehicle at the end of the term Nissan will pay you the NFV (subject to meeting vehicle condition requirements and km allowance) which will be applied to your final payment. Premium paint available at additional cost. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. Not available in conjunction with any other offer. 4. Maximum recommended driveaway price for private and ABN buyers on new and demonstrator MY26 Nissan X-TRAIL ST 2WD and all-new Navara SL vehicles models purchased by 30/06/2026 only (offer has been extended). Premium paint available at additional cost. Subject to availability at participating dealers, and while stocks last. Offer not transferable and not redeemable for cash.  Nissan reserves the right to vary, extend or withdraw this offer.  Excludes Government, Rental and National Fleet customers. 5. The Navara SL loyalty finance offer is available to approved ABN applicants of Nissan Financial Services (Australian Credit Licence Number 391464) who are current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Offer available on new and demonstrator MY26 Nissan Navara SL vehicles (excluding demonstrators over 5,000km or 6 months from date of registration) purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). APR 1.9%. Max 36 month term. Terms and conditions apply. $57,990 financed over 36 monthly repayments of $651.75 (weekly payments of $150.40) and a final payment of $32,500 equal to the pre-agreed future value (NFV). Total amount payable over the term $60,463. If you return your vehicle at the end of the term Nissan will pay you the NFV (subject to meeting vehicle condition requirements and km allowance) which will be applied to your final payment. Premium paint available at additional cost. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. Not available in conjunction with any other offer. 6. The ARIYA loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Terms and conditions apply. 1% Comparison rate for approved personal applicants and 1% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464). Maximum 36 month term. This comparison rate for the purpose of the National Credit Code is based on a 5 year secured loan of $30,000, although this offer relates to a 36 month term only. WARNING: This comparison rate is true only for the example given and may not include all fees. Different terms, fees or other loan amounts might result in a different comparison rate. Offer available as standard finance on new and demonstrator ARIYA vehicles purchased between 01/06/2026 and 30/06/26, and settled by 31/07/2026 (offer has been extended), while stocks last. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Used Cars, Government, Rental and National Fleet customers. 7. Whilst stocks last - Offer limited to first 100 private and ABN buyers on new and demonstrator ARIYA variants purchased from 01/04/2026. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Government, Rental and National Fleet customers. 22kW Autel Maxicharger AC Wallbox supplied by JET Charge Pty Ltd. Subject to law, Nissan Australia is not responsible or liable for any loss, damage or injury suffered arising from, or in connection with this offer or the products, services or other conduct of JET Charge Pty Ltd. This offer does not include installation. Installation, upgrades and equipment add-ons is at customer discretion and cost. Rainchecks not available. Cannot be transferred or redeemed for monetary value. 8. The QASHQAI loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Terms and conditions apply. 2.9% Comparison rate for approved personal applicants and 2.9% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464). Maximum 36 month term. This comparison rate for the purpose of the National Credit Code is based on a 5 year secured loan of $30,000, although this offer relates to a 36 month term only. WARNING: This comparison rate is true only for the example given and may not include all fees. Different terms, fees or other loan amounts might result in a different comparison rate. Offer available as standard finance on new and demonstrator MY26 QASHQAI Ti, Ti-L and N-Design vehicles purchased between 01/06/2026 and 30/06/26, and settled by 31/07/2026 (offer has been extended), while stocks last. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Used Cars, Government, Rental and National Fleet customers. 9. Up to 10 years or 300,000km (whichever occurs first), when servicing at authorised Nissan dealers. Lithium-Ion battery pack warranted against battery capacity loss below 9 bars out of 12 (as shown in vehicle capacity gauge), for a period of 8 years or 160,000 kilometres, whichever occurs first. Full terms at Nissan.com.au/warranty. If you do not wish to receive future emails and special offers from Nissan Australia click here to unsubscribe. To ensure you receive the latest information from Nissan Australia, simply add noreply@nissan.com.au to your address book. Nissan is committed to safeguarding your personal information. View our privacy policy to find out more. To locate your Nissan Dealer simply click here. NISSAN MOTOR CO. (AUSTRALIA) PTY. LTD. 1 Peters Avenue, Mulgrave, Victoria 3170",
+            "type": "TEXT",
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:f2470c4fa6f9564022b879413b7004b73e27405c/668:217"
+                }
+              ],
+              "lineHeight": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:623cb4848873973aa59706392d5dc10df5dc60cf/668:299"
+                }
+              ],
+              "fontFamily": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:f3da8acd2004c13cedf20d89498414142dbb1a16/2064:0"
+                }
+              ],
+              "fontSize": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:ed3b082a21985dde29536d7b564feda24111e776/668:136"
+                }
+              ],
+              "fontStyle": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:48b23c97eb1471147a0025024e20327c9f4633d9/668:260"
+                }
+              ],
+              "paragraphSpacing": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:649fbb013c49dcf75f32a8092aedccd0544e7bb9/668:251"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:f2470c4fa6f9564022b879413b7004b73e27405c/668:217"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 1,
+            "strokeAlign": "OUTSIDE",
+            "absoluteBoundingBox": {
+              "x": 14607,
+              "y": 5704,
+              "width": 520,
+              "height": 1532
+            },
+            "absoluteRenderBounds": {
+              "x": 14607,
+              "y": 5707.353515625,
+              "width": 518.94921875,
+              "height": 1527.7119140625
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "layoutAlign": "STRETCH",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "FILL",
+            "layoutSizingVertical": "HUG",
+            "characters": "1. Cashback offer available at participating Nissan dealers on new and demonstrator Nissan ARIYA, MY26 Navara and MY26 X-TRAIL vehicles purchased between 18/06/2026 and 20/06/2026, while stocks last. Cashback offer is applied at the point of sale as a reduction from the vehicle purchase price and is not transferable, exchangeable or redeemable for cash. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer.\n2. Optional No Repayments for up to six months offer is available to approved applicants of Nissan Financial Services (Australian Credit Licence Number 391464) only across new and demonstrator Nissan ARIYA, MY26 Navara and MY26 X-TRAIL vehicles purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). Advertised weekly repayment is based on a standard loan with no deferral. If the deferred repayment option is selected, interest will accrue and be capitalised, resulting in higher repayments.\n3. The X-TRAIL ST 2WD loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Offer available on new and demonstrator MY26 Nissan X-TRAIL ST 2WD vehicles (excluding demonstrators over 5,000km or 6 months from date of registration) purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). Approved applicants of Nissan Financial Services (Australian Credit Licence Number 391464). 1.9% Comparison rate for approved personal applicants and 1.9% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464) (NFS).  Max 36 month term. Terms and conditions apply. Comparison rate based on a 5 year secured loan of $30,000. WARNING: This comparison rate is true only for the example given and may not include all fees and charges. Different terms, fees or other loan amounts might result in a different comparison rate. $41,490 financed over 36 monthly repayments of $533.77 and a final payment of $19,400 equal to the pre-agreed future value (NFV). Total amount payable over the term $43,115.72. If you return your vehicle at the end of the term Nissan will pay you the NFV (subject to meeting vehicle condition requirements and km allowance) which will be applied to your final payment. Premium paint available at additional cost. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. Not available in conjunction with any other offer.\n4. Maximum recommended driveaway price for private and ABN buyers on new and demonstrator MY26 Nissan X-TRAIL ST 2WD and all-new Navara SL vehicles models purchased by 30/06/2026 only (offer has been extended). Premium paint available at additional cost. Subject to availability at participating dealers, and while stocks last. Offer not transferable and not redeemable for cash.  Nissan reserves the right to vary, extend or withdraw this offer.  Excludes Government, Rental and National Fleet customers.\n5. The Navara SL loyalty finance offer is available to approved ABN applicants of Nissan Financial Services (Australian Credit Licence Number 391464) who are current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Offer available on new and demonstrator MY26 Nissan Navara SL vehicles (excluding demonstrators over 5,000km or 6 months from date of registration) purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). APR 1.9%. Max 36 month term. Terms and conditions apply. $57,990 financed over 36 monthly repayments of $651.75 (weekly payments of $150.40) and a final payment of $32,500 equal to the pre-agreed future value (NFV). Total amount payable over the term $60,463. If you return your vehicle at the end of the term Nissan will pay you the NFV (subject to meeting vehicle condition requirements and km allowance) which will be applied to your final payment. Premium paint available at additional cost. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. Not available in conjunction with any other offer.\n6. The ARIYA loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Terms and conditions apply. 1% Comparison rate for approved personal applicants and 1% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464). Maximum 36 month term. This comparison rate for the purpose of the National Credit Code is based on a 5 year secured loan of $30,000, although this offer relates to a 36 month term only. WARNING: This comparison rate is true only for the example given and may not include all fees. Different terms, fees or other loan amounts might result in a different comparison rate. Offer available as standard finance on new and demonstrator ARIYA vehicles purchased between 01/06/2026 and 30/06/26, and settled by 31/07/2026 (offer has been extended), while stocks last. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Used Cars, Government, Rental and National Fleet customers.\n7. Whilst stocks last - Offer limited to first 100 private and ABN buyers on new and demonstrator ARIYA variants purchased from 01/04/2026. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Government, Rental and National Fleet customers. 22kW Autel Maxicharger AC Wallbox supplied by JET Charge Pty Ltd. Subject to law, Nissan Australia is not responsible or liable for any loss, damage or injury suffered arising from, or in connection with this offer or the products, services or other conduct of JET Charge Pty Ltd. This offer does not include installation. Installation, upgrades and equipment add-ons is at customer discretion and cost. Rainchecks not available. Cannot be transferred or redeemed for monetary value.\n8. The QASHQAI loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Terms and conditions apply. 2.9% Comparison rate for approved personal applicants and 2.9% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464). Maximum 36 month term. This comparison rate for the purpose of the National Credit Code is based on a 5 year secured loan of $30,000, although this offer relates to a 36 month term only. WARNING: This comparison rate is true only for the example given and may not include all fees. Different terms, fees or other loan amounts might result in a different comparison rate. Offer available as standard finance on new and demonstrator MY26 QASHQAI Ti, Ti-L and N-Design vehicles purchased between 01/06/2026 and 30/06/26, and settled by 31/07/2026 (offer has been extended), while stocks last. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Used Cars, Government, Rental and National Fleet customers.\n9. Up to 10 years or 300,000km (whichever occurs first), when servicing at authorised Nissan dealers. Lithium-Ion battery pack warranted against battery capacity loss below 9 bars out of 12 (as shown in vehicle capacity gauge), for a period of 8 years or 160,000 kilometres, whichever occurs first. Full terms at Nissan.com.au/warranty.\n\nIf you do not wish to receive future emails and special offers from Nissan Australia click here to unsubscribe. To ensure you receive the latest information from Nissan Australia, simply add noreply@nissan.com.au to your address book.\nNissan is committed to safeguarding your personal information. View our privacy policy to find out more. To locate your Nissan Dealer simply click here.\nNISSAN MOTOR CO. (AUSTRALIA) PTY. LTD.\n1 Peters Avenue, Mulgrave, Victoria 3170",
+            "characterStyleOverrides": [],
+            "styleOverrideTable": {},
+            "lineTypes": [
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE",
+              "NONE"
+            ],
+            "lineIndentations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "style": {
+              "fontFamily": "Verdana",
+              "fontPostScriptName": "Verdana",
+              "fontStyle": "Regular",
+              "fontWeight": 400,
+              "paragraphSpacing": 8,
+              "textAutoResize": "HEIGHT",
+              "fontSize": 10,
+              "textAlignHorizontal": "LEFT",
+              "textAlignVertical": "TOP",
+              "letterSpacing": 0.25,
+              "lineHeightPx": 14,
+              "lineHeightPercent": 115.19485473632812,
+              "lineHeightPercentFontSize": 140,
+              "lineHeightUnit": "PIXELS"
+            },
+            "layoutVersion": 5,
+            "styles": {
+              "text": "2:761"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          }
+        ],
+        "blendMode": "PASS_THROUGH",
+        "clipsContent": false,
+        "background": [],
+        "fills": [],
+        "strokes": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 0.3960784375667572,
+              "g": 0.3960784375667572,
+              "b": 0.3960784375667572,
+              "a": 1
+            },
+            "boundVariables": {
+              "color": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:c7337a6dffe8f54d4afecfd9f6da73455e4a02ef/668:326"
+              }
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "individualStrokeWeights": {
+          "top": 1,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "strokeAlign": "INSIDE",
+        "backgroundColor": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "layoutMode": "VERTICAL",
+        "counterAxisSizingMode": "FIXED",
+        "paddingTop": 40,
+        "paddingBottom": 40,
+        "itemSpacing": 32,
+        "layoutWrap": "NO_WRAP",
+        "absoluteBoundingBox": {
+          "x": 14607,
+          "y": 5664,
+          "width": 520,
+          "height": 1612
+        },
+        "absoluteRenderBounds": {
+          "x": 14607,
+          "y": 5664,
+          "width": 520,
+          "height": 1612
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "layoutAlign": "STRETCH",
+        "layoutGrow": 0,
+        "layoutSizingHorizontal": "FILL",
+        "layoutSizingVertical": "HUG",
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      }
+    ],
+    "blendMode": "PASS_THROUGH",
+    "clipsContent": false,
+    "background": [],
+    "fills": [],
+    "strokes": [],
+    "strokeWeight": 1,
+    "strokeAlign": "INSIDE",
+    "backgroundColor": {
+      "r": 0,
+      "g": 0,
+      "b": 0,
+      "a": 0
+    },
+    "layoutMode": "VERTICAL",
+    "counterAxisSizingMode": "FIXED",
+    "paddingLeft": 40,
+    "paddingRight": 40,
+    "itemSpacing": 32,
+    "layoutWrap": "NO_WRAP",
+    "absoluteBoundingBox": {
+      "x": 14567,
+      "y": 5664,
+      "width": 600,
+      "height": 1612
+    },
+    "absoluteRenderBounds": {
+      "x": 14567,
+      "y": 5664,
+      "width": 600,
+      "height": 1612
+    },
+    "constraints": {
+      "vertical": "TOP",
+      "horizontal": "LEFT"
+    },
+    "layoutAlign": "STRETCH",
+    "layoutGrow": 0,
+    "layoutSizingHorizontal": "FILL",
+    "layoutSizingVertical": "HUG",
+    "effects": [],
+    "interactions": [],
+    "complexStrokeProperties": {
+      "strokeType": "BASIC"
+    }
+  },
+  "parsed": {
+    "id": "154:1212",
+    "type": "FRAME",
+    "name": "Frame 1618868352",
+    "width": 600,
+    "height": 1612,
+    "visible": true,
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "paddingRight": 40,
+    "paddingLeft": 40,
+    "gap": 32,
+    "layoutMode": "VERTICAL",
+    "strokeWeight": 1,
+    "nodeId": "154:1212",
+    "children": [
+      {
+        "id": "154:1213",
+        "type": "FRAME",
+        "name": "Frame 1618868353",
+        "width": 520,
+        "height": 1612,
+        "visible": true,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "paddingTop": 40,
+        "paddingBottom": 40,
+        "gap": 32,
+        "layoutMode": "VERTICAL",
+        "strokeColor": "#656565",
+        "strokeWeight": 1,
+        "nodeId": "154:1213",
+        "children": [
+          {
+            "id": "154:1219",
+            "type": "TEXT",
+            "name": "1. Cashback offer available at participating Nissan dealers on new and demonstrator Nissan ARIYA, MY26 Navara and MY26 X-TRAIL vehicles purchased between 18/06/2026 and 20/06/2026, while stocks last. Cashback offer is applied at the point of sale as a reduction from the vehicle purchase price and is not transferable, exchangeable or redeemable for cash. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. 2. Optional No Repayments for up to six months offer is available to approved applicants of Nissan Financial Services (Australian Credit Licence Number 391464) only across new and demonstrator Nissan ARIYA, MY26 Navara and MY26 X-TRAIL vehicles purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). Advertised weekly repayment is based on a standard loan with no deferral. If the deferred repayment option is selected, interest will accrue and be capitalised, resulting in higher repayments. 3. The X-TRAIL ST 2WD loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Offer available on new and demonstrator MY26 Nissan X-TRAIL ST 2WD vehicles (excluding demonstrators over 5,000km or 6 months from date of registration) purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). Approved applicants of Nissan Financial Services (Australian Credit Licence Number 391464). 1.9% Comparison rate for approved personal applicants and 1.9% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464) (NFS). Max 36 month term. Terms and conditions apply. Comparison rate based on a 5 year secured loan of $30,000. WARNING: This comparison rate is true only for the example given and may not include all fees and charges. Different terms, fees or other loan amounts might result in a different comparison rate. $41,490 financed over 36 monthly repayments of $533.77 and a final payment of $19,400 equal to the pre-agreed future value (NFV). Total amount payable over the term $43,115.72. If you return your vehicle at the end of the term Nissan will pay you the NFV (subject to meeting vehicle condition requirements and km allowance) which will be applied to your final payment. Premium paint available at additional cost. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. Not available in conjunction with any other offer. 4. Maximum recommended driveaway price for private and ABN buyers on new and demonstrator MY26 Nissan X-TRAIL ST 2WD and all-new Navara SL vehicles models purchased by 30/06/2026 only (offer has been extended). Premium paint available at additional cost. Subject to availability at participating dealers, and while stocks last. Offer not transferable and not redeemable for cash.  Nissan reserves the right to vary, extend or withdraw this offer.  Excludes Government, Rental and National Fleet customers. 5. The Navara SL loyalty finance offer is available to approved ABN applicants of Nissan Financial Services (Australian Credit Licence Number 391464) who are current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Offer available on new and demonstrator MY26 Nissan Navara SL vehicles (excluding demonstrators over 5,000km or 6 months from date of registration) purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). APR 1.9%. Max 36 month term. Terms and conditions apply. $57,990 financed over 36 monthly repayments of $651.75 (weekly payments of $150.40) and a final payment of $32,500 equal to the pre-agreed future value (NFV). Total amount payable over the term $60,463. If you return your vehicle at the end of the term Nissan will pay you the NFV (subject to meeting vehicle condition requirements and km allowance) which will be applied to your final payment. Premium paint available at additional cost. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. Not available in conjunction with any other offer. 6. The ARIYA loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Terms and conditions apply. 1% Comparison rate for approved personal applicants and 1% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464). Maximum 36 month term. This comparison rate for the purpose of the National Credit Code is based on a 5 year secured loan of $30,000, although this offer relates to a 36 month term only. WARNING: This comparison rate is true only for the example given and may not include all fees. Different terms, fees or other loan amounts might result in a different comparison rate. Offer available as standard finance on new and demonstrator ARIYA vehicles purchased between 01/06/2026 and 30/06/26, and settled by 31/07/2026 (offer has been extended), while stocks last. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Used Cars, Government, Rental and National Fleet customers. 7. Whilst stocks last - Offer limited to first 100 private and ABN buyers on new and demonstrator ARIYA variants purchased from 01/04/2026. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Government, Rental and National Fleet customers. 22kW Autel Maxicharger AC Wallbox supplied by JET Charge Pty Ltd. Subject to law, Nissan Australia is not responsible or liable for any loss, damage or injury suffered arising from, or in connection with this offer or the products, services or other conduct of JET Charge Pty Ltd. This offer does not include installation. Installation, upgrades and equipment add-ons is at customer discretion and cost. Rainchecks not available. Cannot be transferred or redeemed for monetary value. 8. The QASHQAI loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Terms and conditions apply. 2.9% Comparison rate for approved personal applicants and 2.9% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464). Maximum 36 month term. This comparison rate for the purpose of the National Credit Code is based on a 5 year secured loan of $30,000, although this offer relates to a 36 month term only. WARNING: This comparison rate is true only for the example given and may not include all fees. Different terms, fees or other loan amounts might result in a different comparison rate. Offer available as standard finance on new and demonstrator MY26 QASHQAI Ti, Ti-L and N-Design vehicles purchased between 01/06/2026 and 30/06/26, and settled by 31/07/2026 (offer has been extended), while stocks last. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Used Cars, Government, Rental and National Fleet customers. 9. Up to 10 years or 300,000km (whichever occurs first), when servicing at authorised Nissan dealers. Lithium-Ion battery pack warranted against battery capacity loss below 9 bars out of 12 (as shown in vehicle capacity gauge), for a period of 8 years or 160,000 kilometres, whichever occurs first. Full terms at Nissan.com.au/warranty. If you do not wish to receive future emails and special offers from Nissan Australia click here to unsubscribe. To ensure you receive the latest information from Nissan Australia, simply add noreply@nissan.com.au to your address book. Nissan is committed to safeguarding your personal information. View our privacy policy to find out more. To locate your Nissan Dealer simply click here. NISSAN MOTOR CO. (AUSTRALIA) PTY. LTD. 1 Peters Avenue, Mulgrave, Victoria 3170",
+            "width": 520,
+            "height": 1532,
+            "visible": true,
+            "text": "1. Cashback offer available at participating Nissan dealers on new and demonstrator Nissan ARIYA, MY26 Navara and MY26 X-TRAIL vehicles purchased between 18/06/2026 and 20/06/2026, while stocks last. Cashback offer is applied at the point of sale as a reduction from the vehicle purchase price and is not transferable, exchangeable or redeemable for cash. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer.\n2. Optional No Repayments for up to six months offer is available to approved applicants of Nissan Financial Services (Australian Credit Licence Number 391464) only across new and demonstrator Nissan ARIYA, MY26 Navara and MY26 X-TRAIL vehicles purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). Advertised weekly repayment is based on a standard loan with no deferral. If the deferred repayment option is selected, interest will accrue and be capitalised, resulting in higher repayments.\n3. The X-TRAIL ST 2WD loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Offer available on new and demonstrator MY26 Nissan X-TRAIL ST 2WD vehicles (excluding demonstrators over 5,000km or 6 months from date of registration) purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). Approved applicants of Nissan Financial Services (Australian Credit Licence Number 391464). 1.9% Comparison rate for approved personal applicants and 1.9% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464) (NFS).  Max 36 month term. Terms and conditions apply. Comparison rate based on a 5 year secured loan of $30,000. WARNING: This comparison rate is true only for the example given and may not include all fees and charges. Different terms, fees or other loan amounts might result in a different comparison rate. $41,490 financed over 36 monthly repayments of $533.77 and a final payment of $19,400 equal to the pre-agreed future value (NFV). Total amount payable over the term $43,115.72. If you return your vehicle at the end of the term Nissan will pay you the NFV (subject to meeting vehicle condition requirements and km allowance) which will be applied to your final payment. Premium paint available at additional cost. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. Not available in conjunction with any other offer.\n4. Maximum recommended driveaway price for private and ABN buyers on new and demonstrator MY26 Nissan X-TRAIL ST 2WD and all-new Navara SL vehicles models purchased by 30/06/2026 only (offer has been extended). Premium paint available at additional cost. Subject to availability at participating dealers, and while stocks last. Offer not transferable and not redeemable for cash.  Nissan reserves the right to vary, extend or withdraw this offer.  Excludes Government, Rental and National Fleet customers.\n5. The Navara SL loyalty finance offer is available to approved ABN applicants of Nissan Financial Services (Australian Credit Licence Number 391464) who are current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Offer available on new and demonstrator MY26 Nissan Navara SL vehicles (excluding demonstrators over 5,000km or 6 months from date of registration) purchased by 30/06/2026 and delivered by 31/07/2026 (offer has been extended). APR 1.9%. Max 36 month term. Terms and conditions apply. $57,990 financed over 36 monthly repayments of $651.75 (weekly payments of $150.40) and a final payment of $32,500 equal to the pre-agreed future value (NFV). Total amount payable over the term $60,463. If you return your vehicle at the end of the term Nissan will pay you the NFV (subject to meeting vehicle condition requirements and km allowance) which will be applied to your final payment. Premium paint available at additional cost. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Excludes Government, Rental and National Fleet customers. Nissan reserves the right to vary, extend or withdraw this offer. Not available in conjunction with any other offer.\n6. The ARIYA loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Terms and conditions apply. 1% Comparison rate for approved personal applicants and 1% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464). Maximum 36 month term. This comparison rate for the purpose of the National Credit Code is based on a 5 year secured loan of $30,000, although this offer relates to a 36 month term only. WARNING: This comparison rate is true only for the example given and may not include all fees. Different terms, fees or other loan amounts might result in a different comparison rate. Offer available as standard finance on new and demonstrator ARIYA vehicles purchased between 01/06/2026 and 30/06/26, and settled by 31/07/2026 (offer has been extended), while stocks last. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Used Cars, Government, Rental and National Fleet customers.\n7. Whilst stocks last - Offer limited to first 100 private and ABN buyers on new and demonstrator ARIYA variants purchased from 01/04/2026. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Government, Rental and National Fleet customers. 22kW Autel Maxicharger AC Wallbox supplied by JET Charge Pty Ltd. Subject to law, Nissan Australia is not responsible or liable for any loss, damage or injury suffered arising from, or in connection with this offer or the products, services or other conduct of JET Charge Pty Ltd. This offer does not include installation. Installation, upgrades and equipment add-ons is at customer discretion and cost. Rainchecks not available. Cannot be transferred or redeemed for monetary value.\n8. The QASHQAI loyalty finance offer is available to current Nissan vehicle owners and any immediate family members residing at the same address as a current Nissan owner. Terms and conditions apply. 2.9% Comparison rate for approved personal applicants and 2.9% APR for approved business applicants of Nissan Financial Services (Australian Credit Licence Number 391464). Maximum 36 month term. This comparison rate for the purpose of the National Credit Code is based on a 5 year secured loan of $30,000, although this offer relates to a 36 month term only. WARNING: This comparison rate is true only for the example given and may not include all fees. Different terms, fees or other loan amounts might result in a different comparison rate. Offer available as standard finance on new and demonstrator MY26 QASHQAI Ti, Ti-L and N-Design vehicles purchased between 01/06/2026 and 30/06/26, and settled by 31/07/2026 (offer has been extended), while stocks last. Proof of current vehicle ownership required, and family members must provide proof of residence matching the vehicle owners. Current Nissan vehicle does not need to be traded in to receive the offer. Nissan reserves the right to vary, extend or withdraw this offer. Excludes Used Cars, Government, Rental and National Fleet customers.\n9. Up to 10 years or 300,000km (whichever occurs first), when servicing at authorised Nissan dealers. Lithium-Ion battery pack warranted against battery capacity loss below 9 bars out of 12 (as shown in vehicle capacity gauge), for a period of 8 years or 160,000 kilometres, whichever occurs first. Full terms at Nissan.com.au/warranty.\n\nIf you do not wish to receive future emails and special offers from Nissan Australia click here to unsubscribe. To ensure you receive the latest information from Nissan Australia, simply add noreply@nissan.com.au to your address book.\nNissan is committed to safeguarding your personal information. View our privacy policy to find out more. To locate your Nissan Dealer simply click here.\nNISSAN MOTOR CO. (AUSTRALIA) PTY. LTD.\n1 Peters Avenue, Mulgrave, Victoria 3170",
+            "fontSize": 10,
+            "fontWeight": 400,
+            "fontFamily": "Verdana",
+            "lineHeight": 14,
+            "letterSpacing": 0.25,
+            "paragraphSpacing": 8,
+            "textAlign": "left",
+            "color": "#ffffff",
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 1,
+            "nodeId": "154:1219",
+            "children": []
+          }
+        ]
+      }
+    ],
+    "exportUrl": "/images/uploads/figma-desk-4d6e1419-6674-4e52-9671-68ba57747548.png"
+  }
+}

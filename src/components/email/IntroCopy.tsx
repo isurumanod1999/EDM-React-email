@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -62,11 +64,14 @@ export const IntroCopy: React.FC<IntroCopyProps> = ({
   bodyStyle,
   textStyle,
 }) => {
+  const greetingSel = useSelectable('greeting');
+  const bodySel = useSelectable('body');
   return (
     <table
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{
         width: '600px',
         backgroundColor: backgroundColor,
@@ -77,6 +82,7 @@ export const IntroCopy: React.FC<IntroCopyProps> = ({
         <td
           align={textAlign}
           valign="top"
+          className={EDM_CLASS.pad}
           style={{
             padding: deskPadding,
             ...defaultStyles.container,
@@ -85,6 +91,7 @@ export const IntroCopy: React.FC<IntroCopyProps> = ({
         >
           {greeting && (
             <p
+              {...greetingSel}
               style={{
                 ...defaultStyles.greeting,
                 ...greetingStyle,
@@ -94,6 +101,7 @@ export const IntroCopy: React.FC<IntroCopyProps> = ({
           )}
           {body && (
             <p
+              {...bodySel}
               style={{
                 ...defaultStyles.body,
                 ...bodyStyle,

@@ -1,0 +1,1269 @@
+{
+  "label": "AU21-P00003955-25_FY26 July-August Retail_NAVARTHON_1080x1920_Story_F1",
+  "rawNodeDoc": {
+    "id": "46:717",
+    "name": "AU21-P00003955-25_FY26 July-August Retail_NAVARTHON_1080x1920_Story_F1",
+    "type": "FRAME",
+    "scrollBehavior": "SCROLLS",
+    "children": [
+      {
+        "id": "46:718",
+        "name": "AU21-P00003955-20_FY26_July_Retail_Retouching_MY2026NissanNavaraPRO-4X-002_OUTSET 1",
+        "type": "INSTANCE",
+        "scrollBehavior": "SCROLLS",
+        "componentId": "1:663",
+        "overrides": [],
+        "uniformScaleFactor": 0.3326528072357178,
+        "children": [
+          {
+            "id": "I46:718;1:642",
+            "name": "AU21-P00003955-20_FY26_July_Retail_Retouching_MY2026NissanNavaraPRO-4X-002_OUTSET 1",
+            "type": "RECTANGLE",
+            "scrollBehavior": "SCROLLS",
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "IMAGE",
+                "scaleMode": "FILL",
+                "imageRef": "f16f39fa2aa89138e94d6f26d1ba9a1ab7f1dc67"
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.3326528072357178,
+            "strokeAlign": "INSIDE",
+            "absoluteBoundingBox": {
+              "x": 8840.7265625,
+              "y": -2313.77783203125,
+              "width": 1362.5458984375,
+              "height": 1269.403076171875
+            },
+            "absoluteRenderBounds": {
+              "x": 9222,
+              "y": -2111,
+              "width": 600,
+              "height": 720
+            },
+            "constraints": {
+              "vertical": "SCALE",
+              "horizontal": "SCALE"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          }
+        ],
+        "blendMode": "PASS_THROUGH",
+        "clipsContent": false,
+        "background": [
+          {
+            "blendMode": "NORMAL",
+            "visible": false,
+            "type": "SOLID",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            }
+          }
+        ],
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "visible": false,
+            "type": "SOLID",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            }
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 0.3326528072357178,
+        "strokeAlign": "INSIDE",
+        "backgroundColor": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "absoluteBoundingBox": {
+          "x": 8840.7265625,
+          "y": -2313.77783203125,
+          "width": 1362.5458984375,
+          "height": 1269.403076171875
+        },
+        "absoluteRenderBounds": {
+          "x": 9222,
+          "y": -2111,
+          "width": 600,
+          "height": 720
+        },
+        "preserveRatio": true,
+        "targetAspectRatio": {
+          "x": 4096,
+          "y": 3816
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      },
+      {
+        "id": "46:719",
+        "name": "KV1",
+        "type": "GROUP",
+        "scrollBehavior": "SCROLLS",
+        "children": [
+          {
+            "id": "46:720",
+            "name": "Mask group",
+            "type": "GROUP",
+            "scrollBehavior": "SCROLLS",
+            "children": [
+              {
+                "id": "46:721",
+                "name": "Rectangle 13",
+                "type": "RECTANGLE",
+                "scrollBehavior": "SCROLLS",
+                "blendMode": "PASS_THROUGH",
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.8509804010391235,
+                      "g": 0.8509804010391235,
+                      "b": 0.8509804010391235,
+                      "a": 1
+                    }
+                  }
+                ],
+                "strokes": [],
+                "strokeWeight": 2.355695962905884,
+                "strokeAlign": "INSIDE",
+                "absoluteBoundingBox": {
+                  "x": 9303.4208984375,
+                  "y": -2043,
+                  "width": 434.7458190917969,
+                  "height": 532.72314453125
+                },
+                "absoluteRenderBounds": null,
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "effects": [],
+                "isMask": true,
+                "maskType": "ALPHA",
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              },
+              {
+                "id": "46:722",
+                "name": "Mask group",
+                "type": "GROUP",
+                "scrollBehavior": "SCROLLS",
+                "children": [
+                  {
+                    "id": "46:723",
+                    "name": "AU21-P00003955-25_FY26_July_August_Inset_Retail_RGB 1",
+                    "type": "INSTANCE",
+                    "scrollBehavior": "SCROLLS",
+                    "componentId": "46:663",
+                    "overrides": [],
+                    "uniformScaleFactor": 0.3490488529205322,
+                    "children": [
+                      {
+                        "id": "I46:723;4112:3514",
+                        "name": "AU21-P00003955-25_FY26_July_August_Inset_Retail_RGB 1",
+                        "type": "RECTANGLE",
+                        "scrollBehavior": "SCROLLS",
+                        "blendMode": "PASS_THROUGH",
+                        "fills": [
+                          {
+                            "blendMode": "NORMAL",
+                            "type": "IMAGE",
+                            "scaleMode": "FILL",
+                            "imageRef": "d4ff8b1a7c58b071a2b64c1f109a334772ba45ad"
+                          }
+                        ],
+                        "strokes": [],
+                        "strokeWeight": 0.3490488529205322,
+                        "strokeAlign": "INSIDE",
+                        "absoluteBoundingBox": {
+                          "x": 8772.5556640625,
+                          "y": -2227.999755859375,
+                          "width": 1429.7041015625,
+                          "height": 953.6014404296875
+                        },
+                        "absoluteRenderBounds": {
+                          "x": 9303.4208984375,
+                          "y": -2043,
+                          "width": 434.74609375,
+                          "height": 532.72314453125
+                        },
+                        "constraints": {
+                          "vertical": "SCALE",
+                          "horizontal": "SCALE"
+                        },
+                        "effects": [],
+                        "interactions": [],
+                        "complexStrokeProperties": {
+                          "strokeType": "BASIC"
+                        }
+                      }
+                    ],
+                    "blendMode": "PASS_THROUGH",
+                    "clipsContent": false,
+                    "background": [
+                      {
+                        "blendMode": "NORMAL",
+                        "visible": false,
+                        "type": "SOLID",
+                        "color": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ],
+                    "fills": [
+                      {
+                        "blendMode": "NORMAL",
+                        "visible": false,
+                        "type": "SOLID",
+                        "color": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ],
+                    "strokes": [],
+                    "strokeWeight": 0.3490488529205322,
+                    "strokeAlign": "INSIDE",
+                    "backgroundColor": {
+                      "r": 0,
+                      "g": 0,
+                      "b": 0,
+                      "a": 0
+                    },
+                    "absoluteBoundingBox": {
+                      "x": 8772.5556640625,
+                      "y": -2227.999755859375,
+                      "width": 1429.7041015625,
+                      "height": 953.6014404296875
+                    },
+                    "absoluteRenderBounds": {
+                      "x": 9303.4208984375,
+                      "y": -2043,
+                      "width": 434.74609375,
+                      "height": 532.72314453125
+                    },
+                    "preserveRatio": true,
+                    "targetAspectRatio": {
+                      "x": 4096,
+                      "y": 2732
+                    },
+                    "constraints": {
+                      "vertical": "TOP",
+                      "horizontal": "LEFT"
+                    },
+                    "effects": [],
+                    "interactions": [],
+                    "complexStrokeProperties": {
+                      "strokeType": "BASIC"
+                    }
+                  },
+                  {
+                    "id": "46:724",
+                    "name": "Rectangle 23",
+                    "type": "RECTANGLE",
+                    "scrollBehavior": "SCROLLS",
+                    "blendMode": "PASS_THROUGH",
+                    "fills": [
+                      {
+                        "blendMode": "MULTIPLY",
+                        "type": "GRADIENT_LINEAR",
+                        "gradientHandlePositions": [
+                          {
+                            "x": 0.5,
+                            "y": -3.0616171314629196e-17
+                          },
+                          {
+                            "x": 0.5,
+                            "y": 0.9999999999999999
+                          },
+                          {
+                            "x": 0,
+                            "y": 0
+                          }
+                        ],
+                        "gradientStops": [
+                          {
+                            "color": {
+                              "r": 0.06625805050134659,
+                              "g": 0.09053861349821091,
+                              "b": 0.06828141957521439,
+                              "a": 1
+                            },
+                            "position": 0
+                          },
+                          {
+                            "color": {
+                              "r": 0.9087289571762085,
+                              "g": 1,
+                              "b": 0.9300253987312317,
+                              "a": 1
+                            },
+                            "position": 0.584794282913208
+                          }
+                        ]
+                      }
+                    ],
+                    "strokes": [],
+                    "strokeWeight": 0.5504297018051147,
+                    "strokeAlign": "INSIDE",
+                    "absoluteBoundingBox": {
+                      "x": 9268.4482421875,
+                      "y": -2078.077392578125,
+                      "width": 489.0869445800781,
+                      "height": 506.6810302734375
+                    },
+                    "absoluteRenderBounds": {
+                      "x": 9303.4208984375,
+                      "y": -2043,
+                      "width": 434.74609375,
+                      "height": 471.6036376953125
+                    },
+                    "constraints": {
+                      "vertical": "TOP",
+                      "horizontal": "LEFT"
+                    },
+                    "effects": [],
+                    "interactions": [],
+                    "complexStrokeProperties": {
+                      "strokeType": "BASIC"
+                    }
+                  }
+                ],
+                "blendMode": "PASS_THROUGH",
+                "clipsContent": false,
+                "background": [],
+                "fills": [],
+                "strokes": [],
+                "strokeWeight": 1.595120906829834,
+                "strokeAlign": "INSIDE",
+                "backgroundColor": {
+                  "r": 0,
+                  "g": 0,
+                  "b": 0,
+                  "a": 0
+                },
+                "absoluteBoundingBox": {
+                  "x": 8772.5556640625,
+                  "y": -2227.999755859375,
+                  "width": 1429.7041015625,
+                  "height": 953.6014404296875
+                },
+                "absoluteRenderBounds": {
+                  "x": 9303.4208984375,
+                  "y": -2043,
+                  "width": 434.74609375,
+                  "height": 532.72314453125
+                },
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              }
+            ],
+            "blendMode": "PASS_THROUGH",
+            "clipsContent": false,
+            "background": [],
+            "fills": [],
+            "strokes": [],
+            "strokeWeight": 1.9318550825119019,
+            "strokeAlign": "INSIDE",
+            "backgroundColor": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 0
+            },
+            "absoluteBoundingBox": {
+              "x": 9303.4208984375,
+              "y": -2043,
+              "width": 434.7458190917969,
+              "height": 532.72314453125
+            },
+            "absoluteRenderBounds": {
+              "x": 9303.4208984375,
+              "y": -2043,
+              "width": 434.74609375,
+              "height": 532.72314453125
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "46:725",
+            "name": "AU21-P00003955-25_FY26_July_August_Inset_Retail_RGB 2",
+            "type": "INSTANCE",
+            "scrollBehavior": "SCROLLS",
+            "componentId": "46:665",
+            "overrides": [],
+            "uniformScaleFactor": 0.3490488529205322,
+            "children": [
+              {
+                "id": "I46:725;4112:3515",
+                "name": "AU21-P00003955-25_FY26_July_August_Inset_Retail_RGB 2",
+                "type": "RECTANGLE",
+                "scrollBehavior": "SCROLLS",
+                "blendMode": "PASS_THROUGH",
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "IMAGE",
+                    "scaleMode": "FILL",
+                    "imageRef": "e8f6ae92cb816834e6dedbe4d6dd7e164a98d442"
+                  }
+                ],
+                "strokes": [],
+                "strokeWeight": 0.3490488529205322,
+                "strokeAlign": "INSIDE",
+                "absoluteBoundingBox": {
+                  "x": 8772.5556640625,
+                  "y": -2228,
+                  "width": 1429.7041015625,
+                  "height": 953.6014404296875
+                },
+                "absoluteRenderBounds": {
+                  "x": 9222,
+                  "y": -2111,
+                  "width": 600,
+                  "height": 720
+                },
+                "constraints": {
+                  "vertical": "SCALE",
+                  "horizontal": "SCALE"
+                },
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              }
+            ],
+            "blendMode": "PASS_THROUGH",
+            "clipsContent": false,
+            "background": [
+              {
+                "blendMode": "NORMAL",
+                "visible": false,
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                }
+              }
+            ],
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "visible": false,
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 0.3490488529205322,
+            "strokeAlign": "INSIDE",
+            "backgroundColor": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 0
+            },
+            "absoluteBoundingBox": {
+              "x": 8772.5556640625,
+              "y": -2228,
+              "width": 1429.7041015625,
+              "height": 953.6014404296875
+            },
+            "absoluteRenderBounds": {
+              "x": 9222,
+              "y": -2111,
+              "width": 600,
+              "height": 720
+            },
+            "preserveRatio": true,
+            "targetAspectRatio": {
+              "x": 4096,
+              "y": 2732
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          }
+        ],
+        "blendMode": "PASS_THROUGH",
+        "clipsContent": false,
+        "background": [],
+        "fills": [],
+        "strokes": [],
+        "strokeWeight": 1.5951207876205444,
+        "strokeAlign": "INSIDE",
+        "backgroundColor": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "absoluteBoundingBox": {
+          "x": 8772.5556640625,
+          "y": -2228,
+          "width": 1429.7041015625,
+          "height": 953.6014404296875
+        },
+        "absoluteRenderBounds": {
+          "x": 9222,
+          "y": -2111,
+          "width": 600,
+          "height": 720
+        },
+        "constraints": {
+          "vertical": "CENTER",
+          "horizontal": "CENTER"
+        },
+        "exportSettings": [
+          {
+            "suffix": "",
+            "format": "PNG",
+            "constraint": {
+              "type": "SCALE",
+              "value": 2
+            }
+          }
+        ],
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      },
+      {
+        "id": "46:726",
+        "name": "NAVARATHON",
+        "type": "TEXT",
+        "scrollBehavior": "SCROLLS",
+        "blendMode": "PASS_THROUGH",
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            }
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 0.5564077496528625,
+        "strokeAlign": "OUTSIDE",
+        "absoluteBoundingBox": {
+          "x": 9249.08203125,
+          "y": -2063.5556640625,
+          "width": 545.8360595703125,
+          "height": 67
+        },
+        "absoluteRenderBounds": {
+          "x": 9259.0712890625,
+          "y": -2053.0703125,
+          "width": 525.8564453125,
+          "height": 55.5028076171875
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "characters": "NAVARATHON",
+        "characterStyleOverrides": [
+          52,
+          51,
+          51,
+          52,
+          52,
+          50,
+          52,
+          52,
+          52,
+          52
+        ],
+        "styleOverrideTable": {
+          "50": {
+            "fontFamily": "Nissan Brand",
+            "fontPostScriptName": "NissanBrand-Bold",
+            "fontStyle": "Bold",
+            "fontWeight": 700,
+            "letterSpacing": -6.587867431640625
+          },
+          "51": {
+            "fontFamily": "Nissan Brand",
+            "fontPostScriptName": "NissanBrand-Bold",
+            "fontStyle": "Bold",
+            "fontWeight": 700,
+            "letterSpacing": -5.7643840026855475,
+            "lineHeightPx": 66.70215606689453,
+            "lineHeightPercent": 59.3841667175293,
+            "lineHeightPercentFontSize": 81,
+            "lineHeightUnit": "FONT_SIZE_%"
+          },
+          "52": {
+            "fontFamily": "Nissan Brand",
+            "fontPostScriptName": "NissanBrand-Bold",
+            "fontStyle": "Bold",
+            "fontWeight": 700
+          }
+        },
+        "lineTypes": [
+          "NONE"
+        ],
+        "lineIndentations": [
+          0
+        ],
+        "style": {
+          "fontFamily": "Nissan Brand",
+          "fontPostScriptName": "NissanBrand-Regular",
+          "fontStyle": "Regular",
+          "fontWeight": 400,
+          "textAutoResize": "HEIGHT",
+          "fontSize": 82.34834289550781,
+          "textAlignHorizontal": "CENTER",
+          "textAlignVertical": "CENTER",
+          "letterSpacing": -2.4704502868652343,
+          "lineHeightPx": 66.70215606689453,
+          "lineHeightPercent": 59.3841667175293,
+          "lineHeightPercentFontSize": 81,
+          "lineHeightUnit": "FONT_SIZE_%"
+        },
+        "layoutVersion": 5,
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      },
+      {
+        "id": "46:727",
+        "name": "on now",
+        "type": "TEXT",
+        "scrollBehavior": "SCROLLS",
+        "blendMode": "PASS_THROUGH",
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            }
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 0.4336174726486206,
+        "strokeAlign": "OUTSIDE",
+        "absoluteBoundingBox": {
+          "x": 9308.9912109375,
+          "y": -1997.55908203125,
+          "width": 425.3787841796875,
+          "height": 52
+        },
+        "absoluteRenderBounds": {
+          "x": 9396.5576171875,
+          "y": -1989.043212890625,
+          "width": 252.9384765625,
+          "height": 43.2542724609375
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "characters": "on now",
+        "characterStyleOverrides": [],
+        "styleOverrideTable": {},
+        "lineTypes": [
+          "NONE"
+        ],
+        "lineIndentations": [
+          0
+        ],
+        "style": {
+          "fontFamily": "Nissan Brand",
+          "fontPostScriptName": "NissanBrand-Regular",
+          "fontStyle": "Regular",
+          "fontWeight": 400,
+          "textCase": "UPPER",
+          "textAutoResize": "HEIGHT",
+          "fontSize": 64.17538452148438,
+          "textAlignHorizontal": "CENTER",
+          "textAlignVertical": "CENTER",
+          "letterSpacing": -1.9252615356445313,
+          "lineHeightPx": 51.98206329345703,
+          "lineHeightPercent": 59.3841667175293,
+          "lineHeightPercentFontSize": 81,
+          "lineHeightUnit": "FONT_SIZE_%"
+        },
+        "layoutVersion": 5,
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      },
+      {
+        "id": "46:728",
+        "name": "Best ever driveaway deals across the all-new Navara range",
+        "type": "TEXT",
+        "scrollBehavior": "SCROLLS",
+        "blendMode": "PASS_THROUGH",
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            }
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 0.8821233510971069,
+        "strokeAlign": "OUTSIDE",
+        "absoluteBoundingBox": {
+          "x": 9258.6669921875,
+          "y": -1473,
+          "width": 416.6666564941406,
+          "height": 39
+        },
+        "absoluteRenderBounds": {
+          "x": 9258.6669921875,
+          "y": -1473.89111328125,
+          "width": 389.2861328125,
+          "height": 45.0733642578125
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "characters": "Best ever driveaway deals across the all-new Navara range",
+        "characterStyleOverrides": [],
+        "styleOverrideTable": {},
+        "lineTypes": [
+          "NONE"
+        ],
+        "lineIndentations": [
+          0
+        ],
+        "style": {
+          "fontFamily": "Nissan Brand",
+          "fontPostScriptName": "NissanBrand-Light",
+          "fontStyle": "Light",
+          "fontWeight": 300,
+          "textAutoResize": "HEIGHT",
+          "fontSize": 24.444442749023438,
+          "textAlignHorizontal": "LEFT",
+          "textAlignVertical": "TOP",
+          "leadingTrim": "CAP_HEIGHT",
+          "letterSpacing": 0,
+          "lineHeightPx": 22.97777557373047,
+          "lineHeightPercent": 68.91495513916016,
+          "lineHeightPercentFontSize": 94,
+          "lineHeightUnit": "FONT_SIZE_%"
+        },
+        "layoutVersion": 5,
+        "exportSettings": [
+          {
+            "suffix": "",
+            "format": "PNG",
+            "constraint": {
+              "type": "SCALE",
+              "value": 1
+            }
+          }
+        ],
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      },
+      {
+        "id": "46:818",
+        "name": "1",
+        "type": "TEXT",
+        "scrollBehavior": "SCROLLS",
+        "blendMode": "PASS_THROUGH",
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            }
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 0.5750678777694702,
+        "strokeAlign": "OUTSIDE",
+        "absoluteBoundingBox": {
+          "x": 9554,
+          "y": -1452,
+          "width": 9.44444465637207,
+          "height": 10
+        },
+        "absoluteRenderBounds": {
+          "x": 9554.4873046875,
+          "y": -1451.7777099609375,
+          "width": 3.5595703125,
+          "height": 9.7777099609375
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "characters": "1",
+        "characterStyleOverrides": [],
+        "styleOverrideTable": {},
+        "lineTypes": [
+          "NONE"
+        ],
+        "lineIndentations": [
+          0
+        ],
+        "style": {
+          "fontFamily": "Nissan Brand",
+          "fontPostScriptName": "NissanBrand-Light",
+          "fontStyle": "Light",
+          "fontWeight": 300,
+          "textAutoResize": "HEIGHT",
+          "fontSize": 14.769886016845703,
+          "textAlignHorizontal": "LEFT",
+          "textAlignVertical": "TOP",
+          "leadingTrim": "CAP_HEIGHT",
+          "letterSpacing": -0.14769886016845704,
+          "lineHeightPx": 15.508379936218262,
+          "lineHeightPercent": 76.9794692993164,
+          "lineHeightPercentFontSize": 104.99999237060547,
+          "lineHeightUnit": "FONT_SIZE_%"
+        },
+        "layoutVersion": 5,
+        "exportSettings": [
+          {
+            "suffix": "",
+            "format": "PNG",
+            "constraint": {
+              "type": "SCALE",
+              "value": 1
+            }
+          }
+        ],
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      }
+    ],
+    "blendMode": "PASS_THROUGH",
+    "clipsContent": true,
+    "background": [
+      {
+        "blendMode": "NORMAL",
+        "type": "SOLID",
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      }
+    ],
+    "fills": [
+      {
+        "blendMode": "NORMAL",
+        "type": "SOLID",
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      }
+    ],
+    "strokes": [],
+    "strokeWeight": 1,
+    "strokeAlign": "INSIDE",
+    "backgroundColor": {
+      "r": 1,
+      "g": 1,
+      "b": 1,
+      "a": 1
+    },
+    "absoluteBoundingBox": {
+      "x": 9222,
+      "y": -2111,
+      "width": 600,
+      "height": 720
+    },
+    "absoluteRenderBounds": {
+      "x": 9222,
+      "y": -2111,
+      "width": 600,
+      "height": 720
+    },
+    "constraints": {
+      "vertical": "TOP",
+      "horizontal": "LEFT"
+    },
+    "layoutAlign": "INHERIT",
+    "layoutGrow": 0,
+    "layoutSizingHorizontal": "FIXED",
+    "layoutSizingVertical": "FIXED",
+    "exportSettings": [
+      {
+        "suffix": "",
+        "format": "PNG",
+        "constraint": {
+          "type": "SCALE",
+          "value": 2
+        }
+      }
+    ],
+    "effects": [],
+    "interactions": [],
+    "complexStrokeProperties": {
+      "strokeType": "BASIC"
+    }
+  },
+  "parsed": {
+    "id": "46:717",
+    "type": "FRAME",
+    "name": "AU21-P00003955-25_FY26 July-August Retail_NAVARTHON_1080x1920_Story_F1",
+    "width": 600,
+    "height": 720,
+    "x": 9222,
+    "y": -2111,
+    "visible": true,
+    "backgroundColor": "#ffffff",
+    "strokeWeight": 1,
+    "nodeId": "46:717",
+    "children": [
+      {
+        "id": "46:718",
+        "type": "INSTANCE",
+        "name": "AU21-P00003955-20_FY26_July_Retail_Retouching_MY2026NissanNavaraPRO-4X-002_OUTSET 1",
+        "width": 1363,
+        "height": 1269,
+        "x": 8841,
+        "y": -2314,
+        "visible": true,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "strokeWeight": 0.3326528072357178,
+        "componentId": "1:663",
+        "nodeId": "46:718",
+        "children": [
+          {
+            "id": "I46:718;1:642",
+            "type": "RECTANGLE",
+            "name": "AU21-P00003955-20_FY26_July_Retail_Retouching_MY2026NissanNavaraPRO-4X-002_OUTSET 1",
+            "width": 1363,
+            "height": 1269,
+            "x": 8841,
+            "y": -2314,
+            "visible": true,
+            "strokeWeight": 0.3326528072357178,
+            "imageRef": "f16f39fa2aa89138e94d6f26d1ba9a1ab7f1dc67",
+            "nodeId": "I46:718;1:642",
+            "children": [],
+            "exportUrl": "/images/uploads/figma-export-a66525ff-d578-418d-8718-69d8d4f759bd.png"
+          }
+        ],
+        "exportUrl": "/images/uploads/figma-export-6a49c053-e3ff-4b4f-b983-76da23c64fd1.png"
+      },
+      {
+        "id": "46:719",
+        "type": "GROUP",
+        "name": "KV1",
+        "width": 1430,
+        "height": 954,
+        "x": 8773,
+        "y": -2228,
+        "visible": true,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "strokeWeight": 1.5951207876205444,
+        "nodeId": "46:719",
+        "children": [
+          {
+            "id": "46:720",
+            "type": "GROUP",
+            "name": "Mask group",
+            "width": 435,
+            "height": 533,
+            "x": 9303,
+            "y": -2043,
+            "visible": true,
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "strokeWeight": 1.9318550825119019,
+            "nodeId": "46:720",
+            "children": [
+              {
+                "id": "46:721",
+                "type": "RECTANGLE",
+                "name": "Rectangle 13",
+                "width": 435,
+                "height": 533,
+                "x": 9303,
+                "y": -2043,
+                "visible": true,
+                "backgroundColor": "#d9d9d9",
+                "strokeWeight": 2.355695962905884,
+                "nodeId": "46:721",
+                "children": []
+              },
+              {
+                "id": "46:722",
+                "type": "GROUP",
+                "name": "Mask group",
+                "width": 1430,
+                "height": 954,
+                "x": 8773,
+                "y": -2228,
+                "visible": true,
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "strokeWeight": 1.595120906829834,
+                "nodeId": "46:722",
+                "children": [
+                  {
+                    "id": "46:723",
+                    "type": "INSTANCE",
+                    "name": "AU21-P00003955-25_FY26_July_August_Inset_Retail_RGB 1",
+                    "width": 1430,
+                    "height": 954,
+                    "x": 8773,
+                    "y": -2228,
+                    "visible": true,
+                    "backgroundColor": "rgba(0, 0, 0, 0)",
+                    "strokeWeight": 0.3490488529205322,
+                    "componentId": "46:663",
+                    "nodeId": "46:723",
+                    "children": [
+                      {
+                        "id": "I46:723;4112:3514",
+                        "type": "RECTANGLE",
+                        "name": "AU21-P00003955-25_FY26_July_August_Inset_Retail_RGB 1",
+                        "width": 1430,
+                        "height": 954,
+                        "x": 8773,
+                        "y": -2228,
+                        "visible": true,
+                        "strokeWeight": 0.3490488529205322,
+                        "imageRef": "d4ff8b1a7c58b071a2b64c1f109a334772ba45ad",
+                        "nodeId": "I46:723;4112:3514",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "46:724",
+                    "type": "RECTANGLE",
+                    "name": "Rectangle 23",
+                    "width": 489,
+                    "height": 507,
+                    "x": 9268,
+                    "y": -2078,
+                    "visible": true,
+                    "backgroundColor": "#e8ffed",
+                    "strokeWeight": 0.5504297018051147,
+                    "nodeId": "46:724",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "46:725",
+            "type": "INSTANCE",
+            "name": "AU21-P00003955-25_FY26_July_August_Inset_Retail_RGB 2",
+            "width": 1430,
+            "height": 954,
+            "x": 8773,
+            "y": -2228,
+            "visible": true,
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "strokeWeight": 0.3490488529205322,
+            "componentId": "46:665",
+            "nodeId": "46:725",
+            "children": [
+              {
+                "id": "I46:725;4112:3515",
+                "type": "RECTANGLE",
+                "name": "AU21-P00003955-25_FY26_July_August_Inset_Retail_RGB 2",
+                "width": 1430,
+                "height": 954,
+                "x": 8773,
+                "y": -2228,
+                "visible": true,
+                "strokeWeight": 0.3490488529205322,
+                "imageRef": "e8f6ae92cb816834e6dedbe4d6dd7e164a98d442",
+                "nodeId": "I46:725;4112:3515",
+                "children": []
+              }
+            ]
+          }
+        ],
+        "exportUrl": "/images/uploads/figma-export-b1be2e49-d7b4-4c73-928e-65e20e26734f.png"
+      },
+      {
+        "id": "46:726",
+        "type": "TEXT",
+        "name": "NAVARATHON",
+        "width": 546,
+        "height": 67,
+        "x": 9249,
+        "y": -2064,
+        "visible": true,
+        "text": "NAVARATHON",
+        "fontSize": 82.34834289550781,
+        "fontWeight": 400,
+        "fontFamily": "Nissan Brand",
+        "lineHeight": 66.70215606689453,
+        "letterSpacing": -2.4704502868652343,
+        "textAlign": "center",
+        "color": "#ffffff",
+        "backgroundColor": "#ffffff",
+        "strokeWeight": 0.5564077496528625,
+        "nodeId": "46:726",
+        "children": []
+      },
+      {
+        "id": "46:727",
+        "type": "TEXT",
+        "name": "on now",
+        "width": 425,
+        "height": 52,
+        "x": 9309,
+        "y": -1998,
+        "visible": true,
+        "text": "on now",
+        "fontSize": 64.17538452148438,
+        "fontWeight": 400,
+        "fontFamily": "Nissan Brand",
+        "lineHeight": 51.98206329345703,
+        "letterSpacing": -1.9252615356445313,
+        "textAlign": "center",
+        "textCase": "UPPER",
+        "color": "#ffffff",
+        "backgroundColor": "#ffffff",
+        "strokeWeight": 0.4336174726486206,
+        "nodeId": "46:727",
+        "children": []
+      },
+      {
+        "id": "46:728",
+        "type": "TEXT",
+        "name": "Best ever driveaway deals across the all-new Navara range",
+        "width": 417,
+        "height": 39,
+        "x": 9259,
+        "y": -1473,
+        "visible": true,
+        "text": "Best ever driveaway deals across the all-new Navara range",
+        "fontSize": 24.444442749023438,
+        "fontWeight": 300,
+        "fontFamily": "Nissan Brand",
+        "lineHeight": 22.97777557373047,
+        "letterSpacing": 0,
+        "textAlign": "left",
+        "color": "#ffffff",
+        "backgroundColor": "#ffffff",
+        "strokeWeight": 0.8821233510971069,
+        "nodeId": "46:728",
+        "children": []
+      },
+      {
+        "id": "46:818",
+        "type": "TEXT",
+        "name": "1",
+        "width": 9,
+        "height": 10,
+        "x": 9554,
+        "y": -1452,
+        "visible": true,
+        "text": "1",
+        "fontSize": 14.769886016845703,
+        "fontWeight": 300,
+        "fontFamily": "Nissan Brand",
+        "lineHeight": 15.508379936218262,
+        "letterSpacing": -0.14769886016845704,
+        "textAlign": "left",
+        "color": "#ffffff",
+        "backgroundColor": "#ffffff",
+        "strokeWeight": 0.5750678777694702,
+        "nodeId": "46:818",
+        "children": []
+      }
+    ],
+    "exportUrl": "/images/uploads/figma-desk-223ca02f-8561-4f64-aa56-72e1d951cc63.png"
+  }
+}

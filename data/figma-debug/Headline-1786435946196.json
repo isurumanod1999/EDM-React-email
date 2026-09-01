@@ -1,0 +1,413 @@
+{
+  "label": "Headline",
+  "rawNodeDoc": {
+    "id": "139:749",
+    "name": "Headline",
+    "type": "FRAME",
+    "scrollBehavior": "SCROLLS",
+    "children": [
+      {
+        "id": "139:750",
+        "name": "Lockup",
+        "type": "FRAME",
+        "scrollBehavior": "SCROLLS",
+        "children": [
+          {
+            "id": "139:751",
+            "name": "THE NEW ERA  OF PATROL",
+            "type": "TEXT",
+            "scrollBehavior": "SCROLLS",
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 0.7921568751335144,
+                  "g": 0.6313725709915161,
+                  "b": 0.5215686559677124,
+                  "a": 1
+                }
+              },
+              {
+                "opacity": 0.20000000298023224,
+                "blendMode": "NORMAL",
+                "type": "GRADIENT_LINEAR",
+                "gradientHandlePositions": [
+                  {
+                    "x": 0,
+                    "y": 0.5
+                  },
+                  {
+                    "x": 1,
+                    "y": 0.5
+                  },
+                  {
+                    "x": 0,
+                    "y": 1
+                  }
+                ],
+                "gradientStops": [
+                  {
+                    "color": {
+                      "r": 0.32549020648002625,
+                      "g": 0.2078431397676468,
+                      "b": 0.16862745583057404,
+                      "a": 1
+                    },
+                    "position": 0
+                  },
+                  {
+                    "color": {
+                      "r": 0.7960784435272217,
+                      "g": 0.6078431606292725,
+                      "b": 0.5137255191802979,
+                      "a": 1
+                    },
+                    "position": 1
+                  }
+                ]
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 1,
+            "strokeAlign": "OUTSIDE",
+            "absoluteBoundingBox": {
+              "x": 13902.5,
+              "y": -946.9736328125,
+              "width": 481,
+              "height": 105
+            },
+            "absoluteRenderBounds": {
+              "x": 13947.8740234375,
+              "y": -937.3736572265625,
+              "width": 378.7255859375,
+              "height": 87.072021484375
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "layoutAlign": "STRETCH",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "FILL",
+            "layoutSizingVertical": "FIXED",
+            "characters": "THE NEW ERA  OF PATROL",
+            "characterStyleOverrides": [],
+            "styleOverrideTable": {},
+            "lineTypes": [
+              "NONE"
+            ],
+            "lineIndentations": [
+              0
+            ],
+            "style": {
+              "fontFamily": "Nissan Brand",
+              "fontPostScriptName": "NissanBrand-Bold",
+              "fontStyle": "Bold",
+              "fontWeight": 700,
+              "fontSize": 56,
+              "textAlignHorizontal": "CENTER",
+              "textAlignVertical": "TOP",
+              "letterSpacing": 0,
+              "lineHeightPx": 50.39999771118164,
+              "lineHeightPercent": 65.98240661621094,
+              "lineHeightPercentFontSize": 90,
+              "lineHeightUnit": "FONT_SIZE_%"
+            },
+            "layoutVersion": 5,
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "139:752",
+            "name": "ARRIVES EARLY 2027",
+            "type": "TEXT",
+            "scrollBehavior": "SCROLLS",
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 0.7921568751335144,
+                  "g": 0.6313725709915161,
+                  "b": 0.5215686559677124,
+                  "a": 1
+                }
+              },
+              {
+                "opacity": 0.20000000298023224,
+                "blendMode": "NORMAL",
+                "type": "GRADIENT_LINEAR",
+                "gradientHandlePositions": [
+                  {
+                    "x": 0,
+                    "y": 0.5
+                  },
+                  {
+                    "x": 1,
+                    "y": 0.5
+                  },
+                  {
+                    "x": 0,
+                    "y": 1
+                  }
+                ],
+                "gradientStops": [
+                  {
+                    "color": {
+                      "r": 0.32549020648002625,
+                      "g": 0.2078431397676468,
+                      "b": 0.16862745583057404,
+                      "a": 1
+                    },
+                    "position": 0
+                  },
+                  {
+                    "color": {
+                      "r": 0.7960784435272217,
+                      "g": 0.6078431606292725,
+                      "b": 0.5137255191802979,
+                      "a": 1
+                    },
+                    "position": 1
+                  }
+                ]
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 1,
+            "strokeAlign": "OUTSIDE",
+            "absoluteBoundingBox": {
+              "x": 13902.5,
+              "y": -841.9736328125,
+              "width": 481,
+              "height": 45
+            },
+            "absoluteRenderBounds": {
+              "x": 13976.92578125,
+              "y": -828.1576538085938,
+              "width": 330.8310546875,
+              "height": 21.5679931640625
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "layoutAlign": "STRETCH",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "FILL",
+            "layoutSizingVertical": "HUG",
+            "characters": "ARRIVES EARLY 2027",
+            "characterStyleOverrides": [],
+            "styleOverrideTable": {},
+            "lineTypes": [
+              "NONE"
+            ],
+            "lineIndentations": [
+              0
+            ],
+            "style": {
+              "fontFamily": "Nissan Brand",
+              "fontPostScriptName": "NissanBrand-Bold",
+              "fontStyle": "Bold",
+              "fontWeight": 700,
+              "textAutoResize": "HEIGHT",
+              "fontSize": 32,
+              "textAlignHorizontal": "CENTER",
+              "textAlignVertical": "TOP",
+              "letterSpacing": 0,
+              "lineHeightPx": 44.79999923706055,
+              "lineHeightPercent": 102.63929748535156,
+              "lineHeightPercentFontSize": 140,
+              "lineHeightUnit": "FONT_SIZE_%"
+            },
+            "layoutVersion": 5,
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          }
+        ],
+        "blendMode": "PASS_THROUGH",
+        "clipsContent": false,
+        "background": [],
+        "fills": [],
+        "strokes": [],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE",
+        "backgroundColor": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "layoutMode": "VERTICAL",
+        "counterAxisSizingMode": "FIXED",
+        "counterAxisAlignItems": "CENTER",
+        "layoutWrap": "NO_WRAP",
+        "absoluteBoundingBox": {
+          "x": 13902.5,
+          "y": -946.9736328125,
+          "width": 481,
+          "height": 150
+        },
+        "absoluteRenderBounds": {
+          "x": 13902.5,
+          "y": -946.9736328125,
+          "width": 481,
+          "height": 150
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "CENTER"
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "HUG",
+        "effects": [
+          {
+            "type": "DROP_SHADOW",
+            "visible": false,
+            "color": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 0.25
+            },
+            "blendMode": "NORMAL",
+            "offset": {
+              "x": 0,
+              "y": 2
+            },
+            "radius": 21,
+            "showShadowBehindNode": false
+          }
+        ],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      }
+    ],
+    "blendMode": "PASS_THROUGH",
+    "clipsContent": false,
+    "background": [],
+    "fills": [],
+    "strokes": [],
+    "strokeWeight": 1,
+    "strokeAlign": "INSIDE",
+    "backgroundColor": {
+      "r": 0,
+      "g": 0,
+      "b": 0,
+      "a": 0
+    },
+    "absoluteBoundingBox": {
+      "x": 13902,
+      "y": -946.9912109375,
+      "width": 482,
+      "height": 151
+    },
+    "absoluteRenderBounds": {
+      "x": 13902,
+      "y": -946.9912109375,
+      "width": 482,
+      "height": 151
+    },
+    "constraints": {
+      "vertical": "TOP",
+      "horizontal": "LEFT"
+    },
+    "layoutAlign": "INHERIT",
+    "layoutGrow": 0,
+    "layoutSizingHorizontal": "FIXED",
+    "layoutSizingVertical": "FIXED",
+    "effects": [],
+    "interactions": [],
+    "complexStrokeProperties": {
+      "strokeType": "BASIC"
+    }
+  },
+  "parsed": {
+    "id": "139:749",
+    "type": "FRAME",
+    "name": "Headline",
+    "width": 482,
+    "height": 151,
+    "x": 13902,
+    "y": -947,
+    "visible": true,
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "strokeWeight": 1,
+    "nodeId": "139:749",
+    "children": [
+      {
+        "id": "139:750",
+        "type": "FRAME",
+        "name": "Lockup",
+        "width": 481,
+        "height": 150,
+        "x": 13903,
+        "y": -947,
+        "visible": true,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "layoutMode": "VERTICAL",
+        "counterAxisAlign": "CENTER",
+        "strokeWeight": 1,
+        "nodeId": "139:750",
+        "children": [
+          {
+            "id": "139:751",
+            "type": "TEXT",
+            "name": "THE NEW ERA  OF PATROL",
+            "width": 481,
+            "height": 105,
+            "x": 13903,
+            "y": -947,
+            "visible": true,
+            "text": "THE NEW ERA  OF PATROL",
+            "fontSize": 56,
+            "fontWeight": 700,
+            "fontFamily": "Nissan Brand",
+            "lineHeight": 50.39999771118164,
+            "letterSpacing": 0,
+            "textAlign": "center",
+            "color": "#caa185",
+            "backgroundColor": "#caa185",
+            "strokeWeight": 1,
+            "nodeId": "139:751",
+            "children": []
+          },
+          {
+            "id": "139:752",
+            "type": "TEXT",
+            "name": "ARRIVES EARLY 2027",
+            "width": 481,
+            "height": 45,
+            "x": 13903,
+            "y": -842,
+            "visible": true,
+            "text": "ARRIVES EARLY 2027",
+            "fontSize": 32,
+            "fontWeight": 700,
+            "fontFamily": "Nissan Brand",
+            "lineHeight": 44.79999923706055,
+            "letterSpacing": 0,
+            "textAlign": "center",
+            "color": "#caa185",
+            "backgroundColor": "#caa185",
+            "strokeWeight": 1,
+            "nodeId": "139:752",
+            "children": []
+          }
+        ]
+      }
+    ],
+    "exportUrl": "/images/uploads/figma-desk-a3fb2153-e8b7-4f92-85bd-3552578027b1.png"
+  }
+}

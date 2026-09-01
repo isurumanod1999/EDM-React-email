@@ -1,37 +1,53 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { EmailTemplateDocument } from '@/lib/schema/template';
 
-export function useTemplatePreview(template: EmailTemplateDocument | null, debounceMs = 400) {
+export function useTemplatePreview(
+  template: EmailTemplateDocument | null,
+  debounceMs = 400,
+  editable = false
+) {
   const [html, setHtml] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState(0);
 
   const previewKey = useMemo(
     () =>
       template
-        ? JSON.stringify({ meta: template.meta, blocks: template.blocks })
+        ? JSON.stringify({ meta: template.meta, blocks: template.blocks, editable })
         : null,
-    [template]
+    [template, editable]
   );
+
+  const retry = useCallback(() => {
+    setRefreshToken((token) => token + 1);
+  }, []);
 
   useEffect(() => {
     if (!previewKey) {
       setHtml('');
       setError(null);
+      setLoading(false);
+      setIsPending(false);
       return;
     }
 
     const payload = JSON.parse(previewKey) as {
       meta: EmailTemplateDocument['meta'];
       blocks: EmailTemplateDocument['blocks'];
+      editable: boolean;
     };
 
+    setIsPending(true);
+    setError(null);
+
     const controller = new AbortController();
-    const timer = setTimeout(async () => {
+    const timer = window.setTimeout(async () => {
+      setIsPending(false);
       setLoading(true);
-      setError(null);
 
       try {
         const res = await fetch('/api/email/render', {
@@ -47,7 +63,7 @@ export function useTemplatePreview(template: EmailTemplateDocument | null, debou
         }
 
         const data = await res.json();
-        setHtml(data.html);
+        setHtml(data.html ?? '');
       } catch (err) {
         if ((err as Error).name !== 'AbortError') {
           setError(err instanceof Error ? err.message : 'Preview failed');
@@ -58,10 +74,13 @@ export function useTemplatePreview(template: EmailTemplateDocument | null, debou
     }, debounceMs);
 
     return () => {
-      clearTimeout(timer);
+      window.clearTimeout(timer);
       controller.abort();
+      setIsPending(false);
     };
-  }, [previewKey, debounceMs]);
+  }, [previewKey, debounceMs, refreshToken]);
 
-  return { html, loading, error };
+  const isStale = isPending || (loading && html.length > 0);
+
+  return { html, loading, isPending, isStale, error, retry };
 }

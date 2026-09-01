@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
   Html,
-  Head,
   Body,
   Container,
   Preview,
   Img,
 } from '@react-email/components';
-import { TwoColStacked } from '@/components/email';
+import { TwoColStacked, EmailResponsiveHead } from '@/components/email';
+import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
 
 import { NISSAN_IMAGES } from '@/lib/constants/nissanAssets';
 
@@ -18,8 +18,8 @@ import { NISSAN_IMAGES } from '@/lib/constants/nissanAssets';
 export const TwoColStackedEmail: React.FC = () => {
   return (
     <Html>
-      <Head />
-      <Preview>Explore Nissan's Range - From AUD 89,900</Preview>
+      <EmailResponsiveHead />
+      <Preview>Explore Nissan&apos;s Range - From AUD 89,900</Preview>
       <Body style={{ backgroundColor: '#f4f4f4', margin: 0, padding: '20px 0' }}>
         <Container style={{ maxWidth: '600px', margin: '0 auto' }}>
           
@@ -28,16 +28,18 @@ export const TwoColStackedEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#ffffff' }}
             role="presentation"
           >
             <tr>
-              <td align="center" valign="middle" style={{ padding: '20px 40px' }}>
+              <td align="center" valign="middle" className={EDM_CLASS.pad} style={{ padding: '20px 40px' }}>
                 <Img
                   src={NISSAN_IMAGES.logo}
                   width={200}
                   alt="Nissan Motor Corporation"
-                  style={{ display: 'block', width: '200px', height: 'auto' }}
+                  className={EDM_CLASS.imgFluid}
+                  style={fluidImgStyle(200)}
                 />
               </td>
             </tr>
@@ -48,6 +50,7 @@ export const TwoColStackedEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#f7f8f8' }}
             role="presentation"
           >
@@ -55,6 +58,7 @@ export const TwoColStackedEmail: React.FC = () => {
               <td
                 align="center"
                 valign="top"
+                className={EDM_CLASS.pad}
                 style={{
                   padding: '30px 40px 15px 40px',
                   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",

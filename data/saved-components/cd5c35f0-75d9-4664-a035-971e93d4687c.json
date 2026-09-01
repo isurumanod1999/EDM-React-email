@@ -1,0 +1,37 @@
+{
+  "name": "NissanHeader",
+  "category": "layout",
+  "componentId": "figma-react-email",
+  "componentVersion": 1,
+  "props": {
+    "tree": {
+      "type": "Section",
+      "style": {
+        "width": "100%",
+        "maxWidth": 600,
+        "margin": "0 auto",
+        "backgroundColor": "#000000"
+      },
+      "children": [
+        {
+          "type": "Img",
+          "src": "/images/uploads/figma-desk-300fe70d-2c39-437a-9d51-88950d0d3d56.png",
+          "width": 600,
+          "height": 160,
+          "alt": "header",
+          "align": "center",
+          "fullBleed": true
+        }
+      ]
+    },
+    "sourceFrame": "header",
+    "mobileFrame": "",
+    "hideBorders": false,
+    "borderColor": ""
+  },
+  "label": "header",
+  "schemaVersion": 1,
+  "id": "cd5c35f0-75d9-4664-a035-971e93d4687c",
+  "createdAt": "2026-08-25T04:56:49.105Z",
+  "updatedAt": "2026-08-25T04:56:49.105Z"
+}

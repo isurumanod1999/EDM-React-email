@@ -1,56 +1,34 @@
-import { promises as fs } from 'fs';
-import path from 'path';
 import type { EmailTemplateDocument, TemplateSummary } from '@/lib/schema/template';
 import { emailTemplateDocumentSchema } from '@/lib/schema/validators';
-import { toTemplateSummary } from '@/lib/templates/factory';
 import { generateId } from '@/lib/utils/id';
+import {
+  createFilesystemTemplateRepository,
+  DEFAULT_TEMPLATES_DIR,
+} from '@/lib/adapters/filesystem/templateRepository';
 
-const TEMPLATES_DIR = path.join(process.cwd(), 'data', 'templates');
+/**
+ * Backward-compatible template storage API.
+ *
+ * Filesystem access now lives in the FilesystemTemplateRepository adapter
+ * (Story 1.3). These functions delegate to it so existing callers keep working
+ * unchanged; create/update/duplicate compose the repository's primitives and
+ * will move into TemplateService in Story 1.6.
+ */
 
-async function ensureTemplatesDir(): Promise<void> {
-  await fs.mkdir(TEMPLATES_DIR, { recursive: true });
-}
-
-function templateFilePath(id: string): string {
-  return path.join(TEMPLATES_DIR, `${id}.json`);
-}
+const repository = createFilesystemTemplateRepository();
 
 export async function listTemplates(): Promise<TemplateSummary[]> {
-  await ensureTemplatesDir();
-  const files = await fs.readdir(TEMPLATES_DIR);
-  const jsonFiles = files.filter((file) => file.endsWith('.json'));
-
-  const summaries: TemplateSummary[] = [];
-
-  for (const file of jsonFiles) {
-    try {
-      const raw = await fs.readFile(path.join(TEMPLATES_DIR, file), 'utf-8');
-      const parsed = emailTemplateDocumentSchema.parse(JSON.parse(raw));
-      summaries.push(toTemplateSummary(parsed));
-    } catch {
-      // Skip invalid template files
-    }
-  }
-
-  return summaries.sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-  );
+  return repository.list();
 }
 
 export async function getTemplate(id: string): Promise<EmailTemplateDocument | null> {
-  try {
-    const raw = await fs.readFile(templateFilePath(id), 'utf-8');
-    return emailTemplateDocumentSchema.parse(JSON.parse(raw));
-  } catch {
-    return null;
-  }
+  return repository.get(id);
 }
 
-export async function saveTemplate(template: EmailTemplateDocument): Promise<EmailTemplateDocument> {
-  await ensureTemplatesDir();
-  const validated = emailTemplateDocumentSchema.parse(template);
-  await fs.writeFile(templateFilePath(validated.id), JSON.stringify(validated, null, 2), 'utf-8');
-  return validated;
+export async function saveTemplate(
+  template: EmailTemplateDocument
+): Promise<EmailTemplateDocument> {
+  return repository.save(template);
 }
 
 export async function createTemplate(
@@ -65,14 +43,14 @@ export async function createTemplate(
     createdAt: template.createdAt ?? now,
     updatedAt: template.updatedAt ?? now,
   });
-  return saveTemplate(doc);
+  return repository.save(doc);
 }
 
 export async function updateTemplate(
   id: string,
   updates: Partial<Omit<EmailTemplateDocument, 'id' | 'createdAt'>>
 ): Promise<EmailTemplateDocument | null> {
-  const existing = await getTemplate(id);
+  const existing = await repository.get(id);
   if (!existing) {
     return null;
   }
@@ -85,20 +63,15 @@ export async function updateTemplate(
     updatedAt: new Date().toISOString(),
   });
 
-  return saveTemplate(updated);
+  return repository.save(updated);
 }
 
 export async function deleteTemplate(id: string): Promise<boolean> {
-  try {
-    await fs.unlink(templateFilePath(id));
-    return true;
-  } catch {
-    return false;
-  }
+  return repository.delete(id);
 }
 
 export async function duplicateTemplate(id: string): Promise<EmailTemplateDocument | null> {
-  const existing = await getTemplate(id);
+  const existing = await repository.get(id);
   if (!existing) {
     return null;
   }
@@ -117,7 +90,7 @@ export async function duplicateTemplate(id: string): Promise<EmailTemplateDocume
     updatedAt: now,
   });
 
-  return saveTemplate(duplicate);
+  return repository.save(duplicate);
 }
 
-export { TEMPLATES_DIR };
+export const TEMPLATES_DIR = DEFAULT_TEMPLATES_DIR;

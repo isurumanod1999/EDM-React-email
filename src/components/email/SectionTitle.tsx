@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface SectionTitleProps {
   title: string;
@@ -23,11 +25,13 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
   textTransform = 'uppercase',
   letterSpacing = '2px',
 }) => {
+  const titleSel = useSelectable('title');
   return (
     <table
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{ width: '600px', backgroundColor }}
       role="presentation"
     >
@@ -35,6 +39,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
         <td
           align={textAlign}
           valign="top"
+          className={EDM_CLASS.pad}
           style={{
             padding: deskPadding,
             fontFamily:
@@ -45,6 +50,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
             textTransform,
             letterSpacing,
           }}
+          {...titleSel}
         >
           {title}
         </td>

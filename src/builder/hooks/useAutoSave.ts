@@ -13,7 +13,7 @@ export function useAutoSave(enabled = true, intervalMs = 30000) {
 
     const timer = setInterval(() => {
       if (useBuilderStore.getState().isDirty) {
-        save();
+        save({ auto: true });
       }
     }, intervalMs);
 

@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { TemplateBlock } from '@/lib/schema/template';
 import { useBuilderStore } from '@/builder/store/builderStore';
+import { SaveReusableComponentModal } from './SaveReusableComponentModal';
 
 interface BlockItemProps {
   block: TemplateBlock;
@@ -11,6 +13,7 @@ interface BlockItemProps {
 }
 
 export function BlockItem({ block, componentName }: BlockItemProps) {
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
   const selectedBlockId = useBuilderStore((s) => s.selectedBlockId);
   const selectBlock = useBuilderStore((s) => s.selectBlock);
   const removeBlock = useBuilderStore((s) => s.removeBlock);
@@ -27,6 +30,7 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
   };
 
   const isSelected = selectedBlockId === block.id;
+  const label = block.label ?? componentName;
 
   return (
     <div
@@ -34,12 +38,27 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
       style={style}
       className={`block-item ${isSelected ? 'selected' : ''} ${isDragging ? 'dragging' : ''}`}
       onClick={() => selectBlock(block.id)}
+      tabIndex={0}
+      role="button"
+      aria-pressed={isSelected}
+      aria-label={`${label}, ${componentName}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectBlock(block.id);
+        }
+      }}
     >
-      <span className="block-drag-handle" {...attributes} {...listeners}>
+      <span
+        className="block-drag-handle"
+        {...attributes}
+        {...listeners}
+        aria-label={`Reorder ${label}`}
+      >
         ⠿
       </span>
       <div className="block-info">
-        <div className="block-name">{block.label ?? componentName}</div>
+        <div className="block-name">{label}</div>
         <div className="block-type">{componentName}</div>
       </div>
       <div className="block-actions">
@@ -48,9 +67,22 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
           className="btn btn-ghost btn-sm"
           onClick={(e) => {
             e.stopPropagation();
+            setSaveModalOpen(true);
+          }}
+          title="Add to components"
+          aria-label={`Add ${label} to reusable components`}
+        >
+          ＋
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          onClick={(e) => {
+            e.stopPropagation();
             duplicateBlock(block.id);
           }}
           title="Duplicate"
+          aria-label={`Duplicate ${label}`}
         >
           ⧉
         </button>
@@ -59,13 +91,20 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
           className="btn btn-ghost btn-sm btn-danger"
           onClick={(e) => {
             e.stopPropagation();
+            if (!window.confirm(`Remove "${label}" from the canvas?`)) return;
             removeBlock(block.id);
           }}
           title="Remove"
+          aria-label={`Remove ${label}`}
         >
           ✕
         </button>
       </div>
+      <SaveReusableComponentModal
+        block={block}
+        open={saveModalOpen}
+        onClose={() => setSaveModalOpen(false)}
+      />
     </div>
   );
 }

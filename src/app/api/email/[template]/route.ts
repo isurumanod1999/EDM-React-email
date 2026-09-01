@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { render } from '@react-email/render';
+import { errorResponse, notFound } from '@/lib/api/response';
 import TwoColDualCtaEmail from '@/emails/TwoColDualCtaEmail';
 import TwoColStackedEmail from '@/emails/TwoColStackedEmail';
 import CompleteEmail from '@/emails/CompleteEmail';
@@ -23,10 +24,7 @@ export async function GET(
   const EmailComponent = templates[template];
   
   if (!EmailComponent) {
-    return NextResponse.json(
-      { error: 'Template not found' },
-      { status: 404 }
-    );
+    return notFound('Template not found');
   }
 
   try {
@@ -35,9 +33,6 @@ export async function GET(
     return NextResponse.json({ html });
   } catch (error) {
     console.error('Error rendering email:', error);
-    return NextResponse.json(
-      { error: 'Failed to render email' },
-      { status: 500 }
-    );
+    return errorResponse(500, 'render_failed', 'Failed to render email');
   }
 }

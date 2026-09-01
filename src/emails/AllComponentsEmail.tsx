@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   Html,
-  Head,
   Body,
   Container,
   Preview,
@@ -16,7 +15,9 @@ import {
   PromoBlock,
   OrderCard,
   Footer,
+  EmailResponsiveHead,
 } from '@/components/email';
+import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
 
 import { NISSAN_IMAGES, NISSAN_COLORS, NISSAN_ICONS, NISSAN_SOCIAL_ICONS } from '@/lib/constants/nissanAssets';
 
@@ -27,7 +28,7 @@ import { NISSAN_IMAGES, NISSAN_COLORS, NISSAN_ICONS, NISSAN_SOCIAL_ICONS } from 
 export const AllComponentsEmail: React.FC = () => {
   return (
     <Html>
-      <Head />
+      <EmailResponsiveHead />
       <Preview>Your Nissan Order Confirmation - All Components Showcase</Preview>
       <Body style={{ backgroundColor: '#e5e5e5', margin: 0, padding: 0 }}>
         <Container style={{ maxWidth: '600px', margin: '0 auto' }}>
@@ -39,16 +40,18 @@ export const AllComponentsEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#ffffff' }}
             role="presentation"
           >
             <tr>
-              <td align="center" valign="middle" style={{ padding: '25px 40px' }}>
+              <td align="center" valign="middle" className={EDM_CLASS.pad} style={{ padding: '25px 40px' }}>
                 <Img
                   src={NISSAN_IMAGES.logo}
                   width={280}
                   alt="Nissan Motor Corporation"
-                  style={{ display: 'block', width: '280px', height: 'auto' }}
+                  className={EDM_CLASS.imgFluid}
+                  style={fluidImgStyle(280)}
                 />
               </td>
             </tr>
@@ -61,6 +64,7 @@ export const AllComponentsEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#000000' }}
             role="presentation"
           >
@@ -70,7 +74,8 @@ export const AllComponentsEmail: React.FC = () => {
                   src={NISSAN_IMAGES.moreBanner}
                   width={600}
                   alt="Nissan MORE - Up to 10 Years of Warranty"
-                  style={{ display: 'block', width: '600px', height: 'auto' }}
+                  className={EDM_CLASS.imgFluid}
+                  style={fluidImgStyle(600)}
                 />
               </td>
             </tr>
@@ -131,6 +136,7 @@ export const AllComponentsEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#f5f5f5' }}
             role="presentation"
           >
@@ -138,6 +144,7 @@ export const AllComponentsEmail: React.FC = () => {
               <td
                 align="center"
                 valign="top"
+                className={EDM_CLASS.pad}
                 style={{
                   padding: '30px 40px 15px 40px',
                   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
@@ -213,6 +220,7 @@ export const AllComponentsEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#ffffff' }}
             role="presentation"
           >
@@ -220,6 +228,7 @@ export const AllComponentsEmail: React.FC = () => {
               <td
                 align="center"
                 valign="top"
+                className={EDM_CLASS.pad}
                 style={{
                   padding: '30px 40px 10px 40px',
                   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
@@ -280,6 +289,7 @@ export const AllComponentsEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#f5f5f5' }}
             role="presentation"
           >
@@ -287,6 +297,7 @@ export const AllComponentsEmail: React.FC = () => {
               <td
                 align="center"
                 valign="top"
+                className={EDM_CLASS.pad}
                 style={{
                   padding: '20px 40px 10px 40px',
                   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
@@ -347,6 +358,7 @@ export const AllComponentsEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#f5f5f5' }}
             role="presentation"
           >
@@ -354,6 +366,7 @@ export const AllComponentsEmail: React.FC = () => {
               <td
                 align="center"
                 valign="top"
+                className={EDM_CLASS.pad}
                 style={{
                   padding: '20px 40px 10px 40px',
                   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
@@ -411,6 +424,7 @@ export const AllComponentsEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#000000' }}
             role="presentation"
           >
@@ -418,6 +432,7 @@ export const AllComponentsEmail: React.FC = () => {
               <td
                 align="center"
                 valign="top"
+                className={EDM_CLASS.pad}
                 style={{
                   padding: '40px',
                   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
@@ -442,8 +457,11 @@ export const AllComponentsEmail: React.FC = () => {
                 </p>
                 <a
                   href="https://www.nissan.com/find-dealer"
+                  className={EDM_CLASS.cta}
                   style={{
                     display: 'inline-block',
+                    maxWidth: '100%',
+                    boxSizing: 'border-box',
                     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
                     fontSize: '14px',
                     fontWeight: 600,

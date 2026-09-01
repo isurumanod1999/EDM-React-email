@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
+import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface HeroBannerProps {
   imgSrc: string;
@@ -42,6 +44,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 }) => {
   const fontFamily =
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+  const imgSel = useSelectable('imgSrc');
+  const headlineSel = useSelectable('headline');
+  const subSel = useSelectable('subheadline');
+  const ctaSel = useSelectable('ctaText');
 
   const image = (
     <Img
@@ -49,12 +55,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       width={imgWidth}
       height={imgHeight}
       alt={altText}
-      style={{
-        display: 'block',
-        width: `${imgWidth}px`,
+      className={EDM_CLASS.imgFluid}
+      style={fluidImgStyle(imgWidth, {
         height: imgHeight ? `${imgHeight}px` : 'auto',
-        maxWidth: '100%',
-      }}
+      })}
+      {...imgSel}
     />
   );
 
@@ -63,6 +68,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{ width: '600px', backgroundColor }}
       role="presentation"
     >
@@ -76,6 +82,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           <td
             align={textAlign}
             valign="top"
+            className={EDM_CLASS.pad}
             style={{
               padding: deskPadding,
               backgroundColor: contentBackgroundColor,
@@ -84,6 +91,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           >
             {headline && (
               <p
+                {...headlineSel}
                 style={{
                   margin: '0 0 12px 0',
                   fontSize: '28px',
@@ -97,6 +105,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             )}
             {subheadline && (
               <p
+                {...subSel}
                 style={{
                   margin: '0 0 20px 0',
                   fontSize: '16px',
@@ -110,8 +119,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             {ctaText && ctaUrl && (
               <Link
                 href={ctaUrl}
+                className={EDM_CLASS.cta}
+                {...ctaSel}
                 style={{
                   display: 'inline-block',
+                  maxWidth: '100%',
+                  boxSizing: 'border-box',
                   fontFamily,
                   fontSize: '14px',
                   fontWeight: 600,

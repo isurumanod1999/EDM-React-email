@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { FieldRenderer, getFieldValue } from './FieldRenderer';
 import type { TemplateCategory } from '@/lib/schema/template';
+import { parseFieldPath } from '@/lib/preview/selectionIdentity';
 
 const TEMPLATE_CATEGORIES: { value: TemplateCategory; label: string }[] = [
   { value: 'promotional', label: 'Promotional' },
@@ -13,9 +14,10 @@ const TEMPLATE_CATEGORIES: { value: TemplateCategory; label: string }[] = [
   { value: 'layout', label: 'Layout' },
 ];
 
-export function PropertyPanel() {
+export function PropertyPanel({ className }: { className?: string }) {
   const template = useBuilderStore((s) => s.template);
   const selectedBlockId = useBuilderStore((s) => s.selectedBlockId);
+  const selectedNodePath = useBuilderStore((s) => s.selectedNodePath);
   const registry = useBuilderStore((s) => s.registry);
   const showAdvanced = useBuilderStore((s) => s.showAdvanced);
   const updateBlockProp = useBuilderStore((s) => s.updateBlockProp);
@@ -23,6 +25,7 @@ export function PropertyPanel() {
   const updateTemplateInfo = useBuilderStore((s) => s.updateTemplateInfo);
 
   const selectedBlock = template?.blocks.find((b) => b.id === selectedBlockId);
+  const selectedFieldKey = parseFieldPath(selectedNodePath);
   const componentDef = selectedBlock
     ? registry.find((c) => c.id === selectedBlock.componentId)
     : null;
@@ -38,9 +41,11 @@ export function PropertyPanel() {
     }, {});
   }, [componentDef, showAdvanced]);
 
+  const panelClass = `builder-panel builder-panel--properties${className ? ` ${className}` : ''}`;
+
   if (!template) {
     return (
-      <aside className="builder-panel">
+      <aside className={panelClass}>
         <div className="builder-panel-header">Properties</div>
         <div className="props-empty">Loading...</div>
       </aside>
@@ -48,7 +53,7 @@ export function PropertyPanel() {
   }
 
   return (
-    <aside className="builder-panel">
+    <aside className={panelClass}>
       <div className="builder-panel-header">Properties</div>
       <div className="builder-panel-body">
         {/* Template settings when no block selected */}
@@ -56,14 +61,6 @@ export function PropertyPanel() {
           <>
             <div className="field-group">
               <div className="field-group-title">Template</div>
-              <div className="field">
-                <label className="field-label">Name</label>
-                <input
-                  className="field-input"
-                  value={template.name}
-                  onChange={(e) => updateTemplateInfo({ name: e.target.value })}
-                />
-              </div>
               <div className="field">
                 <label className="field-label">Description</label>
                 <textarea
@@ -142,6 +139,7 @@ export function PropertyPanel() {
                   <FieldRenderer
                     key={field.key}
                     field={field}
+                    selected={selectedFieldKey === field.key}
                     value={getFieldValue(selectedBlock.props, field.key)}
                     onChange={(value) => updateBlockProp(selectedBlock.id, field.key, value)}
                   />

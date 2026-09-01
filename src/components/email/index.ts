@@ -1,4 +1,6 @@
 // Export all email components
+export { EmailResponsiveHead } from './EmailResponsiveHead';
+
 export { Header } from './Header';
 export type { HeaderProps } from './Header';
 
@@ -55,3 +57,6 @@ export type { SpacerProps } from './Spacer';
 
 export { StatsRow } from './StatsRow';
 export type { StatsRowProps, StatItemProps } from './StatsRow';
+
+export { FigmaReactEmailBlock } from './FigmaReactEmailBlock';
+export type { FigmaReactEmailBlockProps } from '@/lib/figma/types/reactEmailAst';

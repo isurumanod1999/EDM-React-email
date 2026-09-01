@@ -1,0 +1,1526 @@
+{
+  "schemaVersion": 1,
+  "id": "0f027df9-a64a-4881-9e4e-eed9e97faa2e",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "15b8b264-ae65-4247-b00d-6659fb084c41",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "24px 40px 0px 40px"
+          },
+          "children": [
+            {
+              "type": "Text",
+              "content": "Can’t see this email? Click here to view online",
+              "html": "Can’t see this email? Click <span style=\"text-decoration:underline\">here</span> to view online",
+              "style": {
+                "color": "#efefef",
+                "fontSize": "12px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "16px",
+                "whiteSpace": "pre-line",
+                "marginBottom": 0
+              },
+              "mobileStyle": {
+                "lineHeight": "14px"
+              }
+            }
+          ]
+        },
+        "sourceFrame": "preheader",
+        "mobileFrame": "preheader",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "preheader",
+      "sourceSavedComponentId": "2ff85dca-e747-4d2d-87e6-ddb28ed5c083"
+    },
+    {
+      "id": "c2d6d3c4-c59d-4ebd-a62f-e31544270863",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto",
+            "backgroundColor": "#000000"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-300fe70d-2c39-437a-9d51-88950d0d3d56.png",
+              "width": 600,
+              "height": 160,
+              "alt": "header",
+              "align": "center",
+              "fullBleed": true
+            }
+          ]
+        },
+        "sourceFrame": "header",
+        "mobileFrame": "",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "NissanHeader",
+      "sourceSavedComponentId": "cd5c35f0-75d9-4664-a035-971e93d4687c"
+    },
+    {
+      "id": "42ea82c9-2b74-430a-8e5c-4d9307513b40",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-371f9787-524a-4062-82bf-8ebadc9fd69e.png",
+              "mobileSrc": "/images/uploads/figma-mob-9ef1da01-5e50-4238-a04c-6a3a30b5bce4.png",
+              "width": 600,
+              "height": 480,
+              "alt": "KV",
+              "align": "center",
+              "fullBleed": true,
+              "className": "figma-frame-img-1087c4f5-9af4-4090-8d5a-2e30a3bbd6e7"
+            }
+          ]
+        },
+        "sourceFrame": "KV",
+        "mobileFrame": "KV",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "KV"
+    },
+    {
+      "id": "2666c968-d359-457f-aa75-02b7fd3268c0",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "40px 40px 40px 40px"
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "THE NEW ERA  OF PATROL",
+              "as": "h1",
+              "style": {
+                "color": "#caa185",
+                "fontSize": "56px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "50px",
+                "whiteSpace": "pre-line"
+              },
+              "mobileStyle": {
+                "fontSize": "33.60000228881836px",
+                "lineHeight": "30px"
+              }
+            },
+            {
+              "type": "Heading",
+              "content": "ARRIVES EARLY 2027",
+              "as": "h1",
+              "style": {
+                "color": "#caa185",
+                "fontSize": "32px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "45px",
+                "whiteSpace": "pre-line"
+              },
+              "mobileStyle": {
+                "fontSize": "19.200000762939453px",
+                "lineHeight": "27px"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 40
+            },
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "textAlign": "center",
+                "padding": "0px 12px 0px 12px"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "content": "<Name>,",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 16
+                  }
+                },
+                {
+                  "type": "Text",
+                  "content": "The road ahead is going to get a whole lot more exciting!",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 16
+                  }
+                },
+                {
+                  "type": "Text",
+                  "content": "The all-new Nissan Patrol arrives in early 2027, bringing together elevated comfort, commanding performance, legendary off-road capability and new to Patrol features.",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 16
+                  }
+                },
+                {
+                  "type": "Text",
+                  "content": "Register your interest to be the first to know when the  latest all-new Patrol updates drops.",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 0
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 40
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Register your interest",
+              "mobileStyle": {
+                "fontSize": "14px",
+                "lineHeight": "20px"
+              },
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "Opening",
+        "mobileFrame": "Opening",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "Opening"
+    },
+    {
+      "id": "5e7a75f7-a164-462d-8486-6c5dca62bbd9",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "40px 0px 40px 0px"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-export-f434d8c0-7b9f-473f-a27a-188cb53f3d86.png",
+              "width": 600,
+              "height": 338,
+              "alt": "Frame 1618868494",
+              "className": "figma-img-139-780",
+              "align": "center",
+              "fullBleed": true
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "paddingLeft": 40,
+                "paddingRight": 40
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "center",
+                    "padding": "0px 12px 0px 12px"
+                  },
+                  "children": [
+                    {
+                      "type": "Heading",
+                      "content": "THE LATEST TECHNOLOGY  AT YOUR COMMAND",
+                      "as": "h2",
+                      "style": {
+                        "color": "#caa185",
+                        "fontSize": "28px",
+                        "fontWeight": 700,
+                        "textAlign": "center",
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "34px",
+                        "whiteSpace": "pre-line"
+                      },
+                      "mobileStyle": {
+                        "fontSize": "19.200000762939453px",
+                        "lineHeight": "23px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Spacer",
+                  "height": 16
+                },
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "center",
+                    "padding": "0px 12px 0px 12px"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "The Monolith display features dual 14.3-inch screens*, Google built-in^ and a Heads-Up Display* work together to put navigation, entertainment and essential driving information exactly where you need it.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "24px",
+                        "whiteSpace": "pre-line"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sourceFrame": "🟢 1-up",
+        "mobileFrame": "🟢 1-up",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "🟢 1-up"
+    },
+    {
+      "id": "b9dcc190-94dd-4ec2-80e6-948dca5daa17",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "40px 0px 40px 0px"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-export-e1399b81-5579-4342-a55c-81bfe7293475.png",
+              "width": 600,
+              "height": 370,
+              "alt": "Frame 1618868491",
+              "className": "figma-img-139-798",
+              "align": "center",
+              "fullBleed": true
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "paddingLeft": 40,
+                "paddingRight": 40
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "center",
+                    "padding": "0px 12px 0px 12px"
+                  },
+                  "children": [
+                    {
+                      "type": "Heading",
+                      "content": "THE POWER TO EXPLORE",
+                      "as": "h2",
+                      "style": {
+                        "color": "#caa185",
+                        "fontSize": "28px",
+                        "fontWeight": 700,
+                        "textAlign": "center",
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "34px",
+                        "whiteSpace": "pre-line"
+                      },
+                      "mobileStyle": {
+                        "fontSize": "19.200000762939453px",
+                        "lineHeight": "23px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Spacer",
+                  "height": 16
+                },
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "center",
+                    "padding": "0px 12px 0px 12px"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "Drawing on Nissan GT-R technology, the 3.5-litre twin-turbo V6 petrol engine delivers 317kW of power and 700Nm of torque, a 19kW and 140Nm more than the previous Y62 generation. Paired with a 9-speed automatic transmission and available Adaptive Air Suspension* this cohesively delivers effortless performance and capability, on and  off-road.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "24px",
+                        "whiteSpace": "pre-line"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sourceFrame": "🟢 1-up",
+        "mobileFrame": "🟢 1-up",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "🟢 1-up"
+    },
+    {
+      "id": "a0e53659-ccad-4477-bdf3-98f6ca9f211a",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "40px 0px 40px 0px"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-export-c607d2fd-eb0d-4cfa-a5fd-a71e8ea76a29.png",
+              "width": 600,
+              "height": 338,
+              "alt": "Image",
+              "className": "figma-img-172-651",
+              "align": "center",
+              "fullBleed": true
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "paddingLeft": 40,
+                "paddingRight": 40
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "center",
+                    "padding": "0px 12px 0px 12px"
+                  },
+                  "children": [
+                    {
+                      "type": "Heading",
+                      "content": "A FIRST-CLASS CABIN.\nREFINED & PREMIUM COMFORT",
+                      "as": "h2",
+                      "style": {
+                        "color": "#caa185",
+                        "fontSize": "28px",
+                        "fontWeight": 700,
+                        "textAlign": "center",
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "34px",
+                        "whiteSpace": "pre-line"
+                      },
+                      "mobileStyle": {
+                        "fontSize": "19.200000762939453px",
+                        "lineHeight": "23px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Spacer",
+                  "height": 16
+                },
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "center",
+                    "padding": "0px 12px 0px 12px"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "Available massage seats*, immersive Klipsch premium audio*, and spacious seating for up to eight adults creates  an interior that’s every bit as rewarding as the drive itself.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "24px",
+                        "whiteSpace": "pre-line"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sourceFrame": "🟢 1-up",
+        "mobileFrame": "🟢 1-up",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "🟢 1-up"
+    },
+    {
+      "id": "596a82bf-49ed-4ca4-9ebc-e8d1246a0136",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "80px",
+            "borderRadius": 12
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "TELL ME MORE",
+              "as": "h2",
+              "style": {
+                "color": "#c2997f",
+                "fontSize": "28px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "34px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 16
+            },
+            {
+              "type": "Text",
+              "content": "In future emails, I’m most interested in knowing  more about the (please select one):",
+              "style": {
+                "color": "#ffffff",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Row",
+              "style": {
+                "width": "100%"
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "23%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 0,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Interior ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "103px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "34%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "PERFORMANCE ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "151px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "32%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 0
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Technology ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "140px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Register your interest",
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "CTA Banner",
+        "mobileFrame": "CTA Banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "CTA Banner"
+    },
+    {
+      "id": "a1dea5f6-6801-4670-baaf-055c7572a95d",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto",
+            "backgroundColor": "#000000"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-588dc360-7572-45c1-ac51-380ac97db7bb.png",
+              "mobileSrc": "/images/uploads/figma-mob-60ffc3d8-a093-45f0-8631-b82d85ff9ee0.png",
+              "width": 600,
+              "height": 512,
+              "alt": "Nissan More banner",
+              "align": "center",
+              "fullBleed": true,
+              "className": "figma-frame-img-2bb9cabd-2960-4145-9de1-eb5565a464c6"
+            }
+          ]
+        },
+        "sourceFrame": "Nissan More banner",
+        "mobileFrame": "Nissan More banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "Nissan More banner"
+    },
+    {
+      "id": "554bf47a-67dd-42a6-bd8a-8f5ee0f6d015",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "left",
+            "padding": "12px 16px"
+          },
+          "children": [
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "textAlign": "left",
+                "padding": "0px 40px 0px 40px"
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": "100%",
+                    "textAlign": "left",
+                    "borderTop": "1px solid #989898",
+                    "padding": "40px 0px 40px 0px"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "content": "^ Google built-in is a trademark of Google LLC.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "* Select features only available on select grades. Grade applicability to be confirmed closer to launch.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "1. Whichever occurs first, when servicing at authorised Nissan dealers. Where vehicle is not serviced through Nissan or ceases to be serviced at Nissan, additional years will not be added so 10 year/300,000km warranty (whichever occurs first) may not apply. Warranty protection will remain 5 year/unlimited km warranty, plus any additional service activated years added under the Plan. Conditions apply. Full terms at nissan.com.au/warranty    2. When servicing at authorised Nissan dealers. Where vehicle is not serviced through Nissan or ceases to be serviced at Nissan, additional years will not be added, so 10 year/300,000km roadside assist (whichever occurs first) may not apply. Roadside assist duration will remain as 1 year/unlimited kilometre roadside assist (whichever occurs first), plus any service activated years added under the Plan. Terms and conditions apply, please visit Nissan.com.au/roadsideassistance.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "3. Ask your Nissan Dealer to explain exactly what items are covered in each Scheduled Service. Applies for the first 5 services or 5 years, whichever occurs first. Some exclusions apply. Ask your Nissan Dealer or visit Nissan.com.au/service to find out more and for full terms and conditions.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 22
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "If you do not wish to receive future emails and special offers from Nissan Australia click here to unsubscribe. To ensure you receive the latest information from Nissan Australia, simply add noreply@nissan.com.au to your address book.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "NISSAN MOTOR CO. (AUSTRALIA) PTY. LTD.",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 8
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "content": "1 Peters Avenue, Mulgrave, Victoria 3170",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "10px",
+                        "fontWeight": 400,
+                        "textAlign": "left",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "14px",
+                        "letterSpacing": "0.25px",
+                        "whiteSpace": "pre-line",
+                        "marginBottom": 0
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-export-806f15cb-23ba-41a4-ab69-042626364d27.png",
+              "width": 600,
+              "height": 130,
+              "alt": "Logo",
+              "className": "figma-img-I139-867-504-4733",
+              "align": "center"
+            }
+          ]
+        },
+        "sourceFrame": "🟢 Footer",
+        "mobileFrame": "🟢 Footer",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "🟢 Footer"
+    },
+    {
+      "id": "5fa109d5-c064-4e87-8c2a-0282e71c6ceb",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "80px",
+            "borderRadius": 0
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "TELL ME MORE",
+              "as": "h2",
+              "style": {
+                "color": "#c2997f",
+                "fontSize": "28px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "34px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 16
+            },
+            {
+              "type": "Text",
+              "content": "In future emails, I’m most interested in knowing  more about the (please select one):",
+              "style": {
+                "color": "#ffffff",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Row",
+              "style": {
+                "width": "100%"
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "23%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 0,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Interior ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "103px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "34%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "PERFORMANCE ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "151px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "32%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 0
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Technology ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "140px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Register your interest",
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "CTA Banner",
+        "mobileFrame": "CTA Banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "CTA Banner"
+    },
+    {
+      "id": "97270127-9b4d-4465-808e-1d2e61525cb3",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "80px",
+            "borderRadius": 12
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "TELL ME MORE",
+              "as": "h2",
+              "style": {
+                "color": "#c2997f",
+                "fontSize": "28px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "34px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 16
+            },
+            {
+              "type": "Text",
+              "content": "In future emails, I’m most interested in knowing  more about the (please select one):",
+              "style": {
+                "color": "#ffffff",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "24px",
+                "whiteSpace": "pre-line"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 24
+            },
+            {
+              "type": "Row",
+              "style": {
+                "width": "100%"
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "23%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 0,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Interior ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "103px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "34%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 8
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "PERFORMANCE ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "151px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "32%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 8,
+                    "paddingRight": 0
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "href": "#",
+                      "label": "Technology ›",
+                      "containerStyle": {
+                        "textAlign": "center",
+                        "width": "100%",
+                        "margin": 0,
+                        "padding": 0
+                      },
+                      "style": {
+                        "backgroundColor": "transparent",
+                        "color": "#ffffff",
+                        "borderRadius": 0,
+                        "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "fontSize": "16px",
+                        "fontWeight": 400,
+                        "lineHeight": "24px",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "textTransform": "uppercase",
+                        "textDecoration": "none",
+                        "width": "140px",
+                        "maxWidth": "100%",
+                        "display": "inline-block",
+                        "boxSizing": "border-box",
+                        "margin": 0
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 32
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Register your interest",
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "CTA Banner",
+        "mobileFrame": "CTA Banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "CTA Banner"
+    }
+  ],
+  "createdAt": "2026-08-25T08:06:20.671Z",
+  "updatedAt": "2026-08-25T08:58:32.932Z"
+}

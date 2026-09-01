@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Link } from '@react-email/components';
+import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 export interface ButtonRowProps {
   primaryText: string;
@@ -34,6 +36,8 @@ export const ButtonRow: React.FC<ButtonRowProps> = ({
   secondaryBorder = '2px solid #000000',
   buttonBorderRadius = '4px',
 }) => {
+  const primarySel = useSelectable('primaryText');
+  const secondarySel = useSelectable('secondaryText');
   const fontFamily =
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
@@ -48,6 +52,8 @@ export const ButtonRow: React.FC<ButtonRowProps> = ({
     letterSpacing: '0.5px',
     borderRadius: buttonBorderRadius,
     margin: '0 6px 8px 6px',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
   };
 
   return (
@@ -55,13 +61,16 @@ export const ButtonRow: React.FC<ButtonRowProps> = ({
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{ width: '600px', backgroundColor }}
       role="presentation"
     >
       <tr>
-        <td align={align} valign="top" style={{ padding: deskPadding }}>
+        <td align={align} valign="top" className={EDM_CLASS.pad} style={{ padding: deskPadding }}>
           <Link
             href={primaryUrl}
+            className={EDM_CLASS.cta}
+            {...primarySel}
             style={{
               ...buttonBase,
               color: primaryTextColor,
@@ -74,6 +83,8 @@ export const ButtonRow: React.FC<ButtonRowProps> = ({
           {secondaryText && secondaryUrl && (
             <Link
               href={secondaryUrl}
+              className={EDM_CLASS.cta}
+              {...secondarySel}
               style={{
                 ...buttonBase,
                 color: secondaryTextColor,

@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Img, Link } from '@react-email/components';
+import { Link } from '@react-email/components';
+import { EDM_CLASS } from '@/lib/email/responsive';
+import { ResponsiveImg } from '@/lib/email/ResponsiveImg';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -114,6 +117,8 @@ const defaultStyles = {
     border: '1px solid #000000',
     borderRadius: '4px',
     width: '218px',
+    maxWidth: '100%',
+    boxSizing: 'border-box' as const,
   } as React.CSSProperties,
   ctaLink: {
     textDecoration: 'none',
@@ -138,11 +143,13 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
   ctaAlign = 'left',
   styles = {},
 }) => {
+  const rowsSel = useSelectable('rows');
   return (
     <table
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{
         width: '600px',
         backgroundColor: backgroundColor,
@@ -150,34 +157,35 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
       role="presentation"
     >
       <tr>
-        <td align="center" valign="top" style={{ padding: deskPadding }}>
+        <td align="center" valign="top" className={EDM_CLASS.pad} style={{ padding: deskPadding }}>
           <table
             width={contentWidth}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.fluid}
             style={{ width: `${contentWidth}px` }}
             role="presentation"
           >
             {rows.map((item, index) => {
               const itemBgColor = item.backgroundColor || '#ffffff';
-              const itemWidth = item.width || 520;
+              const itemWidth = item.width || contentWidth;
+              const imgWidth = item.imgWidth || itemWidth;
 
               return (
                 <tr key={index}>
                   <td align={contentAlign} valign="top">
-                    {/* Single Product Card */}
                     <table
                       width={itemWidth}
                       cellPadding={0}
                       cellSpacing={0}
                       align={contentAlign}
+                      className={EDM_CLASS.fluid}
                       style={{
                         width: `${itemWidth}px`,
                         backgroundColor: itemBgColor,
                       }}
                       role="presentation"
                     >
-                      {/* Product Image */}
                       <tr>
                         <td
                           align={item.imgAlign || 'center'}
@@ -186,40 +194,34 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                         >
                           {item.url ? (
                             <Link href={item.url} target="_blank">
-                              <Img
-                                src={item.deskImgSrc}
-                                width={item.imgWidth || itemWidth}
+                              <ResponsiveImg
+                                deskSrc={item.deskImgSrc}
+                                mobSrc={item.mobImgSrc}
+                                width={imgWidth}
                                 alt={item.altText || ''}
-                                style={{
-                                  display: 'block',
-                                  width: `${item.imgWidth || itemWidth}px`,
-                                  height: 'auto',
-                                  borderRadius: item.imgBorderRadius,
-                                }}
+                                style={{ borderRadius: item.imgBorderRadius }}
+                                selectAttrs={rowsSel}
                               />
                             </Link>
                           ) : (
-                            <Img
-                              src={item.deskImgSrc}
-                              width={item.imgWidth || itemWidth}
+                            <ResponsiveImg
+                              deskSrc={item.deskImgSrc}
+                              mobSrc={item.mobImgSrc}
+                              width={imgWidth}
                               alt={item.altText || ''}
-                              style={{
-                                display: 'block',
-                                width: `${item.imgWidth || itemWidth}px`,
-                                height: 'auto',
-                                borderRadius: item.imgBorderRadius,
-                              }}
+                              style={{ borderRadius: item.imgBorderRadius }}
+                              selectAttrs={rowsSel}
                             />
                           )}
                         </td>
                       </tr>
 
-                      {/* Title */}
                       {item.productTitle && (
                         <tr>
                           <td
                             align={textAlign}
                             valign="top"
+                            {...rowsSel}
                             style={{
                               backgroundColor: itemBgColor,
                               ...defaultStyles.title,
@@ -245,12 +247,12 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                         </tr>
                       )}
 
-                      {/* Subtitle */}
                       {item.productSubtitle && (
                         <tr>
                           <td
                             align={textAlign}
                             valign="top"
+                            {...rowsSel}
                             style={{
                               backgroundColor: itemBgColor,
                               ...defaultStyles.subtitle,
@@ -261,12 +263,12 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                         </tr>
                       )}
 
-                      {/* Price */}
                       {item.productPrice && (
                         <tr>
                           <td
                             align={textAlign}
                             valign="top"
+                            {...rowsSel}
                             style={{
                               backgroundColor: itemBgColor,
                               ...defaultStyles.price,
@@ -292,7 +294,6 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                         </tr>
                       )}
 
-                      {/* Button CTA */}
                       {item.showButton && (
                         <tr>
                           <td
@@ -305,6 +306,8 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                           >
                             <Link
                               href={item.ctaUrl || item.url || '#'}
+                              className={EDM_CLASS.cta}
+                              {...rowsSel}
                               style={{
                                 ...defaultStyles.cta,
                                 ...styles.cta,
@@ -317,7 +320,6 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                         </tr>
                       )}
 
-                      {/* Link CTA (alternative to button) */}
                       {!item.showButton && item.ctaLinkText && (
                         <tr>
                           <td
@@ -333,6 +335,7 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
                           >
                             <Link
                               href={item.ctaUrl || item.url || '#'}
+                              {...rowsSel}
                               style={{
                                 ...defaultStyles.ctaLink,
                                 ...styles.ctaLink,
@@ -357,4 +360,3 @@ export const OneColProduct: React.FC<OneColProductProps> = ({
 };
 
 export default OneColProduct;
-

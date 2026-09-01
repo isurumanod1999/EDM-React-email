@@ -1,0 +1,34 @@
+{
+  "extends": "next/core-web-vitals",
+  "ignorePatterns": ["node_modules/", ".next/", "out/", "dist/", "scripts/*.mjs"],
+  "overrides": [
+    {
+      "files": ["src/app/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "fs",
+                "message": "Infrastructure access belongs in src/lib/adapters/** (AD-2)."
+              },
+              {
+                "name": "fs/promises",
+                "message": "Infrastructure access belongs in src/lib/adapters/** (AD-2)."
+              },
+              {
+                "name": "node:fs",
+                "message": "Infrastructure access belongs in src/lib/adapters/** (AD-2)."
+              },
+              {
+                "name": "node:fs/promises",
+                "message": "Infrastructure access belongs in src/lib/adapters/** (AD-2)."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1698 @@
+{
+  "label": "Rich Text",
+  "rawNodeDoc": {
+    "id": "1413:9828",
+    "name": "Rich Text",
+    "type": "INSTANCE",
+    "scrollBehavior": "SCROLLS",
+    "boundVariables": {
+      "itemSpacing": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:504:6655"
+      },
+      "paddingLeft": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:504:4842"
+      },
+      "paddingTop": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:504:4717"
+      },
+      "paddingRight": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:504:4842"
+      },
+      "paddingBottom": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:504:4717"
+      },
+      "size": {
+        "x": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:12:1834"
+        }
+      },
+      "fills": [
+        {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:13:4722"
+        }
+      ]
+    },
+    "explicitVariableModes": {
+      "VariableCollectionId:10:563": "10:6"
+    },
+    "componentId": "556:2633",
+    "componentProperties": {
+      "Property 1": {
+        "value": "Default",
+        "type": "VARIANT",
+        "boundVariables": {}
+      }
+    },
+    "overrides": [
+      {
+        "id": "1413:9828",
+        "overriddenFields": [
+          "boundVariables",
+          "height",
+          "width"
+        ]
+      },
+      {
+        "id": "I1413:9828;556:2619",
+        "overriddenFields": [
+          "characterStyleOverrides",
+          "characters",
+          "lineIndentations",
+          "lineTypes",
+          "styleOverrideTable"
+        ]
+      }
+    ],
+    "children": [
+      {
+        "id": "I1413:9828;556:2619",
+        "name": "Optional heading",
+        "type": "TEXT",
+        "scrollBehavior": "SCROLLS",
+        "boundVariables": {
+          "fills": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:9:533"
+            }
+          ],
+          "lineHeight": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:12:1780"
+            }
+          ],
+          "fontFamily": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:9:542"
+            }
+          ],
+          "fontSize": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:11:568"
+            }
+          ],
+          "fontStyle": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:11:567"
+            }
+          ]
+        },
+        "blendMode": "PASS_THROUGH",
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "boundVariables": {
+              "color": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:9:533"
+              }
+            }
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 1,
+        "strokeAlign": "OUTSIDE",
+        "absoluteBoundingBox": {
+          "x": -17504,
+          "y": 2343.3564453125,
+          "width": 520,
+          "height": 48
+        },
+        "absoluteRenderBounds": {
+          "x": -17501.98828125,
+          "y": 2352.9658203125,
+          "width": 383.53515625,
+          "height": 38.65234375
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "layoutAlign": "STRETCH",
+        "layoutGrow": 0,
+        "layoutSizingHorizontal": "FILL",
+        "layoutSizingVertical": "HUG",
+        "characters": "Optional Heading",
+        "characterStyleOverrides": [],
+        "styleOverrideTable": {},
+        "lineTypes": [
+          "NONE"
+        ],
+        "lineIndentations": [
+          0
+        ],
+        "style": {
+          "fontFamily": "Verdana",
+          "fontPostScriptName": "Verdana-Bold",
+          "fontStyle": "Bold",
+          "fontWeight": 700,
+          "textAutoResize": "HEIGHT",
+          "fontSize": 40,
+          "textAlignHorizontal": "LEFT",
+          "textAlignVertical": "TOP",
+          "letterSpacing": 0,
+          "lineHeightPx": 48,
+          "lineHeightPercent": 98.73844909667969,
+          "lineHeightPercentFontSize": 120,
+          "lineHeightUnit": "PIXELS"
+        },
+        "layoutVersion": 5,
+        "styles": {
+          "text": "11:579"
+        },
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      },
+      {
+        "id": "I1413:9828;588:10508",
+        "name": "Content theme/value prop (40 characters)",
+        "type": "TEXT",
+        "scrollBehavior": "SCROLLS",
+        "boundVariables": {
+          "fills": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:9:533"
+            }
+          ],
+          "lineHeight": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:12:1781"
+            }
+          ],
+          "fontFamily": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:9:542"
+            }
+          ],
+          "fontSize": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:11:570"
+            }
+          ],
+          "fontStyle": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:12:1790"
+            }
+          ]
+        },
+        "blendMode": "PASS_THROUGH",
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "boundVariables": {
+              "color": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:9:533"
+              }
+            }
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 1,
+        "strokeAlign": "OUTSIDE",
+        "absoluteBoundingBox": {
+          "x": -17504,
+          "y": 2423.3564453125,
+          "width": 520,
+          "height": 80
+        },
+        "absoluteRenderBounds": {
+          "x": -17502.564453125,
+          "y": 2433.0830078125,
+          "width": 426.1796875,
+          "height": 66.90625
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "layoutAlign": "STRETCH",
+        "layoutGrow": 0,
+        "layoutSizingHorizontal": "FILL",
+        "layoutSizingVertical": "HUG",
+        "characters": "Content theme/value prop (40 characters)",
+        "characterStyleOverrides": [],
+        "styleOverrideTable": {},
+        "lineTypes": [
+          "NONE"
+        ],
+        "lineIndentations": [
+          0
+        ],
+        "style": {
+          "fontFamily": "Verdana",
+          "fontPostScriptName": "Verdana",
+          "fontStyle": "Regular",
+          "fontWeight": 400,
+          "textAutoResize": "HEIGHT",
+          "fontSize": 28,
+          "textAlignHorizontal": "LEFT",
+          "textAlignVertical": "TOP",
+          "letterSpacing": 0,
+          "lineHeightPx": 40,
+          "lineHeightPercent": 117.54576873779297,
+          "lineHeightPercentFontSize": 142.85714721679688,
+          "lineHeightUnit": "PIXELS"
+        },
+        "layoutVersion": 4,
+        "styles": {
+          "text": "12:1792"
+        },
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      },
+      {
+        "id": "I1413:9828;556:2621",
+        "name": "Frame 1618868268",
+        "type": "FRAME",
+        "scrollBehavior": "SCROLLS",
+        "boundVariables": {
+          "itemSpacing": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:504:4838"
+          }
+        },
+        "children": [
+          {
+            "id": "I1413:9828;556:2622",
+            "name": "Frame 1618868266",
+            "type": "FRAME",
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "itemSpacing": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:12:1818"
+              }
+            },
+            "children": [
+              {
+                "id": "I1413:9828;556:2623",
+                "name": "Confidence Comes Standard",
+                "type": "TEXT",
+                "scrollBehavior": "SCROLLS",
+                "boundVariables": {
+                  "fills": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:533"
+                    }
+                  ],
+                  "lineHeight": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9572"
+                    }
+                  ],
+                  "fontFamily": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:542"
+                    }
+                  ],
+                  "fontSize": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9509"
+                    }
+                  ],
+                  "fontStyle": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1790"
+                    }
+                  ],
+                  "paragraphSpacing": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1820"
+                    }
+                  ]
+                },
+                "blendMode": "PASS_THROUGH",
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0,
+                      "g": 0,
+                      "b": 0,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:9:533"
+                      }
+                    }
+                  }
+                ],
+                "strokes": [],
+                "strokeWeight": 1,
+                "strokeAlign": "OUTSIDE",
+                "absoluteBoundingBox": {
+                  "x": -17504,
+                  "y": 2535.3564453125,
+                  "width": 520,
+                  "height": 24
+                },
+                "absoluteRenderBounds": {
+                  "x": -17503.1015625,
+                  "y": 2541.1220703125,
+                  "width": 225.125,
+                  "height": 12.4765625
+                },
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "layoutAlign": "STRETCH",
+                "layoutGrow": 0,
+                "layoutSizingHorizontal": "FILL",
+                "layoutSizingVertical": "HUG",
+                "characters": "Confidence Comes Standard",
+                "characterStyleOverrides": [],
+                "styleOverrideTable": {},
+                "lineTypes": [
+                  "NONE"
+                ],
+                "lineIndentations": [
+                  0
+                ],
+                "style": {
+                  "fontFamily": "Verdana",
+                  "fontPostScriptName": "Verdana",
+                  "fontStyle": "Regular",
+                  "fontWeight": 400,
+                  "paragraphSpacing": 16,
+                  "textAutoResize": "HEIGHT",
+                  "fontSize": 16,
+                  "textAlignHorizontal": "LEFT",
+                  "textAlignVertical": "TOP",
+                  "letterSpacing": 0,
+                  "lineHeightPx": 24,
+                  "lineHeightPercent": 123.42306518554688,
+                  "lineHeightPercentFontSize": 150,
+                  "lineHeightUnit": "PIXELS"
+                },
+                "layoutVersion": 4,
+                "styles": {
+                  "text": "556:2634"
+                },
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              },
+              {
+                "id": "I1413:9828;556:2624",
+                "name": "At [Dealership Name], we’re committed to more than just great vehicles — we’re here to support you every step of the way. Whether you're exploring your first Nissan or servicing a vehicle you've loved for years, our team is dedicated to making your experience easy, transparent, and stress-free. From flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road. Got questions? We're just a call or visit away.",
+                "type": "TEXT",
+                "scrollBehavior": "SCROLLS",
+                "boundVariables": {
+                  "fills": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:534"
+                    }
+                  ],
+                  "lineHeight": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9572"
+                    }
+                  ],
+                  "fontFamily": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:542"
+                    }
+                  ],
+                  "fontSize": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9509"
+                    }
+                  ],
+                  "fontStyle": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1790"
+                    }
+                  ],
+                  "paragraphSpacing": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1820"
+                    }
+                  ]
+                },
+                "blendMode": "PASS_THROUGH",
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.239215686917305,
+                      "g": 0.239215686917305,
+                      "b": 0.239215686917305,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:9:534"
+                      }
+                    }
+                  }
+                ],
+                "strokes": [],
+                "strokeWeight": 1,
+                "strokeAlign": "OUTSIDE",
+                "absoluteBoundingBox": {
+                  "x": -17504,
+                  "y": 2567.3564453125,
+                  "width": 520,
+                  "height": 248
+                },
+                "absoluteRenderBounds": {
+                  "x": -17503.796875,
+                  "y": 2573.2001953125,
+                  "width": 515.609375,
+                  "height": 239.4609375
+                },
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "layoutAlign": "STRETCH",
+                "layoutGrow": 0,
+                "layoutSizingHorizontal": "FILL",
+                "layoutSizingVertical": "HUG",
+                "characters": "At [Dealership Name], we’re committed to more than just great vehicles — we’re here to support you every step of the way. Whether you're exploring your first Nissan or servicing a vehicle you've loved for years, our team is dedicated to making your experience easy, transparent, and stress-free.\nFrom flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road.\nGot questions? We're just a call or visit away.",
+                "characterStyleOverrides": [],
+                "styleOverrideTable": {},
+                "lineTypes": [
+                  "NONE",
+                  "NONE",
+                  "NONE"
+                ],
+                "lineIndentations": [
+                  0,
+                  0,
+                  0
+                ],
+                "style": {
+                  "fontFamily": "Verdana",
+                  "fontPostScriptName": "Verdana",
+                  "fontStyle": "Regular",
+                  "fontWeight": 400,
+                  "paragraphSpacing": 16,
+                  "textAutoResize": "HEIGHT",
+                  "fontSize": 16,
+                  "textAlignHorizontal": "LEFT",
+                  "textAlignVertical": "TOP",
+                  "letterSpacing": 0,
+                  "lineHeightPx": 24,
+                  "lineHeightPercent": 123.42306518554688,
+                  "lineHeightPercentFontSize": 150,
+                  "lineHeightUnit": "PIXELS"
+                },
+                "layoutVersion": 4,
+                "styles": {
+                  "text": "556:2634"
+                },
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              }
+            ],
+            "blendMode": "PASS_THROUGH",
+            "clipsContent": false,
+            "background": [],
+            "fills": [],
+            "strokes": [],
+            "strokeWeight": 1,
+            "strokeAlign": "INSIDE",
+            "backgroundColor": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 0
+            },
+            "layoutMode": "VERTICAL",
+            "counterAxisSizingMode": "FIXED",
+            "itemSpacing": 8,
+            "layoutWrap": "NO_WRAP",
+            "absoluteBoundingBox": {
+              "x": -17504,
+              "y": 2535.3564453125,
+              "width": 520,
+              "height": 280
+            },
+            "absoluteRenderBounds": {
+              "x": -17504,
+              "y": 2535.3564453125,
+              "width": 520,
+              "height": 280
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "layoutAlign": "STRETCH",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "FILL",
+            "layoutSizingVertical": "HUG",
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          },
+          {
+            "id": "I1413:9828;556:2626",
+            "name": "Frame 1618868267",
+            "type": "FRAME",
+            "scrollBehavior": "SCROLLS",
+            "boundVariables": {
+              "itemSpacing": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:12:1818"
+              }
+            },
+            "children": [
+              {
+                "id": "I1413:9828;556:2627",
+                "name": "Additional section",
+                "type": "TEXT",
+                "scrollBehavior": "SCROLLS",
+                "boundVariables": {
+                  "fills": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:533"
+                    }
+                  ],
+                  "lineHeight": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9572"
+                    }
+                  ],
+                  "fontFamily": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:542"
+                    }
+                  ],
+                  "fontSize": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9509"
+                    }
+                  ],
+                  "fontStyle": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1790"
+                    }
+                  ],
+                  "paragraphSpacing": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1820"
+                    }
+                  ]
+                },
+                "blendMode": "PASS_THROUGH",
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0,
+                      "g": 0,
+                      "b": 0,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:9:533"
+                      }
+                    }
+                  }
+                ],
+                "strokes": [],
+                "strokeWeight": 1,
+                "strokeAlign": "OUTSIDE",
+                "absoluteBoundingBox": {
+                  "x": -17504,
+                  "y": 2839.3564453125,
+                  "width": 520,
+                  "height": 24
+                },
+                "absoluteRenderBounds": {
+                  "x": -17503.796875,
+                  "y": 2845.2001953125,
+                  "width": 140.6171875,
+                  "height": 12.3984375
+                },
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "layoutAlign": "STRETCH",
+                "layoutGrow": 0,
+                "layoutSizingHorizontal": "FILL",
+                "layoutSizingVertical": "HUG",
+                "characters": "Additional section",
+                "characterStyleOverrides": [],
+                "styleOverrideTable": {},
+                "lineTypes": [
+                  "NONE"
+                ],
+                "lineIndentations": [
+                  0
+                ],
+                "style": {
+                  "fontFamily": "Verdana",
+                  "fontPostScriptName": "Verdana",
+                  "fontStyle": "Regular",
+                  "fontWeight": 400,
+                  "paragraphSpacing": 16,
+                  "textAutoResize": "HEIGHT",
+                  "fontSize": 16,
+                  "textAlignHorizontal": "LEFT",
+                  "textAlignVertical": "TOP",
+                  "letterSpacing": 0,
+                  "lineHeightPx": 24,
+                  "lineHeightPercent": 123.42306518554688,
+                  "lineHeightPercentFontSize": 150,
+                  "lineHeightUnit": "PIXELS"
+                },
+                "layoutVersion": 4,
+                "styles": {
+                  "text": "556:2634"
+                },
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              },
+              {
+                "id": "I1413:9828;556:2628",
+                "name": "From flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road.",
+                "type": "TEXT",
+                "scrollBehavior": "SCROLLS",
+                "boundVariables": {
+                  "fills": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:534"
+                    }
+                  ],
+                  "lineHeight": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9572"
+                    }
+                  ],
+                  "fontFamily": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:542"
+                    }
+                  ],
+                  "fontSize": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9509"
+                    }
+                  ],
+                  "fontStyle": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1790"
+                    }
+                  ],
+                  "paragraphSpacing": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1820"
+                    }
+                  ]
+                },
+                "blendMode": "PASS_THROUGH",
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.239215686917305,
+                      "g": 0.239215686917305,
+                      "b": 0.239215686917305,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:9:534"
+                      }
+                    }
+                  }
+                ],
+                "strokes": [],
+                "strokeWeight": 1,
+                "strokeAlign": "OUTSIDE",
+                "absoluteBoundingBox": {
+                  "x": -17504,
+                  "y": 2871.3564453125,
+                  "width": 520,
+                  "height": 72
+                },
+                "absoluteRenderBounds": {
+                  "x": -17503.171875,
+                  "y": 2877.1220703125,
+                  "width": 508.0546875,
+                  "height": 60.4765625
+                },
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "layoutAlign": "STRETCH",
+                "layoutGrow": 0,
+                "layoutSizingHorizontal": "FILL",
+                "layoutSizingVertical": "HUG",
+                "characters": "From flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road.",
+                "characterStyleOverrides": [],
+                "styleOverrideTable": {},
+                "lineTypes": [
+                  "NONE"
+                ],
+                "lineIndentations": [
+                  0
+                ],
+                "style": {
+                  "fontFamily": "Verdana",
+                  "fontPostScriptName": "Verdana",
+                  "fontStyle": "Regular",
+                  "fontWeight": 400,
+                  "paragraphSpacing": 16,
+                  "textAutoResize": "HEIGHT",
+                  "fontSize": 16,
+                  "textAlignHorizontal": "LEFT",
+                  "textAlignVertical": "TOP",
+                  "letterSpacing": 0,
+                  "lineHeightPx": 24,
+                  "lineHeightPercent": 123.42306518554688,
+                  "lineHeightPercentFontSize": 150,
+                  "lineHeightUnit": "PIXELS"
+                },
+                "layoutVersion": 4,
+                "styles": {
+                  "text": "556:2634"
+                },
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              },
+              {
+                "id": "I1413:9828;556:2629",
+                "name": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "type": "TEXT",
+                "scrollBehavior": "SCROLLS",
+                "boundVariables": {
+                  "fills": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:534"
+                    }
+                  ],
+                  "lineHeight": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9572"
+                    }
+                  ],
+                  "fontFamily": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:9:542"
+                    }
+                  ],
+                  "fontSize": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:668:9509"
+                    }
+                  ],
+                  "fontStyle": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1790"
+                    }
+                  ],
+                  "paragraphSpacing": [
+                    {
+                      "type": "VARIABLE_ALIAS",
+                      "id": "VariableID:12:1820"
+                    }
+                  ]
+                },
+                "blendMode": "PASS_THROUGH",
+                "fills": [
+                  {
+                    "blendMode": "NORMAL",
+                    "type": "SOLID",
+                    "color": {
+                      "r": 0.239215686917305,
+                      "g": 0.239215686917305,
+                      "b": 0.239215686917305,
+                      "a": 1
+                    },
+                    "boundVariables": {
+                      "color": {
+                        "type": "VARIABLE_ALIAS",
+                        "id": "VariableID:9:534"
+                      }
+                    }
+                  }
+                ],
+                "strokes": [],
+                "strokeWeight": 1,
+                "strokeAlign": "OUTSIDE",
+                "absoluteBoundingBox": {
+                  "x": -17504,
+                  "y": 2951.3564453125,
+                  "width": 520,
+                  "height": 48
+                },
+                "absoluteRenderBounds": {
+                  "x": -17494.921875,
+                  "y": 2957.2001953125,
+                  "width": 461.234375,
+                  "height": 39.4609375
+                },
+                "constraints": {
+                  "vertical": "TOP",
+                  "horizontal": "LEFT"
+                },
+                "layoutAlign": "STRETCH",
+                "layoutGrow": 0,
+                "layoutSizingHorizontal": "FILL",
+                "layoutSizingVertical": "HUG",
+                "characters": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "characterStyleOverrides": [],
+                "styleOverrideTable": {},
+                "lineTypes": [
+                  "UNORDERED",
+                  "UNORDERED"
+                ],
+                "lineIndentations": [
+                  1,
+                  1
+                ],
+                "style": {
+                  "fontFamily": "Verdana",
+                  "fontPostScriptName": "Verdana",
+                  "fontStyle": "Regular",
+                  "fontWeight": 400,
+                  "paragraphSpacing": 16,
+                  "textAutoResize": "HEIGHT",
+                  "fontSize": 16,
+                  "textAlignHorizontal": "LEFT",
+                  "textAlignVertical": "TOP",
+                  "letterSpacing": 0,
+                  "lineHeightPx": 24,
+                  "lineHeightPercent": 123.42306518554688,
+                  "lineHeightPercentFontSize": 150,
+                  "lineHeightUnit": "PIXELS"
+                },
+                "layoutVersion": 4,
+                "styles": {
+                  "text": "556:2634"
+                },
+                "effects": [],
+                "interactions": [],
+                "complexStrokeProperties": {
+                  "strokeType": "BASIC"
+                }
+              }
+            ],
+            "blendMode": "PASS_THROUGH",
+            "clipsContent": false,
+            "background": [],
+            "fills": [],
+            "strokes": [],
+            "strokeWeight": 1,
+            "strokeAlign": "INSIDE",
+            "backgroundColor": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 0
+            },
+            "layoutMode": "VERTICAL",
+            "counterAxisSizingMode": "FIXED",
+            "itemSpacing": 8,
+            "layoutWrap": "NO_WRAP",
+            "absoluteBoundingBox": {
+              "x": -17504,
+              "y": 2839.3564453125,
+              "width": 520,
+              "height": 160
+            },
+            "absoluteRenderBounds": {
+              "x": -17504,
+              "y": 2839.3564453125,
+              "width": 520,
+              "height": 160
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "layoutAlign": "STRETCH",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "FILL",
+            "layoutSizingVertical": "HUG",
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          }
+        ],
+        "blendMode": "PASS_THROUGH",
+        "clipsContent": false,
+        "background": [],
+        "fills": [],
+        "strokes": [],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE",
+        "backgroundColor": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "layoutMode": "VERTICAL",
+        "counterAxisSizingMode": "FIXED",
+        "itemSpacing": 24,
+        "layoutWrap": "NO_WRAP",
+        "absoluteBoundingBox": {
+          "x": -17504,
+          "y": 2535.3564453125,
+          "width": 520,
+          "height": 464
+        },
+        "absoluteRenderBounds": {
+          "x": -17504,
+          "y": 2535.3564453125,
+          "width": 520,
+          "height": 464
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "layoutAlign": "STRETCH",
+        "layoutGrow": 0,
+        "layoutSizingHorizontal": "FILL",
+        "layoutSizingVertical": "HUG",
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      },
+      {
+        "id": "I1413:9828;560:7708",
+        "name": "CTA",
+        "type": "INSTANCE",
+        "scrollBehavior": "SCROLLS",
+        "boundVariables": {
+          "itemSpacing": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:538:8933"
+          },
+          "paddingLeft": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:504:6655"
+          },
+          "paddingTop": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:12:1816"
+          },
+          "paddingRight": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:504:6655"
+          },
+          "paddingBottom": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:12:1816"
+          },
+          "minWidth": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:538:8932"
+          },
+          "size": {
+            "x": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:538:8932"
+            },
+            "y": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:538:9103"
+            }
+          },
+          "rectangleCornerRadii": {
+            "RECTANGLE_TOP_LEFT_CORNER_RADIUS": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:cdf949a3be0a1dc48818a6d5a722ad0aa04550b5/199:435"
+            },
+            "RECTANGLE_TOP_RIGHT_CORNER_RADIUS": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:cdf949a3be0a1dc48818a6d5a722ad0aa04550b5/199:435"
+            },
+            "RECTANGLE_BOTTOM_LEFT_CORNER_RADIUS": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:cdf949a3be0a1dc48818a6d5a722ad0aa04550b5/199:435"
+            },
+            "RECTANGLE_BOTTOM_RIGHT_CORNER_RADIUS": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:cdf949a3be0a1dc48818a6d5a722ad0aa04550b5/199:435"
+            }
+          },
+          "fills": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:57:1811"
+            }
+          ]
+        },
+        "componentId": "697:10583",
+        "componentProperties": {
+          "Text#841:0": {
+            "type": "TEXT",
+            "value": "Contact dealership"
+          },
+          "Type": {
+            "value": "Brand-without icon",
+            "type": "VARIANT",
+            "boundVariables": {}
+          }
+        },
+        "overrides": [],
+        "children": [
+          {
+            "id": "I1413:9828;560:7708;697:10584",
+            "name": "VERB TOPIC (15-20 ch.)",
+            "type": "TEXT",
+            "scrollBehavior": "SCROLLS",
+            "componentPropertyReferences": {
+              "characters": "Text#841:0"
+            },
+            "boundVariables": {
+              "fills": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:9:93"
+                }
+              ],
+              "lineHeight": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:538:9108"
+                }
+              ],
+              "letterSpacing": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:12:4273"
+                }
+              ],
+              "fontFamily": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:9:541"
+                }
+              ],
+              "fontSize": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:538:9107"
+                }
+              ],
+              "fontStyle": [
+                {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:11:565"
+                }
+              ]
+            },
+            "blendMode": "PASS_THROUGH",
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1
+                },
+                "boundVariables": {
+                  "color": {
+                    "type": "VARIABLE_ALIAS",
+                    "id": "VariableID:9:93"
+                  }
+                }
+              }
+            ],
+            "strokes": [],
+            "strokeWeight": 1,
+            "strokeAlign": "OUTSIDE",
+            "absoluteBoundingBox": {
+              "x": -17334,
+              "y": 3043.3564453125,
+              "width": 180,
+              "height": 24
+            },
+            "absoluteRenderBounds": {
+              "x": -17333.19921875,
+              "y": 3050.764404296875,
+              "width": 178.5625,
+              "height": 10.783935546875
+            },
+            "constraints": {
+              "vertical": "TOP",
+              "horizontal": "LEFT"
+            },
+            "layoutAlign": "INHERIT",
+            "layoutGrow": 0,
+            "layoutSizingHorizontal": "HUG",
+            "layoutSizingVertical": "HUG",
+            "characters": "Contact dealership",
+            "characterStyleOverrides": [],
+            "styleOverrideTable": {},
+            "lineTypes": [
+              "NONE"
+            ],
+            "lineIndentations": [
+              0
+            ],
+            "style": {
+              "fontFamily": "Nissan Brand",
+              "fontPostScriptName": "NissanBrand-Regular",
+              "fontStyle": "Regular",
+              "fontWeight": 400,
+              "textCase": "UPPER",
+              "textAutoResize": "WIDTH_AND_HEIGHT",
+              "fontSize": 16,
+              "textAlignHorizontal": "CENTER",
+              "textAlignVertical": "TOP",
+              "letterSpacing": 0.25,
+              "lineHeightPx": 24,
+              "lineHeightPercent": 109.9706802368164,
+              "lineHeightPercentFontSize": 150,
+              "lineHeightUnit": "PIXELS"
+            },
+            "layoutVersion": 4,
+            "styles": {
+              "text": "12:4272"
+            },
+            "effects": [],
+            "interactions": [],
+            "complexStrokeProperties": {
+              "strokeType": "BASIC"
+            }
+          }
+        ],
+        "blendMode": "PASS_THROUGH",
+        "clipsContent": false,
+        "background": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 0.7058823704719543,
+              "g": 0.14509804546833038,
+              "b": 0.2078431397676468,
+              "a": 1
+            },
+            "boundVariables": {
+              "color": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:57:1811"
+              }
+            }
+          }
+        ],
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "type": "SOLID",
+            "color": {
+              "r": 0.7058823704719543,
+              "g": 0.14509804546833038,
+              "b": 0.2078431397676468,
+              "a": 1
+            },
+            "boundVariables": {
+              "color": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:57:1811"
+              }
+            }
+          }
+        ],
+        "strokes": [],
+        "cornerRadius": 9999,
+        "cornerSmoothing": 0,
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE",
+        "backgroundColor": {
+          "r": 0.7058823704719543,
+          "g": 0.14509804546833038,
+          "b": 0.2078431397676468,
+          "a": 1
+        },
+        "layoutMode": "HORIZONTAL",
+        "counterAxisSizingMode": "FIXED",
+        "counterAxisAlignItems": "CENTER",
+        "primaryAxisAlignItems": "CENTER",
+        "paddingLeft": 32,
+        "paddingRight": 32,
+        "itemSpacing": 12,
+        "layoutWrap": "NO_WRAP",
+        "absoluteBoundingBox": {
+          "x": -17389,
+          "y": 3031.3564453125,
+          "width": 290,
+          "height": 48
+        },
+        "absoluteRenderBounds": {
+          "x": -17389,
+          "y": 3031.3564453125,
+          "width": 290,
+          "height": 48
+        },
+        "constraints": {
+          "vertical": "TOP",
+          "horizontal": "LEFT"
+        },
+        "layoutAlign": "INHERIT",
+        "layoutGrow": 0,
+        "minWidth": 290,
+        "layoutSizingHorizontal": "HUG",
+        "layoutSizingVertical": "FIXED",
+        "effects": [],
+        "interactions": [],
+        "complexStrokeProperties": {
+          "strokeType": "BASIC"
+        }
+      }
+    ],
+    "blendMode": "PASS_THROUGH",
+    "clipsContent": false,
+    "background": [
+      {
+        "blendMode": "NORMAL",
+        "type": "SOLID",
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "boundVariables": {
+          "color": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:13:4722"
+          }
+        }
+      }
+    ],
+    "fills": [
+      {
+        "blendMode": "NORMAL",
+        "type": "SOLID",
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "boundVariables": {
+          "color": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:13:4722"
+          }
+        }
+      }
+    ],
+    "strokes": [],
+    "strokeWeight": 1,
+    "strokeAlign": "INSIDE",
+    "backgroundColor": {
+      "r": 1,
+      "g": 1,
+      "b": 1,
+      "a": 1
+    },
+    "layoutMode": "VERTICAL",
+    "counterAxisSizingMode": "FIXED",
+    "counterAxisAlignItems": "CENTER",
+    "primaryAxisAlignItems": "CENTER",
+    "paddingLeft": 40,
+    "paddingRight": 40,
+    "paddingTop": 40,
+    "paddingBottom": 40,
+    "itemSpacing": 32,
+    "layoutWrap": "NO_WRAP",
+    "absoluteBoundingBox": {
+      "x": -17544,
+      "y": 2303.3564453125,
+      "width": 600,
+      "height": 816
+    },
+    "absoluteRenderBounds": {
+      "x": -17544,
+      "y": 2303.3564453125,
+      "width": 600,
+      "height": 816
+    },
+    "constraints": {
+      "vertical": "TOP",
+      "horizontal": "LEFT"
+    },
+    "layoutSizingHorizontal": "FIXED",
+    "layoutSizingVertical": "HUG",
+    "effects": [],
+    "interactions": [],
+    "complexStrokeProperties": {
+      "strokeType": "BASIC"
+    }
+  },
+  "parsed": {
+    "id": "1413:9828",
+    "type": "INSTANCE",
+    "name": "Rich Text",
+    "width": 600,
+    "height": 816,
+    "visible": true,
+    "backgroundColor": "#ffffff",
+    "paddingTop": 40,
+    "paddingRight": 40,
+    "paddingBottom": 40,
+    "paddingLeft": 40,
+    "gap": 32,
+    "layoutMode": "VERTICAL",
+    "primaryAxisAlign": "CENTER",
+    "counterAxisAlign": "CENTER",
+    "strokeWeight": 1,
+    "componentId": "556:2633",
+    "nodeId": "1413:9828",
+    "children": [
+      {
+        "id": "I1413:9828;556:2619",
+        "type": "TEXT",
+        "name": "Optional heading",
+        "width": 520,
+        "height": 48,
+        "visible": true,
+        "text": "Optional Heading",
+        "fontSize": 40,
+        "fontWeight": 700,
+        "fontFamily": "Verdana",
+        "lineHeight": 48,
+        "letterSpacing": 0,
+        "textAlign": "left",
+        "color": "#000000",
+        "backgroundColor": "#000000",
+        "strokeWeight": 1,
+        "nodeId": "I1413:9828;556:2619",
+        "children": []
+      },
+      {
+        "id": "I1413:9828;588:10508",
+        "type": "TEXT",
+        "name": "Content theme/value prop (40 characters)",
+        "width": 520,
+        "height": 80,
+        "visible": true,
+        "text": "Content theme/value prop (40 characters)",
+        "fontSize": 28,
+        "fontWeight": 400,
+        "fontFamily": "Verdana",
+        "lineHeight": 40,
+        "letterSpacing": 0,
+        "textAlign": "left",
+        "color": "#000000",
+        "backgroundColor": "#000000",
+        "strokeWeight": 1,
+        "nodeId": "I1413:9828;588:10508",
+        "children": []
+      },
+      {
+        "id": "I1413:9828;556:2621",
+        "type": "FRAME",
+        "name": "Frame 1618868268",
+        "width": 520,
+        "height": 464,
+        "visible": true,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "gap": 24,
+        "layoutMode": "VERTICAL",
+        "strokeWeight": 1,
+        "nodeId": "I1413:9828;556:2621",
+        "children": [
+          {
+            "id": "I1413:9828;556:2622",
+            "type": "FRAME",
+            "name": "Frame 1618868266",
+            "width": 520,
+            "height": 280,
+            "visible": true,
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "gap": 8,
+            "layoutMode": "VERTICAL",
+            "strokeWeight": 1,
+            "nodeId": "I1413:9828;556:2622",
+            "children": [
+              {
+                "id": "I1413:9828;556:2623",
+                "type": "TEXT",
+                "name": "Confidence Comes Standard",
+                "width": 520,
+                "height": 24,
+                "visible": true,
+                "text": "Confidence Comes Standard",
+                "fontSize": 16,
+                "fontWeight": 400,
+                "fontFamily": "Verdana",
+                "lineHeight": 24,
+                "letterSpacing": 0,
+                "paragraphSpacing": 16,
+                "textAlign": "left",
+                "color": "#000000",
+                "backgroundColor": "#000000",
+                "strokeWeight": 1,
+                "nodeId": "I1413:9828;556:2623",
+                "children": []
+              },
+              {
+                "id": "I1413:9828;556:2624",
+                "type": "TEXT",
+                "name": "At [Dealership Name], we’re committed to more than just great vehicles — we’re here to support you every step of the way. Whether you're exploring your first Nissan or servicing a vehicle you've loved for years, our team is dedicated to making your experience easy, transparent, and stress-free. From flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road. Got questions? We're just a call or visit away.",
+                "width": 520,
+                "height": 248,
+                "visible": true,
+                "text": "At [Dealership Name], we’re committed to more than just great vehicles — we’re here to support you every step of the way. Whether you're exploring your first Nissan or servicing a vehicle you've loved for years, our team is dedicated to making your experience easy, transparent, and stress-free.\nFrom flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road.\nGot questions? We're just a call or visit away.",
+                "fontSize": 16,
+                "fontWeight": 400,
+                "fontFamily": "Verdana",
+                "lineHeight": 24,
+                "letterSpacing": 0,
+                "paragraphSpacing": 16,
+                "textAlign": "left",
+                "color": "#3d3d3d",
+                "backgroundColor": "#3d3d3d",
+                "strokeWeight": 1,
+                "nodeId": "I1413:9828;556:2624",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "I1413:9828;556:2626",
+            "type": "FRAME",
+            "name": "Frame 1618868267",
+            "width": 520,
+            "height": 160,
+            "visible": true,
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "gap": 8,
+            "layoutMode": "VERTICAL",
+            "strokeWeight": 1,
+            "nodeId": "I1413:9828;556:2626",
+            "children": [
+              {
+                "id": "I1413:9828;556:2627",
+                "type": "TEXT",
+                "name": "Additional section",
+                "width": 520,
+                "height": 24,
+                "visible": true,
+                "text": "Additional section",
+                "fontSize": 16,
+                "fontWeight": 400,
+                "fontFamily": "Verdana",
+                "lineHeight": 24,
+                "letterSpacing": 0,
+                "paragraphSpacing": 16,
+                "textAlign": "left",
+                "color": "#000000",
+                "backgroundColor": "#000000",
+                "strokeWeight": 1,
+                "nodeId": "I1413:9828;556:2627",
+                "children": []
+              },
+              {
+                "id": "I1413:9828;556:2628",
+                "type": "TEXT",
+                "name": "From flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road.",
+                "width": 520,
+                "height": 72,
+                "visible": true,
+                "text": "From flexible financing options to certified service technicians, everything we do is designed to give you peace of mind on and off the road.",
+                "fontSize": 16,
+                "fontWeight": 400,
+                "fontFamily": "Verdana",
+                "lineHeight": 24,
+                "letterSpacing": 0,
+                "paragraphSpacing": 16,
+                "textAlign": "left",
+                "color": "#3d3d3d",
+                "backgroundColor": "#3d3d3d",
+                "strokeWeight": 1,
+                "nodeId": "I1413:9828;556:2628",
+                "children": []
+              },
+              {
+                "id": "I1413:9828;556:2629",
+                "type": "TEXT",
+                "name": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "width": 520,
+                "height": 48,
+                "visible": true,
+                "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nLorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "fontSize": 16,
+                "fontWeight": 400,
+                "fontFamily": "Verdana",
+                "lineHeight": 24,
+                "letterSpacing": 0,
+                "paragraphSpacing": 16,
+                "textAlign": "left",
+                "color": "#3d3d3d",
+                "backgroundColor": "#3d3d3d",
+                "strokeWeight": 1,
+                "nodeId": "I1413:9828;556:2629",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "I1413:9828;560:7708",
+        "type": "INSTANCE",
+        "name": "CTA",
+        "width": 290,
+        "height": 48,
+        "visible": true,
+        "backgroundColor": "#b42535",
+        "paddingRight": 32,
+        "paddingLeft": 32,
+        "gap": 12,
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlign": "CENTER",
+        "counterAxisAlign": "CENTER",
+        "cornerRadius": 9999,
+        "strokeWeight": 1,
+        "componentId": "697:10583",
+        "nodeId": "I1413:9828;560:7708",
+        "children": [
+          {
+            "id": "I1413:9828;560:7708;697:10584",
+            "type": "TEXT",
+            "name": "VERB TOPIC (15-20 ch.)",
+            "width": 180,
+            "height": 24,
+            "visible": true,
+            "text": "Contact dealership",
+            "fontSize": 16,
+            "fontWeight": 400,
+            "fontFamily": "Nissan Brand",
+            "lineHeight": 24,
+            "letterSpacing": 0.25,
+            "textAlign": "center",
+            "textCase": "UPPER",
+            "color": "#ffffff",
+            "backgroundColor": "#ffffff",
+            "strokeWeight": 1,
+            "nodeId": "I1413:9828;560:7708;697:10584",
+            "children": []
+          }
+        ]
+      }
+    ],
+    "exportUrl": "/images/uploads/figma-desk-afce7692-1e69-4a2b-8777-dcb6574e792a.png"
+  }
+}

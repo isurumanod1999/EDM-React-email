@@ -19,10 +19,27 @@ export function getAllComponentDefinitions(): ComponentDefinition[] {
 }
 
 export function getRegistryEntries(): ComponentRegistryEntry[] {
-  return componentDefinitions.map(({ component: _component, ...entry }) => ({
+  return componentDefinitions.map(({ component: _component, hideFromPalette: _hidden, ...entry }) => ({
     ...entry,
     defaultProps: entry.defaultProps as Record<string, unknown>,
   }));
+}
+
+export function getPaletteEntries(): ComponentRegistryEntry[] {
+  return getRegistryEntries().filter((entry) => {
+    const def = componentRegistry.get(entry.id);
+    return !def?.hideFromPalette;
+  });
+}
+
+export function getPaletteEntriesByCategory(): Record<string, ComponentRegistryEntry[]> {
+  return getPaletteEntries().reduce<Record<string, ComponentRegistryEntry[]>>((acc, entry) => {
+    if (!acc[entry.category]) {
+      acc[entry.category] = [];
+    }
+    acc[entry.category].push(entry);
+    return acc;
+  }, {});
 }
 
 export function getRegistryEntriesByCategory(): Record<string, ComponentRegistryEntry[]> {

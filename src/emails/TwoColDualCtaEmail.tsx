@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
   Html,
-  Head,
   Body,
   Container,
   Preview,
   Img,
 } from '@react-email/components';
-import { TwoColDualCta } from '@/components/email';
+import { TwoColDualCta, EmailResponsiveHead } from '@/components/email';
+import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
 
 import { NISSAN_IMAGES } from '@/lib/constants/nissanAssets';
 
@@ -18,8 +18,8 @@ import { NISSAN_IMAGES } from '@/lib/constants/nissanAssets';
 export const TwoColDualCtaEmail: React.FC = () => {
   return (
     <Html>
-      <Head />
-      <Preview>Discover Nissan's Latest Models - Request a Quote Today!</Preview>
+      <EmailResponsiveHead />
+      <Preview>Discover Nissan&apos;s Latest Models - Request a Quote Today!</Preview>
       <Body style={{ backgroundColor: '#f4f4f4', margin: 0, padding: '20px 0' }}>
         <Container style={{ maxWidth: '600px', margin: '0 auto' }}>
           
@@ -28,16 +28,18 @@ export const TwoColDualCtaEmail: React.FC = () => {
             width={600}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.wrapper}
             style={{ width: '600px', backgroundColor: '#ffffff' }}
             role="presentation"
           >
             <tr>
-              <td align="center" valign="middle" style={{ padding: '20px 40px' }}>
+              <td align="center" valign="middle" className={EDM_CLASS.pad} style={{ padding: '20px 40px' }}>
                 <Img
                   src={NISSAN_IMAGES.logo}
                   width={200}
                   alt="Nissan Motor Corporation"
-                  style={{ display: 'block', width: '200px', height: 'auto' }}
+                  className={EDM_CLASS.imgFluid}
+                  style={fluidImgStyle(200)}
                 />
               </td>
             </tr>

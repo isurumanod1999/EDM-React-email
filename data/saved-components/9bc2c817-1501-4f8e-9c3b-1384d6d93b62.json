@@ -1,0 +1,242 @@
+{
+  "name": "call-out",
+  "category": "layout",
+  "componentId": "figma-react-email",
+  "componentVersion": 1,
+  "props": {
+    "tree": {
+      "type": "Section",
+      "style": {
+        "maxWidth": 600,
+        "width": "100%",
+        "margin": "0 auto",
+        "backgroundColor": "#131722",
+        "textAlign": "center",
+        "padding": "48px 55px 64px 55px"
+      },
+      "children": [
+        {
+          "type": "Heading",
+          "content": "The Nissan New Car Warranty already includes:",
+          "as": "h2",
+          "style": {
+            "color": "#ffffff",
+            "fontSize": "28px",
+            "fontWeight": 400,
+            "textAlign": "center",
+            "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+            "margin": 0,
+            "padding": 0,
+            "lineHeight": "36px",
+            "whiteSpace": "pre-line"
+          },
+          "mobileStyle": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          }
+        },
+        {
+          "type": "Spacer",
+          "height": 40
+        },
+        {
+          "type": "Row",
+          "style": {
+            "width": "100%"
+          },
+          "children": [
+            {
+              "type": "Column",
+              "className": "figma-col-stack",
+              "style": {
+                "width": "31%",
+                "verticalAlign": "top",
+                "paddingLeft": 0,
+                "paddingRight": 10
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": 72,
+                    "height": 72,
+                    "boxSizing": "border-box",
+                    "marginLeft": "auto",
+                    "marginRight": "auto",
+                    "backgroundColor": "#29333e",
+                    "borderRadius": 36,
+                    "padding": "13.5px 0px 13.5px 0px"
+                  },
+                  "children": [
+                    {
+                      "type": "Img",
+                      "src": "/images/uploads/figma-export-1a3e514e-2022-4a34-89f0-5ff4e32b13f3.png",
+                      "width": 32,
+                      "height": 32,
+                      "alt": "Component 2",
+                      "className": "figma-img-I8687-5550-7005-1402",
+                      "align": "center",
+                      "isIcon": true
+                    }
+                  ]
+                },
+                {
+                  "type": "Spacer",
+                  "height": 24
+                },
+                {
+                  "type": "Text",
+                  "content": "5-year / 150,000km Warranty",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "18px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "28px",
+                    "whiteSpace": "pre-line"
+                  },
+                  "mobileStyle": {
+                    "fontSize": "14px",
+                    "lineHeight": "20px"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "className": "figma-col-stack",
+              "style": {
+                "width": "31%",
+                "verticalAlign": "top",
+                "paddingLeft": 10,
+                "paddingRight": 10
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": 72,
+                    "height": 72,
+                    "boxSizing": "border-box",
+                    "marginLeft": "auto",
+                    "marginRight": "auto",
+                    "backgroundColor": "#29333e",
+                    "borderRadius": 36,
+                    "padding": "13.5px 0px 13.5px 0px"
+                  },
+                  "children": [
+                    {
+                      "type": "Img",
+                      "src": "/images/uploads/figma-export-5a83ee15-c592-4c01-a46e-b512fb710ef3.png",
+                      "width": 32,
+                      "height": 32,
+                      "alt": "Component 2",
+                      "className": "figma-img-I8687-5550-7005-1409",
+                      "align": "center",
+                      "isIcon": true
+                    }
+                  ]
+                },
+                {
+                  "type": "Spacer",
+                  "height": 24
+                },
+                {
+                  "type": "Text",
+                  "content": "1-year Standard Roadside Assist",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "18px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "28px",
+                    "whiteSpace": "pre-line"
+                  },
+                  "mobileStyle": {
+                    "fontSize": "14px",
+                    "lineHeight": "20px"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "className": "figma-col-stack",
+              "style": {
+                "width": "31%",
+                "verticalAlign": "top",
+                "paddingLeft": 10,
+                "paddingRight": 0
+              },
+              "children": [
+                {
+                  "type": "Section",
+                  "style": {
+                    "width": 72,
+                    "height": 72,
+                    "boxSizing": "border-box",
+                    "marginLeft": "auto",
+                    "marginRight": "auto",
+                    "backgroundColor": "#29333e",
+                    "borderRadius": 36,
+                    "padding": "13.5px 0px 13.5px 0px"
+                  },
+                  "children": [
+                    {
+                      "type": "Img",
+                      "src": "/images/uploads/figma-export-e5ddbd1c-8708-47ec-9aa0-0fee24812511.png",
+                      "width": 32,
+                      "height": 32,
+                      "alt": "Component 2",
+                      "className": "figma-img-I8687-5550-7005-1396",
+                      "align": "center",
+                      "isIcon": true
+                    }
+                  ]
+                },
+                {
+                  "type": "Spacer",
+                  "height": 24
+                },
+                {
+                  "type": "Text",
+                  "content": "5 years of flat price service**",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "18px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "28px",
+                    "whiteSpace": "pre-line"
+                  },
+                  "mobileStyle": {
+                    "fontSize": "14px",
+                    "lineHeight": "20px"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "sourceFrame": "call-out",
+    "mobileFrame": "call-out",
+    "hideBorders": false,
+    "borderColor": ""
+  },
+  "label": "call-out",
+  "schemaVersion": 1,
+  "id": "9bc2c817-1501-4f8e-9c3b-1384d6d93b62",
+  "createdAt": "2026-08-25T06:17:47.563Z",
+  "updatedAt": "2026-08-25T06:17:47.563Z"
+}

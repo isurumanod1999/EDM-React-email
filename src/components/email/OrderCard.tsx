@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { EDM_CLASS } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -73,11 +75,13 @@ export const OrderCard: React.FC<OrderCardProps> = ({
   rowPadding = '16px 20px',
   styles = {},
 }) => {
+  const rowsSel = useSelectable('rows');
   return (
     <table
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{
         width: '600px',
         backgroundColor: backgroundColor,
@@ -85,12 +89,12 @@ export const OrderCard: React.FC<OrderCardProps> = ({
       role="presentation"
     >
       <tr>
-        <td align="center" valign="top" style={{ padding: deskPadding }}>
-          {/* Card Container */}
+        <td align="center" valign="top" className={EDM_CLASS.pad} style={{ padding: deskPadding }}>
           <table
             width={cardWidth}
             cellPadding={0}
             cellSpacing={0}
+            className={EDM_CLASS.fluid}
             style={{
               width: `${cardWidth}px`,
               borderRadius: cardBorderRadius,
@@ -100,7 +104,6 @@ export const OrderCard: React.FC<OrderCardProps> = ({
           >
             {rows.map((row, index) => (
               <React.Fragment key={index}>
-                {/* Order Detail Row */}
                 <tr>
                   <td
                     align="left"
@@ -110,13 +113,20 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                       fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
                     }}
                   >
-                    <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
+                    <table
+                      width="100%"
+                      cellPadding={0}
+                      cellSpacing={0}
+                      className={EDM_CLASS.stackRow}
+                      role="presentation"
+                    >
                       <tr>
-                        {/* Label */}
                         <td
                           width="50%"
                           align="left"
                           valign="top"
+                          className={EDM_CLASS.stackCellLeft}
+                          {...rowsSel}
                           style={{
                             width: '50%',
                             ...defaultStyles.label,
@@ -125,13 +135,15 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                           }}
                           dangerouslySetInnerHTML={{ __html: row.label }}
                         />
-                        {/* Value */}
                         <td
                           width="50%"
                           align="right"
                           valign="top"
+                          className={EDM_CLASS.stackCellLeft}
+                          {...rowsSel}
                           style={{
                             width: '50%',
+                            textAlign: 'right',
                             ...defaultStyles.value,
                             ...styles.value,
                             ...row.valueStyle,
@@ -142,7 +154,6 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                     </table>
                   </td>
                 </tr>
-                {/* Divider (not after last row) */}
                 {index < rows.length - 1 && (
                   <tr>
                     <td align="center" style={{ padding: '0 20px' }}>
@@ -178,4 +189,3 @@ export const OrderCard: React.FC<OrderCardProps> = ({
 };
 
 export default OrderCard;
-

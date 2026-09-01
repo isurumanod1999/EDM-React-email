@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Img, Link } from '@react-email/components';
+import { EDM_CLASS, fluidImgStyle } from '@/lib/email/responsive';
+import { useSelectable } from '@/builder/preview/PreviewEditContext';
 
 // ============================================================================
 // TYPES
@@ -143,6 +145,8 @@ const defaultStyles = {
     border: '1px solid #000000',
     borderRadius: '50px',
     width: '218px',
+    maxWidth: '100%',
+    boxSizing: 'border-box' as const,
   } as React.CSSProperties,
   cta2: {
     display: 'inline-block',
@@ -158,6 +162,8 @@ const defaultStyles = {
     border: '1px solid #000000',
     borderRadius: '50px',
     width: '218px',
+    maxWidth: '100%',
+    boxSizing: 'border-box' as const,
   } as React.CSSProperties,
 };
 
@@ -176,12 +182,16 @@ const ProductCard: React.FC<{
 }> = ({ product, align, textAlign, cardBorder, cardBorderRadius, styles = {}, containerStyle }) => {
   const bgColor = product.backgroundColor || '#ffffff';
   const width = product.width || 250;
+  const imgWidth = product.imgWidth || width;
+  const rowsSel = useSelectable('rows');
 
   return (
     <table
       width={width}
       cellPadding={0}
       cellSpacing={0}
+      align={align}
+      className={EDM_CLASS.colDrop}
       style={{
         width: `${width}px`,
         float: align,
@@ -192,12 +202,12 @@ const ProductCard: React.FC<{
       }}
       role="presentation"
     >
-      {/* Header Title */}
       {product.headerTitle && (
         <tr>
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.headerTitle,
@@ -209,12 +219,12 @@ const ProductCard: React.FC<{
         </tr>
       )}
 
-      {/* Header Subtitle */}
       {product.headerSubtitle && (
         <tr>
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.headerSubtitle,
@@ -226,43 +236,38 @@ const ProductCard: React.FC<{
         </tr>
       )}
 
-      {/* Product Image */}
       <tr>
         <td align="center" valign="top" style={{ backgroundColor: bgColor }}>
           {product.url ? (
             <Link href={product.url} style={{ color: '#181716' }} target="_blank">
               <Img
                 src={product.imgSrc}
-                width={product.imgWidth || width}
+                width={imgWidth}
                 alt={product.altText || ''}
-                style={{
-                  display: 'block',
-                  width: `${product.imgWidth || width}px`,
-                  height: 'auto',
-                }}
+                className={EDM_CLASS.imgFluid}
+                style={fluidImgStyle(imgWidth)}
+                {...rowsSel}
               />
             </Link>
           ) : (
             <Img
               src={product.imgSrc}
-              width={product.imgWidth || width}
+              width={imgWidth}
               alt={product.altText || ''}
-              style={{
-                display: 'block',
-                width: `${product.imgWidth || width}px`,
-                height: 'auto',
-              }}
+              className={EDM_CLASS.imgFluid}
+              style={fluidImgStyle(imgWidth)}
+              {...rowsSel}
             />
           )}
         </td>
       </tr>
 
-      {/* Label Text */}
       {product.labelText && (
         <tr>
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.label,
@@ -274,12 +279,12 @@ const ProductCard: React.FC<{
         </tr>
       )}
 
-      {/* Title */}
       {product.title && (
         <tr>
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.title,
@@ -291,12 +296,12 @@ const ProductCard: React.FC<{
         </tr>
       )}
 
-      {/* Subtitle */}
       {product.subtitle && (
         <tr>
           <td
             align={textAlign}
             valign="top"
+            {...rowsSel}
             style={{
               backgroundColor: bgColor,
               ...defaultStyles.subtitle,
@@ -308,7 +313,6 @@ const ProductCard: React.FC<{
         </tr>
       )}
 
-      {/* Primary CTA (Outlined) */}
       <tr>
         <td
           align="center"
@@ -320,6 +324,8 @@ const ProductCard: React.FC<{
         >
           <Link
             href={product.cta1Url || product.url || '#'}
+            className={EDM_CLASS.cta}
+            {...rowsSel}
             style={{
               ...defaultStyles.cta1,
               ...styles.cta1,
@@ -331,7 +337,6 @@ const ProductCard: React.FC<{
         </td>
       </tr>
 
-      {/* Secondary CTA (Filled) */}
       <tr>
         <td
           align="center"
@@ -343,6 +348,8 @@ const ProductCard: React.FC<{
         >
           <Link
             href={product.cta2Url || product.url || '#'}
+            className={EDM_CLASS.cta}
+            {...rowsSel}
             style={{
               ...defaultStyles.cta2,
               ...styles.cta2,
@@ -376,6 +383,7 @@ export const TwoColDualCta: React.FC<TwoColDualCtaProps> = ({
       width={600}
       cellPadding={0}
       cellSpacing={0}
+      className={EDM_CLASS.wrapper}
       style={{
         width: '600px',
         backgroundColor: backgroundColor,
@@ -383,15 +391,20 @@ export const TwoColDualCta: React.FC<TwoColDualCtaProps> = ({
       role="presentation"
     >
       <tr>
-        <td align="center" valign="top" style={{ padding: deskPadding }}>
-          <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
+        <td align="center" valign="top" className={EDM_CLASS.pad} style={{ padding: deskPadding }}>
+          <table
+            width="100%"
+            cellPadding={0}
+            cellSpacing={0}
+            className={EDM_CLASS.fluid}
+            role="presentation"
+          >
             {rows.map((row, index) => (
               <tr key={index}>
                 <td align="center" valign="top">
                   <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
                     <tr>
                       <td align="left" valign="top">
-                        {/* Left Card */}
                         <ProductCard
                           product={row.product1}
                           align="left"
@@ -401,23 +414,22 @@ export const TwoColDualCta: React.FC<TwoColDualCtaProps> = ({
                           styles={styles}
                         />
 
-                        {/* Spacer between columns */}
-                        {/* <table
+                        <table
                           width={gutterWidth}
                           cellPadding={0}
                           cellSpacing={0}
                           align="left"
+                          className={EDM_CLASS.colHide}
                           style={{ width: `${gutterWidth}px` }}
                           role="presentation"
                         >
                           <tr>
-                            <td width={gutterWidth} style={{ width: `${gutterWidth}px`,backgroundColor:"red" }}>
-                              a
+                            <td width={gutterWidth} style={{ width: `${gutterWidth}px`, fontSize: '0px', lineHeight: '0px' }}>
+                              &nbsp;
                             </td>
                           </tr>
-                        </table> */}
+                        </table>
 
-                        {/* Right Card */}
                         <ProductCard
                           product={row.product2}
                           align="right"
@@ -429,15 +441,8 @@ export const TwoColDualCta: React.FC<TwoColDualCtaProps> = ({
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        width={gutterWidth}
-                        style={{
-                          width: `${gutterWidth}px`,
-                          fontSize: '0px',
-                          lineHeight: '0px',
-                        }}
-                      >
-                        {'\u200B'}
+                      <td className={EDM_CLASS.clearfix} style={{ fontSize: '0px', lineHeight: '0px' }}>
+                        &nbsp;
                       </td>
                     </tr>
                   </table>
@@ -452,4 +457,3 @@ export const TwoColDualCta: React.FC<TwoColDualCtaProps> = ({
 };
 
 export default TwoColDualCta;
-
