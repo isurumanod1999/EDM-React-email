@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { THEME_INITIALIZER_SCRIPT } from '@/lib/theme/theme';
 import './globals.css';
 import '@/builder/builder.css';
 
@@ -13,8 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INITIALIZER_SCRIPT }} />
+      </head>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }
