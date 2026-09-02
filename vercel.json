@@ -5,6 +5,20 @@
     "src/app/api/[...path]/route.ts": {
       "maxDuration": 60,
       "memory": 1024
+    },
+    "src/app/api/email/render/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/email/export/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/figma/import/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "src/app/api/figma/build-email/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
     }
   }
 }
