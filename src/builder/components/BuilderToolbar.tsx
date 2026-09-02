@@ -17,6 +17,8 @@ import { confirmLeaveIfDirty } from '@/builder/hooks/useUnsavedChangesGuard';
 import { downloadBlob } from '@/builder/utils/download';
 import { sanitizeExportName } from '@/lib/export/sanitizeName';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { ToolbarOverflowMenu } from '@/builder/components/ToolbarOverflowMenu';
+import { ChevronLeftIcon, ExportIcon, SaveIcon, SendIcon } from '@/builder/components/icons';
 
 export function BuilderToolbar() {
   const router = useRouter();
@@ -75,10 +77,9 @@ export function BuilderToolbar() {
       const contentType = res.headers.get('Content-Type') ?? '';
 
       if (!res.ok) {
-        const err =
-          contentType.includes('application/json')
-            ? await res.json().catch(() => ({}))
-            : {};
+        const err = contentType.includes('application/json')
+          ? await res.json().catch(() => ({}))
+          : {};
         throw new Error(
           typeof err.error === 'string' ? err.error : `Export failed (${res.status})`
         );
@@ -107,13 +108,18 @@ export function BuilderToolbar() {
     }
   };
 
+  const canDeliver = Boolean(template && template.blocks.length > 0);
+  const docStatusState = isSaving ? 'saving' : isDirty ? 'dirty' : 'saved';
+  const docStatusLabel = isSaving ? 'Saving…' : isDirty ? 'Unsaved changes' : 'All changes saved';
+
   return (
     <header className="builder-toolbar">
       <div className="builder-toolbar-left">
-        <Link href="/builder" className="btn btn-ghost btn-sm">
-          ← Workspace
+        <Link href="/builder" className="btn btn-ghost btn-sm" title="Back to workspace">
+          <ChevronLeftIcon />
+          Workspace
         </Link>
-        <ThemeToggle className="builder-theme-toggle" />
+        <span className="builder-toolbar-divider" aria-hidden="true" />
         {template && (
           <div className="builder-toolbar-title">
             <input
@@ -123,65 +129,76 @@ export function BuilderToolbar() {
             />
           </div>
         )}
-        {isDirty && <span className="status-badge dirty">Unsaved</span>}
+        <span className="builder-doc-status" data-state={docStatusState} role="status">
+          {docStatusLabel}
+        </span>
       </div>
 
       <div className="builder-toolbar-right">
-        <label className="field-checkbox-row" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-          <input
-            type="checkbox"
-            checked={showAdvanced}
-            onChange={(e) => setShowAdvanced(e.target.checked)}
+        <div className="builder-toolbar-group">
+          <ImportMenu
+            hasFigmaSession={!!figmaSession}
+            sessionNodeName={figmaSession?.nodeName}
+            onFetch={() => setFigmaFetchOpen(true)}
+            onBuild={() => setFigmaBuildOpen(true)}
+            onBatch={() => setFigmaBatchOpen(true)}
+            onScreenshot={() => setAiImportOpen(true)}
           />
-          Advanced
-        </label>
-        <ImportMenu
-          hasFigmaSession={!!figmaSession}
-          sessionNodeName={figmaSession?.nodeName}
-          onFetch={() => setFigmaFetchOpen(true)}
-          onBuild={() => setFigmaBuildOpen(true)}
-          onBatch={() => setFigmaBatchOpen(true)}
-          onScreenshot={() => setAiImportOpen(true)}
-        />
-        <TaggingPanel />
-        <CodePanel />
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm"
-          onClick={() => setSendOpen(true)}
-          disabled={!template || template.blocks.length === 0}
-          title={
-            template && template.blocks.length === 0
-              ? 'Add components to the canvas first'
-              : 'Send a test email via Resend'
-          }
-        >
-          Send email
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm"
-          onClick={handleExport}
-          disabled={isExporting || !template || template.blocks.length === 0}
-          title={
-            template && template.blocks.length === 0
-              ? 'Add components to the canvas first'
-              : 'Download ZIP with HTML and img folder'
-          }
-        >
-          {isExporting ? 'Exporting...' : 'Export'}
-        </button>
-        <button type="button" className="btn btn-secondary btn-sm" onClick={handleDuplicate}>
-          Duplicate
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary btn-sm"
-          onClick={() => save()}
-          disabled={isSaving || !isDirty}
-        >
-          {isSaving ? 'Saving...' : 'Save'}
-        </button>
+          <TaggingPanel />
+          <CodePanel />
+        </div>
+
+        <span className="builder-toolbar-divider" aria-hidden="true" />
+
+        <div className="builder-toolbar-group">
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={() => setSendOpen(true)}
+            disabled={!canDeliver}
+            title={
+              canDeliver ? 'Send a test email via Resend' : 'Add components to the canvas first'
+            }
+          >
+            <SendIcon />
+            Send test
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleExport}
+            disabled={isExporting || !canDeliver}
+            title={
+              canDeliver
+                ? 'Download ZIP with HTML and img folder'
+                : 'Add components to the canvas first'
+            }
+          >
+            <ExportIcon />
+            {isExporting ? 'Exporting…' : 'Export'}
+          </button>
+        </div>
+
+        <span className="builder-toolbar-divider" aria-hidden="true" />
+
+        <div className="builder-toolbar-group">
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={() => save()}
+            disabled={isSaving || !isDirty}
+          >
+            <SaveIcon />
+            {isSaving ? 'Saving…' : 'Save'}
+          </button>
+          <ThemeToggle className="builder-theme-toggle" />
+          <ToolbarOverflowMenu
+            showAdvanced={showAdvanced}
+            onToggleAdvanced={setShowAdvanced}
+            onDuplicate={handleDuplicate}
+            duplicateDisabled={!template}
+          />
+        </div>
       </div>
 
       <FigmaFetchModal

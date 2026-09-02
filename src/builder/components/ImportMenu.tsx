@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { ChevronDownIcon, ImportIcon } from '@/builder/components/icons';
 
 interface ImportMenuProps {
   hasFigmaSession: boolean;
@@ -58,9 +59,7 @@ export function ImportMenu({
           title={`Build components from "${sessionNodeName ?? 'loaded frame'}"`}
         >
           Build from Figma
-          <span className="figma-session-badge" title={sessionNodeName}>
-            ●
-          </span>
+          <span className="figma-session-badge" title={sessionNodeName} aria-hidden="true" />
         </button>
       )}
 
@@ -71,10 +70,9 @@ export function ImportMenu({
         aria-expanded={open}
         aria-haspopup="menu"
       >
+        <ImportIcon />
         Import
-        <span className="import-menu-chevron" aria-hidden="true">
-          ▾
-        </span>
+        <ChevronDownIcon className="import-menu-chevron" />
       </button>
 
       {open && (
@@ -91,7 +89,9 @@ export function ImportMenu({
             title={hasFigmaSession ? undefined : 'Fetch a Figma frame first'}
           >
             Build from Figma
-            {hasFigmaSession && <span className="import-menu-item-badge">●</span>}
+            {hasFigmaSession && (
+              <span className="import-menu-item-badge" aria-hidden="true" />
+            )}
           </button>
           <button type="button" className="import-menu-item" role="menuitem" onClick={() => run(onBatch)}>
             Batch Import

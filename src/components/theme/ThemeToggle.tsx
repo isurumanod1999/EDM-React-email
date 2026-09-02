@@ -1,6 +1,7 @@
 'use client';
 
 import { useTheme } from './ThemeProvider';
+import { MoonIcon, SunIcon } from '@/builder/components/icons';
 
 export function ThemeToggle({ className = '' }: { className?: string }) {
   const { theme, toggleTheme } = useTheme();
@@ -14,7 +15,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       aria-label={`Switch to ${nextTheme} mode`}
       title={`Switch to ${nextTheme} mode`}
     >
-      <span aria-hidden>{theme === 'dark' ? '☀' : '☾'}</span>
+      {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
       <span className="theme-toggle-label">{nextTheme === 'light' ? 'Light' : 'Dark'}</span>
     </button>
   );

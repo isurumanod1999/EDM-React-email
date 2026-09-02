@@ -5,6 +5,7 @@ import type { TemplateBlock } from '@/lib/schema/template';
 import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { pushToast } from '@/builder/store/toastStore';
+import { CloseIcon } from './icons';
 
 interface SaveReusableComponentModalProps {
   block: TemplateBlock;
@@ -92,12 +93,12 @@ export function SaveReusableComponentModal({
           </div>
           <button
             type="button"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm btn-icon"
             onClick={handleClose}
             disabled={saving}
             aria-label="Close dialog"
           >
-            ✕
+            <CloseIcon />
           </button>
         </div>
 
@@ -132,12 +133,7 @@ export function SaveReusableComponentModal({
             ) : null}
           </div>
           <div className="import-modal-footer">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={handleClose}
-              disabled={saving}
-            >
+            <button type="button" className="btn btn-ghost" onClick={handleClose} disabled={saving}>
               Cancel
             </button>
             <button type="submit" className="btn btn-primary" disabled={saving || !name.trim()}>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Direction B — Quiet Enterprise | EDM Email Template Builder</title>
+<style>
+/* ==========================================================================
+   DIRECTION B — QUIET ENTERPRISE
+   Primary theme: light (warm paper, deliberately not plain white).
+   Personality: calm, client-safe, low-contrast. Soft 6px radii, one shadow
+   level, larger type, generous field spacing. Navigation is a single top bar
+   with a breadcrumb row; commands collapse into one right-aligned cluster
+   with a "More" overflow so the bar never looks busy.
+
+   PALETTE (primary / light)
+   --------------------------------------------------------------------------
+   product bar             #FFFFFF
+   breadcrumb / doc bar    #FBF9F6
+   workspace pasteboard    #F1EEE9
+   panel surface           #FAF8F5
+   raised control          #FFFFFF
+   hairline border         #E2DCD3
+   strong border           #CFC7BB
+   text primary            #23201C
+   text secondary          #6A645C
+   text muted              #8E8880
+   accent (deep navy)      #24466E
+   accent tint             #EAF0F7
+   warning ink             #9A6B12
+   warning tint            #FBF2DE
+   danger ink              #A63A32
+   success ink             #2F6B4F
+   content-true preview    #FFFFFF
+   shadow                  rgba(35,32,28,0.06)
+   ALTERNATE THEME (dark)  chrome #1C1F24 / panel #23272E / pasteboard #15171B
+                           border #333942 / text #ECE7DF / accent #7FA9DC
+   ========================================================================== */
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 34px;
+    background: #F1EEE9;
+    color: #23201C;
+    font-family: ui-sans-serif, "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sheet { max-width: 1440px; margin: 0 auto; }
+
+  .doc { background: #FAF8F5; border: 1px solid #E2DCD3; border-radius: 8px; padding: 22px 24px; margin-bottom: 22px; box-shadow: 0 1px 2px rgba(35,32,28,.06); }
+  .doc .kicker { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #24466E; font-weight: 700; }
+  .doc h1 { margin: 3px 0 0; font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+  .doc p { margin: 10px 0 0; color: #6A645C; max-width: 96ch; }
+  .swatches { display: flex; gap: 26px; margin-top: 18px; flex-wrap: wrap; }
+  .swgroup b { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #8E8880; margin-bottom: 6px; }
+  .swrow { display: flex; gap: 5px; }
+  .sw { width: 30px; height: 18px; border-radius: 3px; border: 1px solid #CFC7BB; }
+
+  .frame { border: 1px solid #CFC7BB; border-radius: 10px; overflow: hidden; background: #FFFFFF; box-shadow: 0 1px 2px rgba(35,32,28,.06); }
+  .frame-bar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #F1EEE9; border-bottom: 1px solid #E2DCD3; }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: #CFC7BB; display: block; }
+  .url { flex: 1; font-size: 12px; color: #8E8880; background: #FFFFFF; border: 1px solid #E2DCD3; border-radius: 20px; padding: 4px 12px; }
+
+  /* ---- product chrome ---- */
+  .productbar { display: flex; align-items: center; gap: 18px; padding: 12px 20px; background: #FFFFFF; border-bottom: 1px solid #E2DCD3; }
+  .brand { display: flex; align-items: baseline; gap: 9px; }
+  .brand .glyph { width: 24px; height: 24px; border-radius: 5px; background: #24466E; color: #FFFFFF; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; letter-spacing: .04em; }
+  .brand .name { font-size: 14.5px; font-weight: 600; }
+  .topnav { display: flex; gap: 4px; }
+  .topnav a { padding: 6px 12px; border-radius: 6px; font-size: 13.5px; color: #6A645C; text-decoration: none; }
+  .topnav a.on { background: #EAF0F7; color: #24466E; font-weight: 600; }
+  .productbar .right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .theme { display: flex; border: 1px solid #E2DCD3; border-radius: 6px; overflow: hidden; }
+  .theme span { padding: 4px 10px; font-size: 12px; color: #8E8880; }
+  .theme span.on { background: #F1EEE9; color: #23201C; font-weight: 600; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: #EAF0F7; border: 1px solid #CFC7BB; color: #24466E; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+
+  /* ---- document bar (breadcrumb row + command cluster) ---- */
+  .docbar { display: flex; align-items: center; gap: 14px; padding: 12px 20px; background: #FBF9F6; border-bottom: 1px solid #E2DCD3; position: relative; }
+  .crumbs { font-size: 12.5px; color: #8E8880; }
+  .crumbs a { color: #6A645C; text-decoration: none; }
+  .titleblock { display: flex; align-items: center; gap: 10px; }
+  .titleblock input { border: 1px solid transparent; background: transparent; font: inherit; font-size: 17px; font-weight: 600; color: #23201C; padding: 4px 8px; border-radius: 6px; width: 270px; }
+  .titleblock input:hover { border-color: #E2DCD3; background: #FFFFFF; }
+  .pill-state { font-size: 11.5px; font-weight: 600; color: #9A6B12; background: #FBF2DE; border: 1px solid #E8D5A8; border-radius: 5px; padding: 3px 9px; }
+  .cluster { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .divider { width: 1px; height: 22px; background: #E2DCD3; }
+  .btn { font: inherit; font-size: 13px; border-radius: 6px; padding: 6px 12px; border: 1px solid #CFC7BB; background: #FFFFFF; color: #23201C; cursor: default; white-space: nowrap; }
+  .btn-quiet { border-color: transparent; background: transparent; color: #6A645C; }
+  .btn-primary { background: #24466E; border-color: #24466E; color: #FFFFFF; font-weight: 600; }
+  .btn-disabled { color: #B6AFA5; border-color: #E2DCD3; background: #FAF8F5; }
+  .btn .caret { color: #8E8880; margin-left: 4px; }
+  .btn .live { color: #2F6B4F; font-size: 10px; margin-left: 6px; }
+  .chk { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #6A645C; }
+  .chk i { width: 14px; height: 14px; border: 1px solid #CFC7BB; border-radius: 3px; background: #FFFFFF; display: inline-block; }
+
+  /* overflow menu, shown open as a state */
+  .overflow { position: absolute; top: 52px; right: 116px; width: 208px; background: #FFFFFF; border: 1px solid #CFC7BB; border-radius: 8px; box-shadow: 0 6px 18px rgba(35,32,28,.10); padding: 6px; z-index: 5; }
+  .overflow .grp { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: #8E8880; padding: 6px 10px 3px; font-weight: 700; }
+  .overflow .item { display: flex; justify-content: space-between; padding: 7px 10px; border-radius: 5px; font-size: 13px; color: #23201C; }
+  .overflow .item span { color: #8E8880; font-size: 11.5px; }
+  .overflow .item.hl { background: #F1EEE9; }
+
+  /* ---- body ---- */
+  .body { display: grid; grid-template-columns: 254px 1fr 316px; background: #F1EEE9; min-height: 720px; gap: 1px; }
+  .panel { background: #FAF8F5; display: flex; flex-direction: column; min-width: 0; }
+  .phead { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 10px; font-size: 13px; font-weight: 600; color: #23201C; border-bottom: 1px solid #E2DCD3; }
+  .phead .sub { font-size: 12px; font-weight: 400; color: #8E8880; }
+  .pbody { padding: 14px 16px; overflow: hidden; }
+
+  .cat { margin-bottom: 18px; }
+  .cat-title { font-size: 11px; letter-spacing: .09em; text-transform: uppercase; color: #8E8880; font-weight: 700; margin-bottom: 8px; }
+  .pitem { background: #FFFFFF; border: 1px solid #E2DCD3; border-radius: 6px; padding: 9px 11px; margin-bottom: 6px; box-shadow: 0 1px 1px rgba(35,32,28,.04); }
+  .pitem-name { display: block; font-size: 13.5px; font-weight: 550; }
+  .pitem-desc { display: block; font-size: 12px; color: #8E8880; }
+  .pitem--saved { border-left: 3px solid #24466E; }
+  .savedrow { display: flex; align-items: flex-start; gap: 6px; }
+  .savedrow .pitem { flex: 1; }
+  .savedrow .del { border: 1px solid #E2DCD3; background: #FFFFFF; border-radius: 6px; color: #A63A32; width: 26px; height: 32px; font-size: 12px; }
+
+  /* ---- center ---- */
+  .center { display: flex; flex-direction: column; background: #F1EEE9; min-width: 0; }
+  .card { background: #FAF8F5; }
+  .blocklist { padding: 12px 16px; }
+  .block { display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid #E2DCD3; border-radius: 7px; padding: 10px 12px; margin-bottom: 7px; box-shadow: 0 1px 1px rgba(35,32,28,.04); }
+  .block.sel { border-color: #24466E; box-shadow: 0 0 0 2px #EAF0F7; }
+  .grip { color: #CFC7BB; }
+  .bname { font-size: 13.5px; font-weight: 550; }
+  .btype { font-size: 12px; color: #8E8880; }
+  .bacts { margin-left: auto; display: flex; gap: 4px; }
+  .bacts button { border: 1px solid transparent; background: transparent; color: #8E8880; border-radius: 5px; width: 26px; height: 24px; font-size: 12px; }
+
+  .previewsec { flex: 1; display: flex; flex-direction: column; border-top: 1px solid #E2DCD3; }
+  .ptoolbar { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; background: #FAF8F5; border-bottom: 1px solid #E2DCD3; }
+  .ptoolbar .lbl { font-size: 13px; font-weight: 600; color: #23201C; }
+  .ptoolbar .hint { color: #24466E; font-weight: 500; font-size: 12.5px; margin-left: 8px; }
+  .seg { display: flex; border: 1px solid #CFC7BB; border-radius: 6px; overflow: hidden; }
+  .seg button { border: 0; background: #FFFFFF; font: inherit; font-size: 12.5px; padding: 5px 14px; color: #6A645C; }
+  .seg button.on { background: #EAF0F7; color: #24466E; font-weight: 600; }
+  .stage { flex: 1; padding: 26px; background: #F1EEE9; display: flex; flex-direction: column; align-items: center; gap: 14px; overflow: hidden; }
+  .errorbar { width: 100%; max-width: 700px; display: flex; align-items: center; gap: 12px; background: #FBF2DE; border: 1px solid #E8D5A8; border-radius: 7px; padding: 10px 14px; font-size: 13px; color: #7A5410; }
+  .errorbar .btn { margin-left: auto; }
+  .paper { width: 100%; max-width: 700px; background: #FFFFFF; border: 1px solid #E2DCD3; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(35,32,28,.07); color: #1A1A1A; }
+
+  .em-head { padding: 18px 26px; border-bottom: 1px solid #EDEBE7; font-size: 13px; font-weight: 700; letter-spacing: .22em; }
+  .em-hero { padding: 32px 26px; background: #F4F1EC; }
+  .em-hero h2 { margin: 0 0 6px; font-size: 25px; letter-spacing: -.015em; }
+  .em-hero p { margin: 0 0 16px; font-size: 13.5px; color: #4A4A4A; }
+  .em-cta { display: inline-block; background: #1A1A1A; color: #FFFFFF; font-size: 11px; letter-spacing: .12em; padding: 10px 18px; font-weight: 700; }
+  .em-promo { display: flex; gap: 18px; padding: 22px 26px; background: #1A1A1A; color: #FFFFFF; align-items: center; }
+  .em-promo .thumb { width: 152px; height: 88px; background: #333333; flex: none; }
+  .em-promo h3 { margin: 0 0 4px; font-size: 16px; }
+  .em-promo p { margin: 0 0 8px; font-size: 12.5px; color: #CFCFCF; }
+  .em-promo .link { font-size: 10.5px; letter-spacing: .12em; font-weight: 700; border-bottom: 1px solid #FFFFFF; }
+  .em-cols { display: flex; gap: 18px; padding: 22px 26px; }
+  .em-cols div { flex: 1; }
+  .em-cols .ph { height: 68px; background: #F0EEEA; margin-bottom: 9px; }
+  .em-cols b { display: block; font-size: 13px; }
+  .em-cols span { font-size: 12.5px; color: #6A6A6A; }
+  .em-foot { padding: 18px 26px; background: #FAF9F7; font-size: 11.5px; color: #6A6A6A; border-top: 1px solid #EDEBE7; }
+
+  /* ---- inspector ---- */
+  .fgroup { margin-bottom: 20px; }
+  .fgroup-title { font-size: 11px; letter-spacing: .09em; text-transform: uppercase; color: #8E8880; font-weight: 700; margin-bottom: 10px; }
+  .field { margin-bottom: 12px; }
+  .flabel { display: block; font-size: 12.5px; color: #6A645C; margin-bottom: 4px; }
+  .flabel .req { color: #A63A32; }
+  .fctl { width: 100%; background: #FFFFFF; border: 1px solid #CFC7BB; border-radius: 6px; color: #23201C; font: inherit; font-size: 13px; padding: 7px 10px; }
+  .fhelp { font-size: 12px; color: #8E8880; }
+  .colorrow { display: flex; gap: 8px; align-items: center; }
+  .chip { width: 34px; height: 32px; border-radius: 6px; border: 1px solid #CFC7BB; flex: none; }
+  .notice { background: #FFFFFF; border: 1px dashed #CFC7BB; border-radius: 7px; padding: 12px; font-size: 12.5px; color: #8E8880; text-align: center; }
+
+  /* ---- secondary: workspace cards ---- */
+  .secondary { margin-top: 28px; }
+  .sectag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #8E8880; font-weight: 700; margin-bottom: 10px; }
+  .wshead { display: flex; align-items: flex-end; gap: 16px; padding: 24px 24px 18px; background: #FBF9F6; border-bottom: 1px solid #E2DCD3; }
+  .wshead .eyebrow { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #8E8880; font-weight: 700; }
+  .wshead h2 { margin: 4px 0 3px; font-size: 22px; font-weight: 600; letter-spacing: -.015em; }
+  .wshead p { margin: 0; color: #6A645C; font-size: 13.5px; }
+  .wshead .acts { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .wsctl { display: flex; gap: 10px; padding: 16px 24px; background: #FAF8F5; border-bottom: 1px solid #E2DCD3; }
+  .wsctl input, .wsctl select { border: 1px solid #CFC7BB; border-radius: 6px; background: #FFFFFF; font: inherit; font-size: 13px; padding: 7px 11px; color: #23201C; }
+  .wsctl input { width: 300px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 20px 24px 24px; background: #F1EEE9; }
+  .gcard { background: #FAF8F5; border: 1px solid #E2DCD3; border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(35,32,28,.06); }
+  .gtag { display: inline-block; font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: #24466E; background: #EAF0F7; border-radius: 4px; padding: 2px 8px; font-weight: 650; }
+  .gcard h3 { margin: 10px 0 4px; font-size: 15.5px; font-weight: 600; }
+  .gcard .meta { font-size: 12.5px; color: #8E8880; margin: 0 0 14px; }
+  .gcard .row { display: flex; gap: 8px; }
+  .gempty { grid-column: span 3; background: #FAF8F5; border: 1px dashed #CFC7BB; border-radius: 8px; padding: 30px; text-align: center; }
+  .gempty b { display: block; font-size: 15px; margin-bottom: 4px; }
+  .gempty p { margin: 0 0 14px; color: #8E8880; font-size: 13px; }
+  .caption { font-size: 12.5px; color: #8E8880; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="doc">
+    <div class="kicker">Direction B</div>
+    <h1>Quiet Enterprise</h1>
+    <p>
+      This direction assumes the screen will be shown to clients as often as it is used by operators, so it lowers its
+      voice: warm paper surfaces instead of flat white, one soft shadow level, and roomier fields that survive a
+      projector. Command load is managed by hierarchy rather than grouping labels — Save, Export and Import stay on the
+      bar while the long tail moves into a single <em>More</em> overflow. Type runs a step larger and dividers a step
+      lighter, trading raw density for legibility and calm.
+    </p>
+    <div class="swatches">
+      <div class="swgroup">
+        <b>Primary theme — light (warm)</b>
+        <div class="swrow">
+          <span class="sw" style="background:#FFFFFF"></span>
+          <span class="sw" style="background:#FBF9F6"></span>
+          <span class="sw" style="background:#FAF8F5"></span>
+          <span class="sw" style="background:#F1EEE9"></span>
+          <span class="sw" style="background:#E2DCD3"></span>
+          <span class="sw" style="background:#24466E"></span>
+          <span class="sw" style="background:#9A6B12"></span>
+          <span class="sw" style="background:#2F6B4F"></span>
+        </div>
+      </div>
+      <div class="swgroup">
+        <b>Alternate theme — dark</b>
+        <div class="swrow">
+          <span class="sw" style="background:#15171B"></span>
+          <span class="sw" style="background:#1C1F24"></span>
+          <span class="sw" style="background:#23272E"></span>
+          <span class="sw" style="background:#333942"></span>
+          <span class="sw" style="background:#ECE7DF"></span>
+          <span class="sw" style="background:#7FA9DC"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ PRIMARY: EDITOR ============================ -->
+  <div class="frame">
+    <div class="frame-bar">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="url">edm-builder.internal/builder/8f2c41</div>
+    </div>
+
+    <!-- product chrome -->
+    <div class="productbar">
+      <div class="brand"><span class="glyph">ED</span><span class="name">Email Template Builder</span></div>
+      <nav class="topnav">
+        <a href="#">Overview</a>
+        <a href="#">Workspace</a>
+        <a href="#" class="on">Editor</a>
+      </nav>
+      <div class="right">
+        <div class="theme"><span class="on">Light</span><span>Dark</span></div>
+        <span class="avatar">IS</span>
+      </div>
+    </div>
+
+    <!-- document command bar -->
+    <div class="docbar">
+      <div class="crumbs"><a href="#">Workspace</a> ›</div>
+      <div class="titleblock">
+        <input value="Autumn Service Reminder" aria-label="Template name" readonly />
+        <span class="pill-state">Unsaved changes</span>
+      </div>
+
+      <div class="cluster">
+        <label class="chk"><i></i> Advanced</label>
+        <span class="divider"></span>
+        <button class="btn">Build from Figma <span class="live">●</span></button>
+        <button class="btn">Import <span class="caret">▾</span></button>
+        <span class="divider"></span>
+        <button class="btn btn-disabled" title="Add components to the canvas first">Export</button>
+        <button class="btn btn-quiet">More <span class="caret">▾</span></button>
+        <button class="btn btn-primary">Save</button>
+      </div>
+
+      <!-- overflow menu shown open -->
+      <div class="overflow">
+        <div class="grp">Review</div>
+        <div class="item">Tagging <span>12 mapped</span></div>
+        <div class="item">Code <span>JSX</span></div>
+        <div class="grp">Deliver</div>
+        <div class="item hl">Send email <span>Test</span></div>
+        <div class="item">Duplicate</div>
+        <div class="grp">Document</div>
+        <div class="item">Category <span>Promotional</span></div>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- palette -->
+      <aside class="panel">
+        <div class="phead">Components <span class="sub">20 available</span></div>
+        <div class="pbody">
+          <div class="cat">
+            <div class="cat-title">Reusable Components</div>
+            <div class="savedrow">
+              <div class="pitem pitem--saved">
+                <span class="pitem-name">Service Offer Card</span>
+                <span class="pitem-desc">Promo Block · approved copy</span>
+              </div>
+              <button class="del">✕</button>
+            </div>
+            <div class="savedrow">
+              <div class="pitem pitem--saved">
+                <span class="pitem-name">Legal Footer AU</span>
+                <span class="pitem-desc">Footer · compliance approved</span>
+              </div>
+              <button class="del">✕</button>
+            </div>
+          </div>
+          <div class="cat">
+            <div class="cat-title">Layout</div>
+            <div class="pitem"><span class="pitem-name">Header</span><span class="pitem-desc">Logo header with optional link</span></div>
+            <div class="pitem"><span class="pitem-name">Section Title</span><span class="pitem-desc">Section heading divider</span></div>
+            <div class="pitem"><span class="pitem-name">Image Block</span><span class="pitem-desc">Standalone image, optional link</span></div>
+            <div class="pitem"><span class="pitem-name">Divider</span><span class="pitem-desc">Horizontal line separator</span></div>
+            <div class="pitem"><span class="pitem-name">Footer</span><span class="pitem-desc">Social links and legal text</span></div>
+          </div>
+          <div class="cat">
+            <div class="cat-title">Promotional</div>
+            <div class="pitem"><span class="pitem-name">Hero Banner</span><span class="pitem-desc">Full-width hero with headline</span></div>
+            <div class="pitem"><span class="pitem-name">Promo Block</span><span class="pitem-desc">Banner with image, title, CTA</span></div>
+            <div class="pitem"><span class="pitem-name">CTA Banner</span><span class="pitem-desc">Full-width call-to-action</span></div>
+            <div class="pitem"><span class="pitem-name">Stats Row</span><span class="pitem-desc">Three-column statistics row</span></div>
+          </div>
+          <div class="cat">
+            <div class="cat-title">Newsletter</div>
+            <div class="pitem"><span class="pitem-name">Intro Copy</span><span class="pitem-desc">Greeting and introductory text</span></div>
+            <div class="pitem"><span class="pitem-name">Testimonial</span><span class="pitem-desc">Customer quote with author</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- canvas + preview -->
+      <main class="center">
+        <section class="card">
+          <div class="phead">Canvas (6 blocks) <span class="sub">Drag from Components, or press Enter to add</span></div>
+          <div class="blocklist">
+            <div class="block"><span class="grip">⠿</span><div><div class="bname">Brand Header</div><div class="btype">Header</div></div><div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div></div>
+            <div class="block"><span class="grip">⠿</span><div><div class="bname">Autumn hero</div><div class="btype">Hero Banner</div></div><div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div></div>
+            <div class="block sel"><span class="grip">⠿</span><div><div class="bname">Service Plus offer</div><div class="btype">Promo Block</div></div><div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div></div>
+            <div class="block"><span class="grip">⠿</span><div><div class="bname">Parts picks</div><div class="btype">Two Col Stacked</div></div><div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div></div>
+            <div class="block"><span class="grip">⠿</span><div><div class="bname">Book a service</div><div class="btype">CTA Banner</div></div><div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div></div>
+            <div class="block"><span class="grip">⠿</span><div><div class="bname">Legal Footer AU</div><div class="btype">Footer</div></div><div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div></div>
+          </div>
+        </section>
+
+        <section class="previewsec">
+          <div class="ptoolbar">
+            <span class="lbl">Live Preview <span class="hint">· Click any component to edit it</span></span>
+            <div class="seg"><button class="on">Desktop</button><button>Mobile</button></div>
+          </div>
+          <div class="stage">
+            <div class="errorbar" role="alert">
+              <span>Preview render failed — the last change could not be rendered.</span>
+              <button class="btn">Retry render</button>
+            </div>
+            <div class="paper">
+              <div class="em-head">MERIDIAN</div>
+              <div class="em-hero">
+                <h2>Autumn Service Reminder</h2>
+                <p>Book before 30 November and save on essential seasonal checks.</p>
+                <span class="em-cta">BOOK A SERVICE</span>
+              </div>
+              <div class="em-promo">
+                <div class="thumb"></div>
+                <div>
+                  <h3>Service Plus</h3>
+                  <p>Up to <strong>3 years of scheduled maintenance</strong> included.</p>
+                  <span class="link">LEARN MORE</span>
+                </div>
+              </div>
+              <div class="em-cols">
+                <div><div class="ph"></div><b>Cabin Filter Kit</b><span>$48.00</span></div>
+                <div><div class="ph"></div><b>Wiper Blade Set</b><span>$32.00</span></div>
+              </div>
+              <div class="em-foot">You are receiving this because your vehicle is serviced by Meridian. Unsubscribe · Privacy</div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- inspector -->
+      <aside class="panel">
+        <div class="phead">Properties <span class="sub">Promo Block</span></div>
+        <div class="pbody">
+          <div class="fgroup">
+            <div class="fgroup-title">Promo Block</div>
+            <p class="fhelp" style="margin:0">Promotional banner with image, title, and CTA.</p>
+          </div>
+          <div class="fgroup">
+            <div class="fgroup-title">Content</div>
+            <div class="field"><label class="flabel">Image URL <span class="req">*</span></label><input class="fctl" value="/images/service-plus-520.jpg" readonly /></div>
+            <div class="field"><label class="flabel">Title</label><input class="fctl" value="Service Plus" readonly /></div>
+            <div class="field"><label class="flabel">Subtitle</label><textarea class="fctl" rows="2" readonly>Up to 3 years of scheduled maintenance included.</textarea></div>
+            <div class="field"><label class="flabel">Button Text</label><input class="fctl" value="LEARN MORE" readonly /></div>
+            <div class="field"><label class="flabel">Button URL</label><input class="fctl" value="https://meridian.example/service-plus" readonly /></div>
+          </div>
+          <div class="fgroup">
+            <div class="fgroup-title">Layout</div>
+            <div class="field"><label class="flabel">Image Width (px)</label><input class="fctl" value="520" readonly /></div>
+            <div class="field"><label class="flabel">Image Height (px)</label><input class="fctl" value="Auto" readonly /></div>
+          </div>
+          <div class="fgroup">
+            <div class="fgroup-title">Style</div>
+            <div class="field">
+              <label class="flabel">Section Background</label>
+              <div class="colorrow"><span class="chip" style="background:#1A1A1A"></span><input class="fctl" value="#1A1A1A" readonly /></div>
+            </div>
+          </div>
+          <div class="notice">Advanced fields are hidden. Turn on <strong>Advanced</strong> in the command bar to show them.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <p class="caption">States shown: <strong>Unsaved changes</strong> with a disabled <strong>Export</strong>, the <strong>More</strong> overflow open, and a preview <strong>render failure</strong> with retry.</p>
+
+  <!-- ============================ SECONDARY: WORKSPACE ============================ -->
+  <div class="secondary">
+    <div class="sectag">Secondary view — Template Workspace (card density)</div>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <div class="url">edm-builder.internal/builder</div>
+      </div>
+      <div class="productbar">
+        <div class="brand"><span class="glyph">ED</span><span class="name">Email Template Builder</span></div>
+        <nav class="topnav">
+          <a href="#">Overview</a>
+          <a href="#" class="on">Workspace</a>
+          <a href="#">Editor</a>
+        </nav>
+        <div class="right">
+          <div class="theme"><span class="on">Light</span><span>Dark</span></div>
+          <span class="avatar">IS</span>
+        </div>
+      </div>
+
+      <div class="wshead">
+        <div>
+          <div class="eyebrow">Overview → Workspace</div>
+          <h2>Template Workspace</h2>
+          <p>Choose a template to continue into the editor, or start a new production draft.</p>
+        </div>
+        <div class="acts">
+          <button class="btn">← Overview</button>
+          <button class="btn btn-primary">+ New Template</button>
+        </div>
+      </div>
+
+      <div class="wsctl">
+        <input value="range teaser" placeholder="Search templates…" readonly />
+        <select><option>Recently updated</option><option>Oldest updated</option><option>Name A–Z</option><option>Name Z–A</option></select>
+      </div>
+
+      <div class="grid">
+        <div class="gempty">
+          <span style="display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8E8880;font-weight:700;margin-bottom:10px">State variant — filtered result set</span>
+          <b>No matches</b>
+          <p>No templates match “range teaser”. Try a different search.</p>
+        </div>
+        <div class="gcard">
+          <span class="gtag">Promotional</span>
+          <h3>Autumn Service Reminder</h3>
+          <p class="meta">6 blocks · Updated 2 Sep 2026</p>
+          <div class="row"><button class="btn btn-primary">Edit</button><button class="btn">Duplicate</button><button class="btn btn-quiet">Delete</button></div>
+        </div>
+        <div class="gcard">
+          <span class="gtag">Newsletter</span>
+          <h3>Monthly Owner Newsletter</h3>
+          <p class="meta">9 blocks · Updated 28 Aug 2026</p>
+          <div class="row"><button class="btn btn-primary">Edit</button><button class="btn">Duplicating…</button><button class="btn btn-quiet btn-disabled">Delete</button></div>
+        </div>
+        <div class="gcard">
+          <span class="gtag">Transactional</span>
+          <h3>Parts Order Confirmation</h3>
+          <p class="meta">4 blocks · Updated 21 Aug 2026</p>
+          <div class="row"><button class="btn btn-primary">Edit</button><button class="btn">Duplicate</button><button class="btn btn-quiet">Delete</button></div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">States shown: filtered <strong>No matches</strong> empty state alongside a card in a <strong>Duplicating…</strong> busy state.</p>
+  </div>
+
+</div>
+</body>
+</html>

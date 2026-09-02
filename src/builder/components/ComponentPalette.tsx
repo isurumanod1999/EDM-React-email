@@ -7,6 +7,7 @@ import type { SavedComponentDocument } from '@/lib/schema/savedComponent';
 import { formatCategoryLabel } from '@/builder/utils/props';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { pushToast } from '@/builder/store/toastStore';
+import { CloseIcon } from './icons';
 
 function PaletteItem({ entry }: { entry: ComponentRegistryEntry }) {
   const addBlock = useBuilderStore((s) => s.addBlock);
@@ -100,7 +101,7 @@ function SavedPaletteItem({ component }: { component: SavedComponentDocument }) 
         title="Delete reusable component"
         aria-label={`Delete reusable component ${component.name}`}
       >
-        ✕
+        <CloseIcon />
       </button>
     </div>
   );

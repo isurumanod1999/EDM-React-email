@@ -7,6 +7,7 @@ import { ImportProgressBanner } from '@/builder/components/ImportProgressBanner'
 import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { toFigmaSession, type FigmaImportApiResult } from '@/builder/types/figmaSession';
+import { CloseIcon } from './icons';
 
 interface FigmaFetchModalProps {
   open: boolean;
@@ -145,12 +146,12 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
           </div>
           <button
             type="button"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm btn-icon"
             onClick={handleClose}
             disabled={isFetching}
             aria-label="Close dialog"
           >
-            ✕
+            <CloseIcon />
           </button>
         </div>
 
@@ -208,7 +209,12 @@ export function FigmaFetchModal({ open, onClose, onFetchComplete }: FigmaFetchMo
         </div>
 
         <div className="import-modal-footer">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose} disabled={isFetching}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={handleClose}
+            disabled={isFetching}
+          >
             Cancel
           </button>
 

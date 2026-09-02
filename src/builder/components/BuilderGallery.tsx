@@ -8,6 +8,7 @@ import { formatCategoryLabel } from '@/builder/utils/props';
 import { BuilderToastContainer } from '@/builder/components/BuilderToastContainer';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { pushToast } from '@/builder/store/toastStore';
+import { PlusIcon } from '@/builder/components/icons';
 import '@/builder/builder.css';
 
 async function readApiError(res: Response, fallback: string): Promise<string> {
@@ -145,29 +146,36 @@ export function BuilderGallery() {
 
   return (
     <div className="gallery-page">
-      <div className="gallery-header">
-        <div>
-          <span className="gallery-eyebrow">Overview → Workspace</span>
-          <h1 className="gallery-title">Template Workspace</h1>
-          <p className="gallery-subtitle">
-            Choose a template to continue into the editor, or start a new production draft.
-          </p>
-        </div>
-        <div className="gallery-header-actions">
-          <Link href="/" className="btn btn-secondary">
-            ← Overview
-          </Link>
+      <header className="app-bar">
+        <Link href="/" className="app-bar-brand">
+          <span className="app-bar-mark" aria-hidden />
+          Email Studio
+        </Link>
+        <span className="app-bar-divider" aria-hidden="true" />
+        <span className="app-bar-context">Templates</span>
+        <div className="app-bar-actions">
           <ThemeToggle />
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-primary btn-sm"
             onClick={handleCreate}
             disabled={creating || loading}
           >
-            {creating ? 'Creating…' : '+ New Template'}
+            <PlusIcon />
+            {creating ? 'Creating…' : 'New template'}
           </button>
         </div>
-      </div>
+      </header>
+
+      <div className="gallery-body">
+        <div className="gallery-header">
+          <div>
+            <h1 className="gallery-title">Templates</h1>
+            <p className="gallery-subtitle">
+              Open a template to continue in the editor, or start a new production draft.
+            </p>
+          </div>
+        </div>
 
       {loading && <div className="loading-state">Loading templates…</div>}
 
@@ -236,52 +244,62 @@ export function BuilderGallery() {
             const deleting = busy && busyAction?.action === 'delete';
 
             return (
-              <article key={template.id} className="gallery-card">
-                <div>
-                  <span className="category-tag">{formatCategoryLabel(template.category)}</span>
+              <article
+                key={template.id}
+                className="gallery-card"
+                data-busy={busy || undefined}
+              >
+                <div className="gallery-card-head">
+                  <span className="category-tag">
+                    {formatCategoryLabel(template.category)}
+                  </span>
+                  <span className="gallery-card-blocks">
+                    {template.blockCount} block{template.blockCount !== 1 ? 's' : ''}
+                  </span>
                 </div>
-                <h2 className="gallery-card-title">{template.name}</h2>
-                {template.description ? (
-                  <p className="gallery-card-meta">{template.description}</p>
-                ) : null}
-                <p className="gallery-card-meta">
-                  {template.blockCount} block{template.blockCount !== 1 ? 's' : ''} · Updated{' '}
-                  {new Date(template.updatedAt).toLocaleDateString()}
-                </p>
-                <div className="gallery-card-actions">
-                  <Link
-                    href={`/builder/${template.id}`}
-                    className="btn btn-primary btn-sm"
-                    aria-disabled={busy}
-                    tabIndex={busy ? -1 : undefined}
-                    style={busy ? { pointerEvents: 'none', opacity: 0.5 } : undefined}
-                  >
-                    Edit
+
+                <h2 className="gallery-card-title">
+                  {/* Covers the whole card so the primary action is the card itself. */}
+                  <Link href={`/builder/${template.id}`} className="gallery-card-link">
+                    {template.name}
                   </Link>
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => handleDuplicate(template.id, template.name)}
-                    disabled={busy || creating}
-                  >
-                    {duplicating ? 'Duplicating…' : 'Duplicate'}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-sm btn-danger"
-                    onClick={() => handleDelete(template.id, template.name)}
-                    disabled={busy || creating}
-                  >
-                    {deleting ? 'Deleting…' : 'Delete'}
-                  </button>
+                </h2>
+
+                {template.description ? (
+                  <p className="gallery-card-desc">{template.description}</p>
+                ) : null}
+
+                <div className="gallery-card-foot">
+                  <span className="gallery-card-meta">
+                    Updated {new Date(template.updatedAt).toLocaleDateString()}
+                  </span>
+                  <div className="gallery-card-actions">
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => handleDuplicate(template.id, template.name)}
+                      disabled={busy || creating}
+                    >
+                      {duplicating ? 'Duplicating…' : 'Duplicate'}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm btn-danger"
+                      onClick={() => handleDelete(template.id, template.name)}
+                      disabled={busy || creating}
+                    >
+                      {deleting ? 'Deleting…' : 'Delete'}
+                    </button>
+                  </div>
                 </div>
               </article>
             );
           })}
             </div>
           )}
-        </>
-      ) : null}
+          </>
+        ) : null}
+      </div>
 
       <BuilderToastContainer />
     </div>

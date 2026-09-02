@@ -28,6 +28,7 @@ import { RichTextEditor } from './customizer/RichTextEditor';
 import { hasRichFormatting } from '@/builder/lib/sanitizeHtml';
 import { autoMobileStyle } from '@/components/email/mobileTypography';
 import type { StyleTarget } from '@/builder/store/builderStore';
+import { CloseIcon, DuplicateIcon } from './icons';
 
 const FIGMA_BLOCK_ID = 'figma-react-email';
 
@@ -116,11 +117,11 @@ export function ComponentCustomizer() {
         </div>
         <button
           type="button"
-          className="btn btn-ghost btn-sm"
+          className="btn btn-ghost btn-sm btn-icon"
           onClick={() => selectBlock(null)}
           aria-label="Close customizer"
         >
-          ✕
+          <CloseIcon />
         </button>
       </div>
 
@@ -149,12 +150,12 @@ export function ComponentCustomizer() {
                     <span className="fc-layer-actions">
                       <button
                         type="button"
-                        className="btn btn-ghost btn-sm"
+                        className="btn btn-ghost btn-sm btn-icon"
                         onClick={() => duplicateNode(block.id, key)}
                         title="Duplicate element"
                         aria-label="Duplicate element"
                       >
-                        ⧉
+                        <DuplicateIcon />
                       </button>
                       <button
                         type="button"
@@ -163,7 +164,7 @@ export function ComponentCustomizer() {
                         title="Delete element"
                         aria-label="Delete element"
                       >
-                        ✕
+                        <CloseIcon />
                       </button>
                     </span>
                   )}
@@ -218,8 +219,8 @@ export function ComponentCustomizer() {
             />
           ) : (
             <p className="fc-hint">
-              Select an element in the preview or the layers list to edit its text, colors,
-              spacing and more.
+              Select an element in the preview or the layers list to edit its text, colors, spacing
+              and more.
             </p>
           )}
         </div>
@@ -317,78 +318,78 @@ function NodeInspector({ node, styleView, isMobile, onStyle, onContent }: Inspec
       return (
         <>
           {!isMobile && (
-          <div className="field-group">
-            <div className="field-group-title">Content</div>
-            <RichTextEditor
-              value={node.html ?? ''}
-              plainFallback={node.content}
-              allowBlocks={node.type !== 'Link'}
-              placeholder={node.type === 'Link' ? 'Link text' : 'Type text…'}
-              onChange={(html, plain) =>
-                onContent(
-                  hasRichFormatting(html)
-                    ? { content: plain, html }
-                    : { content: plain, html: undefined }
-                )
-              }
-            />
-            {node.type === 'Heading' && (
-              <SelectControl
-                label="Heading level"
-                value={node.as ?? 'h2'}
-                options={HEADING_OPTIONS}
-                onChange={(v) => onContent({ as: v ?? 'h2' })}
+            <div className="field-group">
+              <div className="field-group-title">Content</div>
+              <RichTextEditor
+                value={node.html ?? ''}
+                plainFallback={node.content}
+                allowBlocks={node.type !== 'Link'}
+                placeholder={node.type === 'Link' ? 'Link text' : 'Type text…'}
+                onChange={(html, plain) =>
+                  onContent(
+                    hasRichFormatting(html)
+                      ? { content: plain, html }
+                      : { content: plain, html: undefined }
+                  )
+                }
               />
-            )}
-            {node.type === 'Link' && (
-              <TextControl
-                label="URL"
-                value={node.href}
-                placeholder="https://"
-                onChange={(v) => onContent({ href: v })}
-              />
-            )}
-            {(node.type === 'Text' || node.type === 'Heading') && (
-              <TextControl
-                label="Link URL (optional)"
-                value={node.href ?? ''}
-                placeholder="https:// — makes the text clickable"
-                onChange={(v) => onContent({ href: v || undefined })}
-              />
-            )}
-          </div>
+              {node.type === 'Heading' && (
+                <SelectControl
+                  label="Heading level"
+                  value={node.as ?? 'h2'}
+                  options={HEADING_OPTIONS}
+                  onChange={(v) => onContent({ as: v ?? 'h2' })}
+                />
+              )}
+              {node.type === 'Link' && (
+                <TextControl
+                  label="URL"
+                  value={node.href}
+                  placeholder="https://"
+                  onChange={(v) => onContent({ href: v })}
+                />
+              )}
+              {(node.type === 'Text' || node.type === 'Heading') && (
+                <TextControl
+                  label="Link URL (optional)"
+                  value={node.href ?? ''}
+                  placeholder="https:// — makes the text clickable"
+                  onChange={(v) => onContent({ href: v || undefined })}
+                />
+              )}
+            </div>
           )}
           {isMobile && (
-          <div className="field-group">
-            <div className="field-group-title">Mobile content</div>
-            {/* Seed from any existing mobile override, else the desktop text — so
+            <div className="field-group">
+              <div className="field-group-title">Mobile content</div>
+              {/* Seed from any existing mobile override, else the desktop text — so
                 the editor starts from what actually shows and the user just
                 tweaks it. Writes mobile-only keys; desktop content is untouched. */}
-            <RichTextEditor
-              value={node.mobileHtml ?? node.html ?? ''}
-              plainFallback={node.mobileContent ?? node.content}
-              allowBlocks={node.type !== 'Link'}
-              placeholder={node.type === 'Link' ? 'Mobile link text' : 'Mobile text…'}
-              onChange={(html, plain) =>
-                onContent(
-                  hasRichFormatting(html)
-                    ? { mobileContent: plain, mobileHtml: html }
-                    : { mobileContent: plain, mobileHtml: undefined }
-                )
-              }
-            />
-            <p className="fc-hint" style={{ marginTop: 6 }}>
-              This text shows only on phones (≤600px). Desktop keeps its own content.
-              {node.type === 'Link' ? ' The link URL is shared with desktop.' : ''}
-            </p>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              onClick={() => onContent({ mobileContent: undefined, mobileHtml: undefined })}
-            >
-              Clear mobile override (use desktop text)
-            </button>
-          </div>
+              <RichTextEditor
+                value={node.mobileHtml ?? node.html ?? ''}
+                plainFallback={node.mobileContent ?? node.content}
+                allowBlocks={node.type !== 'Link'}
+                placeholder={node.type === 'Link' ? 'Mobile link text' : 'Mobile text…'}
+                onChange={(html, plain) =>
+                  onContent(
+                    hasRichFormatting(html)
+                      ? { mobileContent: plain, mobileHtml: html }
+                      : { mobileContent: plain, mobileHtml: undefined }
+                  )
+                }
+              />
+              <p className="fc-hint" style={{ marginTop: 6 }}>
+                This text shows only on phones (≤600px). Desktop keeps its own content.
+                {node.type === 'Link' ? ' The link URL is shared with desktop.' : ''}
+              </p>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => onContent({ mobileContent: undefined, mobileHtml: undefined })}
+              >
+                Clear mobile override (use desktop text)
+              </button>
+            </div>
           )}
           {TypographyControls}
           {ColorControls(true)}
@@ -402,37 +403,41 @@ function NodeInspector({ node, styleView, isMobile, onStyle, onContent }: Inspec
       return (
         <>
           {!isMobile && (
-          <div className="field-group">
-            <div className="field-group-title">Content</div>
-            <TextControl label="Label" value={node.label} onChange={(v) => onContent({ label: v })} />
-            <TextControl
-              label="URL"
-              value={node.href}
-              placeholder="https://"
-              onChange={(v) => onContent({ href: v })}
-            />
-          </div>
+            <div className="field-group">
+              <div className="field-group-title">Content</div>
+              <TextControl
+                label="Label"
+                value={node.label}
+                onChange={(v) => onContent({ label: v })}
+              />
+              <TextControl
+                label="URL"
+                value={node.href}
+                placeholder="https://"
+                onChange={(v) => onContent({ href: v })}
+              />
+            </div>
           )}
           {isMobile && (
-          <div className="field-group">
-            <div className="field-group-title">Mobile content</div>
-            {/* Seed from the mobile label if set, else the desktop label. */}
-            <TextControl
-              label="Label"
-              value={node.mobileLabel ?? node.label}
-              onChange={(v) => onContent({ mobileLabel: v || undefined })}
-            />
-            <p className="fc-hint" style={{ marginTop: 6 }}>
-              Shown only on phones (≤600px). The link URL is shared with desktop.
-            </p>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              onClick={() => onContent({ mobileLabel: undefined })}
-            >
-              Clear mobile override (use desktop label)
-            </button>
-          </div>
+            <div className="field-group">
+              <div className="field-group-title">Mobile content</div>
+              {/* Seed from the mobile label if set, else the desktop label. */}
+              <TextControl
+                label="Label"
+                value={node.mobileLabel ?? node.label}
+                onChange={(v) => onContent({ mobileLabel: v || undefined })}
+              />
+              <p className="fc-hint" style={{ marginTop: 6 }}>
+                Shown only on phones (≤600px). The link URL is shared with desktop.
+              </p>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => onContent({ mobileLabel: undefined })}
+              >
+                Clear mobile override (use desktop label)
+              </button>
+            </div>
           )}
           <div className="field-group">
             <div className="field-group-title">Colors</div>
@@ -479,15 +484,18 @@ function NodeInspector({ node, styleView, isMobile, onStyle, onContent }: Inspec
       if (isMobile) {
         return (
           <p className="fc-hint">
-            Image source, size and link are shared across viewports. Switch to Desktop to edit
-            them.
+            Image source, size and link are shared across viewports. Switch to Desktop to edit them.
           </p>
         );
       }
       return (
         <div className="field-group">
           <div className="field-group-title">Image</div>
-          <TextControl label="Source URL" value={node.src} onChange={(v) => onContent({ src: v })} />
+          <TextControl
+            label="Source URL"
+            value={node.src}
+            onChange={(v) => onContent({ src: v })}
+          />
           <TextControl
             label="Alt text"
             value={node.alt ?? ''}

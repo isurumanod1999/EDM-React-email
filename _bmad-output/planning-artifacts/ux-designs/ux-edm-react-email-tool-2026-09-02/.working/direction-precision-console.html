@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Direction A — Precision Console | EDM Email Template Builder</title>
+<style>
+/* ==========================================================================
+   DIRECTION A — PRECISION CONSOLE
+   Primary theme: dark. Personality: instrument panel for a production operator.
+   Hairline borders instead of shadows, zero-to-2px radii, tabular metadata,
+   uppercase micro-labels, a persistent status strip. Density: tight.
+
+   PALETTE (primary / dark)
+   --------------------------------------------------------------------------
+   chrome product bar        #0B0E12
+   chrome document bar       #12161C
+   workspace pasteboard      #0E1216
+   panel surface             #161B22
+   raised control            #1D242D
+   hairline border           #262E39
+   strong border             #333D4A
+   text primary              #E6EAF0
+   text secondary            #9AA6B4
+   text tertiary             #6B7684
+   signal accent (amber)     #E0A233
+   accent dim                #7A5A1E
+   positive                  #3FA46A
+   danger                    #D2544B
+   content-true preview      #FFFFFF
+   ALTERNATE THEME (light)   bar #F2F4F7 / panel #FFFFFF / pasteboard #E6EAEE
+                             border #D2D8E0 / text #12161C / accent #A96A0C
+   ========================================================================== */
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px;
+    background: #0E1216; /* pasteboard */
+    color: #E6EAF0;
+    font-family: ui-sans-serif, "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sheet { max-width: 1480px; margin: 0 auto; }
+
+  /* ---- documentation header ---- */
+  .doc { border: 1px solid #262E39; background: #161B22; padding: 18px 20px; margin-bottom: 20px; }
+  .doc h1 { margin: 0 0 2px; font-size: 15px; letter-spacing: .02em; font-weight: 650; }
+  .doc .kicker { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #E0A233; font-weight: 700; }
+  .doc p { margin: 8px 0 0; color: #9AA6B4; max-width: 96ch; font-size: 12.5px; }
+  .swatches { display: flex; gap: 22px; margin-top: 14px; flex-wrap: wrap; }
+  .swgroup { border: 1px solid #262E39; padding: 8px 10px; }
+  .swgroup b { display: block; font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: #6B7684; margin-bottom: 6px; font-weight: 700; }
+  .swrow { display: flex; gap: 4px; }
+  .sw { width: 26px; height: 16px; border: 1px solid #333D4A; }
+
+  /* ---- browser frame ---- */
+  .frame { border: 1px solid #333D4A; background: #0B0E12; }
+  .frame-bar { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-bottom: 1px solid #262E39; background: #0B0E12; }
+  .dots { display: flex; gap: 5px; }
+  .dots i { width: 9px; height: 9px; border: 1px solid #333D4A; display: block; }
+  .url { flex: 1; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; color: #6B7684; border: 1px solid #262E39; background: #12161C; padding: 3px 8px; }
+
+  /* ---- app shell ---- */
+  .app { background: #0E1216; }
+  .productbar { display: flex; align-items: center; gap: 0; height: 38px; padding: 0 12px; background: #0B0E12; border-bottom: 1px solid #262E39; }
+  .mark { font-size: 11px; font-weight: 750; letter-spacing: .18em; color: #E0A233; padding-right: 12px; margin-right: 12px; border-right: 1px solid #262E39; }
+  .mark span { color: #E6EAF0; letter-spacing: .06em; font-weight: 600; }
+  .modnav { display: flex; height: 100%; }
+  .modnav a { display: flex; align-items: center; padding: 0 14px; font-size: 11.5px; letter-spacing: .04em; color: #9AA6B4; text-decoration: none; border-bottom: 2px solid transparent; }
+  .modnav a.on { color: #E6EAF0; border-bottom-color: #E0A233; background: #12161C; }
+  .productbar .right { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #9AA6B4; }
+  .themeswitch { display: flex; border: 1px solid #262E39; }
+  .themeswitch span { padding: 2px 8px; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #6B7684; }
+  .themeswitch span.on { background: #1D242D; color: #E6EAF0; }
+  .who { border: 1px solid #262E39; padding: 2px 7px; font-size: 10px; letter-spacing: .1em; color: #9AA6B4; }
+
+  /* ---- document command bar ---- */
+  .docbar { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; background: #12161C; border-bottom: 1px solid #262E39; }
+  .crumb { font-size: 10.5px; color: #6B7684; letter-spacing: .04em; white-space: nowrap; }
+  .titlefield { display: flex; align-items: center; gap: 8px; }
+  .titlefield input { background: #0E1216; border: 1px solid #262E39; color: #E6EAF0; font: inherit; font-size: 13.5px; font-weight: 600; padding: 4px 8px; width: 232px; }
+  .badge { font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; padding: 3px 6px; border: 1px solid #7A5A1E; color: #E0A233; background: #1D242D; }
+  .cmdgroups { margin-left: auto; display: flex; align-items: stretch; gap: 0; }
+  .cgroup { display: flex; flex-direction: column; gap: 3px; padding: 0 12px; border-left: 1px solid #262E39; }
+  .cgroup > b { font-size: 8.5px; letter-spacing: .16em; text-transform: uppercase; color: #6B7684; font-weight: 700; }
+  .cgroup .row { display: flex; gap: 5px; align-items: center; }
+  .btn { font: inherit; font-size: 11.5px; padding: 3px 9px; border: 1px solid #333D4A; background: #1D242D; color: #E6EAF0; border-radius: 2px; cursor: default; white-space: nowrap; }
+  .btn-ghost { background: transparent; border-color: #262E39; color: #9AA6B4; }
+  .btn-primary { background: #E0A233; border-color: #E0A233; color: #12161C; font-weight: 650; }
+  .btn-busy { background: #1D242D; border-color: #7A5A1E; color: #E0A233; font-weight: 600; }
+  .btn[disabled], .btn.is-disabled { opacity: .42; }
+  .dot { color: #3FA46A; font-size: 9px; }
+  .chk { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #9AA6B4; }
+  .chk i { width: 11px; height: 11px; border: 1px solid #333D4A; background: #0E1216; display: inline-block; }
+
+  /* ---- body grid ---- */
+  .body { display: grid; grid-template-columns: 228px 1fr 296px; min-height: 700px; }
+  .panel { background: #161B22; border-right: 1px solid #262E39; display: flex; flex-direction: column; min-width: 0; }
+  .panel:last-child { border-right: 0; border-left: 1px solid #262E39; }
+  .phead { display: flex; align-items: center; justify-content: space-between; height: 28px; padding: 0 10px; background: #12161C; border-bottom: 1px solid #262E39; font-size: 9.5px; letter-spacing: .15em; text-transform: uppercase; color: #9AA6B4; font-weight: 700; }
+  .phead em { font-style: normal; color: #6B7684; letter-spacing: .04em; text-transform: none; font-size: 11px; }
+  .pbody { padding: 8px; overflow: hidden; }
+
+  /* ---- palette ---- */
+  .cat { margin-bottom: 12px; }
+  .cat-title { display: flex; justify-content: space-between; font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: #6B7684; font-weight: 700; padding: 0 2px 5px; border-bottom: 1px solid #262E39; margin-bottom: 6px; }
+  .pitem { border: 1px solid #262E39; background: #1D242D; padding: 5px 8px; margin-bottom: 4px; }
+  .pitem-name { display: block; font-size: 12px; font-weight: 600; color: #E6EAF0; }
+  .pitem-desc { display: block; font-size: 10.5px; color: #6B7684; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pitem--saved { border-left: 2px solid #E0A233; }
+  .savedrow { display: flex; gap: 4px; align-items: stretch; }
+  .savedrow .pitem { flex: 1; }
+  .savedrow .del { border: 1px solid #262E39; background: transparent; color: #6B7684; width: 22px; font-size: 11px; margin-bottom: 4px; }
+  .empty { border: 1px dashed #333D4A; padding: 8px; font-size: 11px; color: #6B7684; text-align: center; }
+
+  /* ---- center: canvas + preview ---- */
+  .center { display: flex; flex-direction: column; background: #0E1216; min-width: 0; }
+  .canvassec { border-bottom: 1px solid #262E39; }
+  .blocklist { padding: 6px 8px; }
+  .block { display: grid; grid-template-columns: 20px 16px 1fr auto; align-items: center; gap: 8px; border: 1px solid #262E39; background: #161B22; padding: 4px 8px; margin-bottom: 3px; }
+  .block.sel { border-color: #E0A233; background: #1D242D; }
+  .idx { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; color: #6B7684; font-variant-numeric: tabular-nums; }
+  .grip { color: #6B7684; font-size: 12px; }
+  .bname { font-size: 12px; font-weight: 600; }
+  .btype { font-size: 10px; color: #6B7684; letter-spacing: .03em; }
+  .bacts { display: flex; gap: 3px; }
+  .bacts button { border: 1px solid #262E39; background: transparent; color: #9AA6B4; font-size: 10px; width: 20px; height: 18px; line-height: 1; }
+  .previewsec { flex: 1; display: flex; flex-direction: column; }
+  .ptoolbar { display: flex; align-items: center; justify-content: space-between; height: 30px; padding: 0 10px; background: #12161C; border-bottom: 1px solid #262E39; }
+  .ptoolbar .lbl { font-size: 9.5px; letter-spacing: .15em; text-transform: uppercase; color: #9AA6B4; font-weight: 700; }
+  .stale { color: #E0A233; letter-spacing: .04em; text-transform: none; font-size: 11px; font-weight: 500; margin-left: 8px; }
+  .seg { display: flex; border: 1px solid #333D4A; }
+  .seg button { border: 0; background: transparent; color: #9AA6B4; font: inherit; font-size: 11px; padding: 2px 10px; }
+  .seg button.on { background: #1D242D; color: #E6EAF0; font-weight: 600; }
+  .stage { flex: 1; padding: 18px; background: #0B0E12; display: flex; justify-content: center; overflow: hidden; }
+  .paper { width: 100%; max-width: 700px; background: #FFFFFF; border: 1px solid #333D4A; color: #1A1A1A; }
+
+  /* content-true email preview (customer content, neutral sample brand) */
+  .em-head { padding: 16px 24px; border-bottom: 1px solid #E4E4E4; font: 700 13px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .22em; }
+  .em-hero { padding: 30px 24px; background: #F0EEEA; }
+  .em-hero h2 { margin: 0 0 6px; font-size: 24px; letter-spacing: -.01em; }
+  .em-hero p { margin: 0 0 14px; font-size: 13px; color: #4A4A4A; }
+  .em-cta { display: inline-block; background: #1A1A1A; color: #FFFFFF; font-size: 11px; letter-spacing: .12em; padding: 9px 16px; font-weight: 700; }
+  .em-promo { display: flex; gap: 16px; padding: 20px 24px; background: #1A1A1A; color: #FFFFFF; align-items: center; }
+  .em-promo .thumb { width: 148px; height: 84px; background: #333333; flex: none; }
+  .em-promo h3 { margin: 0 0 4px; font-size: 15px; }
+  .em-promo p { margin: 0 0 8px; font-size: 12px; color: #CFCFCF; }
+  .em-promo .link { font-size: 10.5px; letter-spacing: .12em; font-weight: 700; border-bottom: 1px solid #FFFFFF; }
+  .em-cols { display: flex; gap: 14px; padding: 20px 24px; }
+  .em-cols div { flex: 1; }
+  .em-cols .ph { height: 62px; background: #ECEAE6; margin-bottom: 8px; }
+  .em-cols b { display: block; font-size: 12.5px; }
+  .em-cols span { font-size: 12px; color: #6A6A6A; }
+  .em-foot { padding: 16px 24px; background: #F4F3F1; font-size: 10.5px; color: #6A6A6A; border-top: 1px solid #E4E4E4; }
+
+  /* ---- inspector ---- */
+  .fgroup { margin-bottom: 12px; }
+  .fgroup-title { font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: #6B7684; font-weight: 700; padding-bottom: 5px; border-bottom: 1px solid #262E39; margin-bottom: 7px; }
+  .field { margin-bottom: 7px; }
+  .flabel { display: flex; justify-content: space-between; font-size: 10.5px; color: #9AA6B4; margin-bottom: 3px; }
+  .flabel .req { color: #E0A233; }
+  .fctl { width: 100%; background: #0E1216; border: 1px solid #262E39; color: #E6EAF0; font: inherit; font-size: 11.5px; padding: 4px 7px; }
+  .fctl--mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; }
+  .colorrow { display: flex; gap: 6px; align-items: center; }
+  .chip { width: 26px; height: 24px; border: 1px solid #333D4A; flex: none; }
+  .fhelp { font-size: 10.5px; color: #6B7684; }
+
+  /* ---- status strip ---- */
+  .status { display: flex; align-items: center; gap: 0; height: 24px; background: #0B0E12; border-top: 1px solid #262E39; padding: 0 12px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; color: #6B7684; }
+  .status span { padding: 0 12px; border-right: 1px solid #262E39; }
+  .status span:first-child { padding-left: 0; }
+  .status .ok { color: #3FA46A; }
+  .status .warn { color: #E0A233; }
+  .status .right { margin-left: auto; border: 0; padding-right: 0; }
+
+  /* ---- secondary view: workspace ---- */
+  .secondary { margin-top: 24px; }
+  .sectag { font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: #6B7684; font-weight: 700; margin-bottom: 8px; }
+  .wsbar { display: flex; align-items: flex-end; gap: 12px; padding: 14px 12px; background: #12161C; border-bottom: 1px solid #262E39; }
+  .wsbar h2 { margin: 2px 0 0; font-size: 16px; font-weight: 650; }
+  .wsbar .eyebrow { font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: #6B7684; font-weight: 700; }
+  .wsbar .acts { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  .wsctl { display: flex; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #262E39; background: #0E1216; }
+  .wsctl input, .wsctl select { background: #161B22; border: 1px solid #262E39; color: #E6EAF0; font: inherit; font-size: 11.5px; padding: 4px 8px; }
+  .wsctl input { width: 240px; }
+  table.ws { width: 100%; border-collapse: collapse; background: #161B22; }
+  table.ws th { text-align: left; font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: #6B7684; font-weight: 700; padding: 6px 12px; border-bottom: 1px solid #262E39; background: #12161C; }
+  table.ws td { padding: 7px 12px; border-bottom: 1px solid #1F262F; font-size: 12px; vertical-align: middle; }
+  table.ws td.num { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-variant-numeric: tabular-nums; color: #9AA6B4; }
+  .tag { font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; border: 1px solid #333D4A; padding: 2px 6px; color: #9AA6B4; }
+  .rowacts { display: flex; gap: 5px; justify-content: flex-end; }
+  .rowbusy { color: #D2544B; font-size: 11px; }
+  .caption { font-size: 11.5px; color: #6B7684; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="doc">
+    <div class="kicker">Direction A</div>
+    <h1>Precision Console</h1>
+    <p>
+      The editor reads as an instrument panel: hairline rules carry all structure, radii stay near zero, and every
+      command sits inside a labelled group (Import, Review, Deliver) so the document bar can be scanned rather than
+      read. Metadata is tabular and monospaced, and a persistent status strip keeps autosave, block count, and render
+      state visible without opening anything. Density is deliberately tight so an operator working ten campaigns a day
+      never scrolls chrome to reach a control.
+    </p>
+    <div class="swatches">
+      <div class="swgroup">
+        <b>Primary theme — dark</b>
+        <div class="swrow">
+          <span class="sw" style="background:#0B0E12"></span>
+          <span class="sw" style="background:#12161C"></span>
+          <span class="sw" style="background:#161B22"></span>
+          <span class="sw" style="background:#1D242D"></span>
+          <span class="sw" style="background:#333D4A"></span>
+          <span class="sw" style="background:#E0A233"></span>
+          <span class="sw" style="background:#3FA46A"></span>
+          <span class="sw" style="background:#D2544B"></span>
+        </div>
+      </div>
+      <div class="swgroup">
+        <b>Alternate theme — light</b>
+        <div class="swrow">
+          <span class="sw" style="background:#F2F4F7"></span>
+          <span class="sw" style="background:#FFFFFF"></span>
+          <span class="sw" style="background:#E6EAEE"></span>
+          <span class="sw" style="background:#D2D8E0"></span>
+          <span class="sw" style="background:#12161C"></span>
+          <span class="sw" style="background:#A96A0C"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ PRIMARY: EDITOR ============================ -->
+  <div class="frame">
+    <div class="frame-bar">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="url">edm-builder.internal/builder/8f2c41</div>
+    </div>
+
+    <div class="app">
+      <!-- product chrome (stable across app) -->
+      <div class="productbar">
+        <div class="mark">EDM&nbsp;<span>Email Template Builder</span></div>
+        <nav class="modnav">
+          <a href="#">Overview</a>
+          <a href="#">Workspace</a>
+          <a href="#" class="on">Editor</a>
+        </nav>
+        <div class="right">
+          <div class="themeswitch"><span class="on">Dark</span><span>Light</span></div>
+          <div class="who">OPS · I. SENANAYAKE</div>
+        </div>
+      </div>
+
+      <!-- document command bar: Navigate | Create/Import | Review | Deliver -->
+      <div class="docbar">
+        <div class="crumb">Workspace /</div>
+        <div class="titlefield">
+          <input value="Autumn Service Reminder" aria-label="Template name" readonly />
+          <span class="badge">Unsaved</span>
+        </div>
+
+        <div class="cmdgroups">
+          <div class="cgroup">
+            <b>View</b>
+            <div class="row"><label class="chk"><i></i> Advanced</label></div>
+          </div>
+          <div class="cgroup">
+            <b>Import</b>
+            <div class="row">
+              <button class="btn">Build from Figma <span class="dot">●</span></button>
+              <button class="btn">Import ▾</button>
+            </div>
+          </div>
+          <div class="cgroup">
+            <b>Review</b>
+            <div class="row">
+              <button class="btn">Tagging</button>
+              <button class="btn">Code</button>
+            </div>
+          </div>
+          <div class="cgroup">
+            <b>Deliver</b>
+            <div class="row">
+              <button class="btn">Send email</button>
+              <button class="btn">Export</button>
+              <button class="btn btn-ghost">Duplicate</button>
+              <button class="btn btn-busy">Saving…</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- three-rail body -->
+      <div class="body">
+
+        <!-- palette -->
+        <aside class="panel">
+          <div class="phead">Components</div>
+          <div class="pbody">
+            <div class="cat">
+              <div class="cat-title"><span>Reusable Components</span><span>2</span></div>
+              <div class="savedrow">
+                <div class="pitem pitem--saved">
+                  <span class="pitem-name">Service Offer Card</span>
+                  <span class="pitem-desc">Promo Block · locked copy</span>
+                </div>
+                <button class="del">✕</button>
+              </div>
+              <div class="savedrow">
+                <div class="pitem pitem--saved">
+                  <span class="pitem-name">Legal Footer AU</span>
+                  <span class="pitem-desc">Footer · compliance approved</span>
+                </div>
+                <button class="del">✕</button>
+              </div>
+            </div>
+
+            <div class="cat">
+              <div class="cat-title"><span>Layout</span><span>7</span></div>
+              <div class="pitem"><span class="pitem-name">Header</span><span class="pitem-desc">Logo header with optional link</span></div>
+              <div class="pitem"><span class="pitem-name">Section Title</span><span class="pitem-desc">Section heading divider</span></div>
+              <div class="pitem"><span class="pitem-name">Image Block</span><span class="pitem-desc">Standalone image with optional link</span></div>
+              <div class="pitem"><span class="pitem-name">Divider</span><span class="pitem-desc">Horizontal line separator</span></div>
+              <div class="pitem"><span class="pitem-name">Spacer</span><span class="pitem-desc">Vertical whitespace</span></div>
+              <div class="pitem"><span class="pitem-name">Footer</span><span class="pitem-desc">Social links and legal text</span></div>
+              <div class="pitem"><span class="pitem-name">Figma React Email</span><span class="pitem-desc">Built from Figma primitives</span></div>
+            </div>
+
+            <div class="cat">
+              <div class="cat-title"><span>Promotional</span><span>6</span></div>
+              <div class="pitem"><span class="pitem-name">Hero Banner</span><span class="pitem-desc">Full-width hero with headline</span></div>
+              <div class="pitem"><span class="pitem-name">Promo Block</span><span class="pitem-desc">Banner with image, title, CTA</span></div>
+              <div class="pitem"><span class="pitem-name">CTA Banner</span><span class="pitem-desc">Full-width call-to-action</span></div>
+              <div class="pitem"><span class="pitem-name">Button Row</span><span class="pitem-desc">Primary and secondary CTAs</span></div>
+              <div class="pitem"><span class="pitem-name">Stats Row</span><span class="pitem-desc">Three-column statistics</span></div>
+              <div class="pitem"><span class="pitem-name">Three Col Icon</span><span class="pitem-desc">Icon feature grid</span></div>
+            </div>
+
+            <div class="cat">
+              <div class="cat-title"><span>Product Showcase</span><span>3</span></div>
+              <div class="pitem"><span class="pitem-name">2-Col Dual CTA</span><span class="pitem-desc">Two-column cards, dual CTAs</span></div>
+              <div class="pitem"><span class="pitem-name">Two Col Stacked</span><span class="pitem-desc">Stacked products with prices</span></div>
+              <div class="pitem"><span class="pitem-name">One Col Product</span><span class="pitem-desc">Single featured product</span></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- canvas + preview -->
+        <main class="center">
+          <section class="canvassec">
+            <div class="phead">Canvas (6 blocks) <em>Drag to reorder</em></div>
+            <div class="blocklist">
+              <div class="block">
+                <span class="idx">01</span><span class="grip">⠿</span>
+                <div><div class="bname">Brand Header</div><div class="btype">Header</div></div>
+                <div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div>
+              </div>
+              <div class="block">
+                <span class="idx">02</span><span class="grip">⠿</span>
+                <div><div class="bname">Autumn hero</div><div class="btype">Hero Banner</div></div>
+                <div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div>
+              </div>
+              <div class="block sel">
+                <span class="idx">03</span><span class="grip">⠿</span>
+                <div><div class="bname">Service Plus offer</div><div class="btype">Promo Block</div></div>
+                <div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div>
+              </div>
+              <div class="block">
+                <span class="idx">04</span><span class="grip">⠿</span>
+                <div><div class="bname">Parts picks</div><div class="btype">Two Col Stacked</div></div>
+                <div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div>
+              </div>
+              <div class="block">
+                <span class="idx">05</span><span class="grip">⠿</span>
+                <div><div class="bname">Book a service</div><div class="btype">CTA Banner</div></div>
+                <div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div>
+              </div>
+              <div class="block">
+                <span class="idx">06</span><span class="grip">⠿</span>
+                <div><div class="bname">Legal Footer AU</div><div class="btype">Footer</div></div>
+                <div class="bacts"><button>＋</button><button>⧉</button><button>✕</button></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="previewsec">
+            <div class="ptoolbar">
+              <span class="lbl">Live Preview <span class="stale">· Updating…</span></span>
+              <div class="seg"><button class="on">Desktop</button><button>Mobile</button></div>
+            </div>
+            <div class="stage">
+              <div class="paper">
+                <div class="em-head">MERIDIAN</div>
+                <div class="em-hero">
+                  <h2>Autumn Service Reminder</h2>
+                  <p>Book before 30 November and save on essential seasonal checks.</p>
+                  <span class="em-cta">BOOK A SERVICE</span>
+                </div>
+                <div class="em-promo">
+                  <div class="thumb"></div>
+                  <div>
+                    <h3>Service Plus</h3>
+                    <p>Up to <strong>3 years of scheduled maintenance</strong> included.</p>
+                    <span class="link">LEARN MORE</span>
+                  </div>
+                </div>
+                <div class="em-cols">
+                  <div><div class="ph"></div><b>Cabin Filter Kit</b><span>$48.00</span></div>
+                  <div><div class="ph"></div><b>Wiper Blade Set</b><span>$32.00</span></div>
+                </div>
+                <div class="em-foot">You are receiving this because your vehicle is serviced by Meridian. Unsubscribe · Privacy</div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <!-- inspector -->
+        <aside class="panel">
+          <div class="phead">Properties <em>Promo Block</em></div>
+          <div class="pbody">
+            <div class="fgroup">
+              <div class="fgroup-title">Selection</div>
+              <div class="fhelp">Promotional banner with image, title, and CTA. Block 03 of 6.</div>
+            </div>
+            <div class="fgroup">
+              <div class="fgroup-title">Content</div>
+              <div class="field"><div class="flabel"><span>Image URL</span><span class="req">Required</span></div><input class="fctl fctl--mono" value="/images/service-plus-520.jpg" readonly /></div>
+              <div class="field"><div class="flabel"><span>Title</span></div><input class="fctl" value="Service Plus" readonly /></div>
+              <div class="field"><div class="flabel"><span>Subtitle</span><span>Rich text</span></div><textarea class="fctl" rows="2" readonly>Up to &lt;strong&gt;3 years of scheduled maintenance&lt;/strong&gt; included.</textarea></div>
+              <div class="field"><div class="flabel"><span>Button Text</span></div><input class="fctl" value="LEARN MORE" readonly /></div>
+              <div class="field"><div class="flabel"><span>Button URL</span></div><input class="fctl fctl--mono" value="https://meridian.example/service-plus" readonly /></div>
+            </div>
+            <div class="fgroup">
+              <div class="fgroup-title">Layout</div>
+              <div class="field"><div class="flabel"><span>Image Width (px)</span></div><input class="fctl fctl--mono" value="520" readonly /></div>
+              <div class="field"><div class="flabel"><span>Image Height (px)</span></div><input class="fctl fctl--mono" value="Auto" readonly /></div>
+            </div>
+            <div class="fgroup">
+              <div class="fgroup-title">Style</div>
+              <div class="field">
+                <div class="flabel"><span>Section Background</span></div>
+                <div class="colorrow"><span class="chip" style="background:#1A1A1A"></span><input class="fctl fctl--mono" value="#1A1A1A" readonly /></div>
+              </div>
+            </div>
+            <div class="fgroup">
+              <div class="fgroup-title">Email Meta</div>
+              <div class="field"><div class="flabel"><span>Preview Text</span></div><input class="fctl" value="Autumn checks from $99 — book before 30 Nov" readonly /></div>
+              <div class="field">
+                <div class="flabel"><span>Background Color</span></div>
+                <div class="colorrow"><span class="chip" style="background:#FFFFFF"></span><input class="fctl fctl--mono" value="#FFFFFF" readonly /></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- persistent status strip -->
+      <div class="status">
+        <span class="warn">SAVING…</span>
+        <span>AUTOSAVE 45s</span>
+        <span>LAST SAVED 17:32</span>
+        <span>BLOCKS 6</span>
+        <span class="warn">PREVIEW UPDATING</span>
+        <span class="ok">TAGGING 12/12 MAPPED</span>
+        <span class="right">CATEGORY PROMOTIONAL</span>
+      </div>
+    </div>
+  </div>
+  <p class="caption">State shown: dirty document mid-save — <strong>Unsaved</strong> badge, <strong>Saving…</strong> primary command, stale preview label, and a live status strip.</p>
+
+  <!-- ============================ SECONDARY: WORKSPACE ============================ -->
+  <div class="secondary">
+    <div class="sectag">Secondary view — Template Workspace (list density)</div>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <div class="url">edm-builder.internal/builder</div>
+      </div>
+      <div class="app">
+        <div class="productbar">
+          <div class="mark">EDM&nbsp;<span>Email Template Builder</span></div>
+          <nav class="modnav">
+            <a href="#">Overview</a>
+            <a href="#" class="on">Workspace</a>
+            <a href="#">Editor</a>
+          </nav>
+          <div class="right">
+            <div class="themeswitch"><span class="on">Dark</span><span>Light</span></div>
+            <div class="who">OPS · I. SENANAYAKE</div>
+          </div>
+        </div>
+
+        <div class="wsbar">
+          <div>
+            <div class="eyebrow">Overview → Workspace</div>
+            <h2>Template Workspace</h2>
+          </div>
+          <div class="acts">
+            <button class="btn btn-ghost">← Overview</button>
+            <button class="btn btn-primary">+ New Template</button>
+          </div>
+        </div>
+
+        <div class="wsctl">
+          <input value="" placeholder="Search templates…" readonly />
+          <select><option>Recently updated</option><option>Oldest updated</option><option>Name A–Z</option><option>Name Z–A</option></select>
+        </div>
+
+        <table class="ws">
+          <thead>
+            <tr><th>Template</th><th>Category</th><th>Blocks</th><th>Updated</th><th style="text-align:right">Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Autumn Service Reminder</strong><div style="color:#6B7684;font-size:11px">Seasonal service push · 6 blocks tagged</div></td>
+              <td><span class="tag">Promotional</span></td>
+              <td class="num">6</td>
+              <td class="num">02 Sep 2026</td>
+              <td><div class="rowacts"><button class="btn btn-primary">Edit</button><button class="btn">Duplicate</button><button class="btn btn-ghost">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td><strong>Monthly Owner Newsletter</strong><div style="color:#6B7684;font-size:11px">Recurring send, first Tuesday</div></td>
+              <td><span class="tag">Newsletter</span></td>
+              <td class="num">9</td>
+              <td class="num">28 Aug 2026</td>
+              <td><div class="rowacts"><button class="btn btn-primary">Edit</button><button class="btn">Duplicating…</button><button class="btn btn-ghost is-disabled">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td><strong>Parts Order Confirmation</strong><div style="color:#6B7684;font-size:11px">Triggered by order webhook</div></td>
+              <td><span class="tag">Transactional</span></td>
+              <td class="num">4</td>
+              <td class="num">21 Aug 2026</td>
+              <td><div class="rowacts"><button class="btn btn-primary">Edit</button><button class="btn">Duplicate</button><button class="btn btn-ghost">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td><strong>Q4 Model Range Teaser</strong><div style="color:#6B7684;font-size:11px">Imported from Figma frame “Range / Teaser”</div></td>
+              <td><span class="tag">Product Showcase</span></td>
+              <td class="num">7</td>
+              <td class="num">14 Aug 2026</td>
+              <td><div class="rowacts"><span class="rowbusy">Deleting…</span></div></td>
+            </tr>
+            <tr>
+              <td><strong>Untitled Template</strong><div style="color:#6B7684;font-size:11px">No blocks yet</div></td>
+              <td><span class="tag">Newsletter</span></td>
+              <td class="num">0</td>
+              <td class="num">02 Sep 2026</td>
+              <td><div class="rowacts"><button class="btn btn-primary">Edit</button><button class="btn">Duplicate</button><button class="btn btn-ghost">Delete</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="status">
+          <span>5 TEMPLATES</span>
+          <span>SORT RECENTLY UPDATED</span>
+          <span class="warn">1 ROW BUSY</span>
+          <span class="right">STORAGE data/templates</span>
+        </div>
+      </div>
+    </div>
+    <p class="caption">State shown: row-level busy states — <strong>Duplicating…</strong> and <strong>Deleting…</strong> with sibling actions dimmed.</p>
+  </div>
+
+</div>
+</body>
+</html>

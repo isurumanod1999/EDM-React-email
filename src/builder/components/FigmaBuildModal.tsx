@@ -15,6 +15,7 @@ import {
   type ImageNodeOutlineEntry,
 } from '@/lib/figma/detectImageNodes';
 import { findNodeIdsFromDesignHints } from '@/lib/figma/designContextImageHints';
+import { CloseIcon } from './icons';
 
 interface FigmaBuildModalProps {
   open: boolean;
@@ -61,19 +62,12 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
 
   const contextHintIds = useMemo(() => {
     if (!figmaSession?.desktopNode) return [] as string[];
-    return findNodeIdsFromDesignHints(
-      figmaSession.desktopNode,
-      figmaSession.designContext
-    );
+    return findNodeIdsFromDesignHints(figmaSession.desktopNode, figmaSession.designContext);
   }, [figmaSession?.desktopNode, figmaSession?.designContext]);
 
   const instructionHintIds = useMemo(() => {
     if (!figmaSession?.desktopNode || !imageInstructions.trim()) return [] as string[];
-    return findNodeIdsFromDesignHints(
-      figmaSession.desktopNode,
-      undefined,
-      imageInstructions
-    );
+    return findNodeIdsFromDesignHints(figmaSession.desktopNode, undefined, imageInstructions);
   }, [figmaSession?.desktopNode, imageInstructions]);
 
   const detectedImageIds = useMemo(() => {
@@ -120,10 +114,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
     const mergeAnchors = detectImageMergeClusters(figmaSession.desktopNode)
       .map((c) => c.nodeIds[0])
       .filter((id): id is string => Boolean(id));
-    const hints = findNodeIdsFromDesignHints(
-      figmaSession.desktopNode,
-      figmaSession.designContext
-    );
+    const hints = findNodeIdsFromDesignHints(figmaSession.desktopNode, figmaSession.designContext);
     const defaults = [...new Set([...badges, ...mergeAnchors, ...hints])];
     setInitialImageIds(defaults);
     setSelectedImageIds(defaults);
@@ -228,8 +219,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
         designContext: figmaSession.designContext,
         autoDetectImages: false,
         imageInstructions: imageInstructions.trim() || undefined,
-        imageNodeIds:
-          effectiveSelectedImageIds.length > 0 ? effectiveSelectedImageIds : undefined,
+        imageNodeIds: effectiveSelectedImageIds.length > 0 ? effectiveSelectedImageIds : undefined,
         forcePrimitiveBuild:
           explicitLayerIds.length > 0 ||
           Boolean(imageInstructions.trim()) ||
@@ -305,9 +295,7 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
             <h2 id="figma-build-empty-title">Build from Figma</h2>
           </div>
           <div className="import-modal-body">
-            <p className="import-field-hint">
-              No Figma design loaded. Fetch a frame first.
-            </p>
+            <p className="import-field-hint">No Figma design loaded. Fetch a frame first.</p>
           </div>
           <div className="import-modal-footer">
             <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose}>
@@ -349,12 +337,12 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
           </div>
           <button
             type="button"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm btn-icon"
             onClick={handleClose}
             disabled={busy}
             aria-label="Close dialog"
           >
-            ✕
+            <CloseIcon />
           </button>
         </div>
 
@@ -544,7 +532,12 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
         </div>
 
         <div className="import-modal-footer">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose} disabled={busy}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={handleClose}
+            disabled={busy}
+          >
             Cancel
           </button>
 
