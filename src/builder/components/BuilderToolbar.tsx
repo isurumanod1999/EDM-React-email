@@ -16,6 +16,7 @@ import { pushToast } from '@/builder/store/toastStore';
 import { confirmLeaveIfDirty } from '@/builder/hooks/useUnsavedChangesGuard';
 import { downloadBlob } from '@/builder/utils/download';
 import { sanitizeExportName } from '@/lib/export/sanitizeName';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export function BuilderToolbar() {
   const router = useRouter();
@@ -110,8 +111,9 @@ export function BuilderToolbar() {
     <header className="builder-toolbar">
       <div className="builder-toolbar-left">
         <Link href="/builder" className="btn btn-ghost btn-sm">
-          ← Templates
+          ← Workspace
         </Link>
+        <ThemeToggle className="builder-theme-toggle" />
         {template && (
           <div className="builder-toolbar-title">
             <input
