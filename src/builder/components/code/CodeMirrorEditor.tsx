@@ -7,6 +7,7 @@ import { StateEffect, StateField } from '@codemirror/state';
 import { Decoration, DecorationSet, EditorView } from '@codemirror/view';
 import type { CodeSelectionIndex, CodeSpan } from '@/lib/codeview/selectionIndex';
 import { selectionAtOffset } from '@/lib/codeview/selectionIndex';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
 const setHighlight = StateEffect.define<CodeSpan | null>();
 
@@ -62,6 +63,7 @@ export default function CodeMirrorEditor({
   selectionIndex = null,
   onSelect,
 }: CodeMirrorEditorProps) {
+  const { theme } = useTheme();
   const viewRef = useRef<EditorView | null>(null);
 
   const clickSelectExtension = useMemo(() => {
@@ -86,27 +88,35 @@ export default function CodeMirrorEditor({
       javascript({ jsx: true }),
       highlightField,
       EditorView.theme({
-        '&': { fontSize: `${fontSize}px` },
+        '&': {
+          fontSize: `${fontSize}px`,
+          backgroundColor: 'var(--code-bg)',
+          color: 'var(--code-text)',
+        },
         '.cm-scroller': {
           fontFamily:
             "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
           lineHeight: '1.6',
         },
-        '.cm-gutters': { borderRight: '1px solid rgba(255,255,255,0.08)' },
+        '.cm-gutters': {
+          backgroundColor: 'var(--code-gutter)',
+          color: 'var(--code-muted)',
+          borderRight: '1px solid var(--border)',
+        },
         '.cm-content': { caretColor: 'inherit' },
         '.cm-line.cm-code-selection-highlight': {
-          backgroundColor: 'rgba(79, 70, 229, 0.12)',
+          backgroundColor: 'var(--code-line-highlight)',
         },
         '.cm-gutterElement.cm-code-selection-highlight': {
-          backgroundColor: 'rgba(79, 70, 229, 0.18)',
-          color: 'rgba(199, 210, 254, 0.95)',
+          backgroundColor: 'var(--code-line-highlight)',
+          color: 'var(--accent-text)',
         },
-      }),
+      }, { dark: theme === 'dark' }),
       ...clickSelectExtension,
     ];
     if (wrap) list.push(EditorView.lineWrapping);
     return list;
-  }, [fontSize, wrap, clickSelectExtension]);
+  }, [fontSize, wrap, clickSelectExtension, theme]);
 
   useEffect(() => {
     const view = viewRef.current;
@@ -127,7 +137,7 @@ export default function CodeMirrorEditor({
     <CodeMirror
       value={value}
       height="100%"
-      theme="dark"
+      theme={theme}
       extensions={extensions}
       onChange={onChange}
       onCreateEditor={(view) => {

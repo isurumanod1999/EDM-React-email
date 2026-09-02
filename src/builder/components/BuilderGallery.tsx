@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { TemplateSummary } from '@/lib/schema/template';
 import { formatCategoryLabel } from '@/builder/utils/props';
 import { BuilderToastContainer } from '@/builder/components/BuilderToastContainer';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { pushToast } from '@/builder/store/toastStore';
 import '@/builder/builder.css';
 
@@ -146,15 +147,17 @@ export function BuilderGallery() {
     <div className="gallery-page">
       <div className="gallery-header">
         <div>
-          <h1 className="gallery-title">Email Template Builder</h1>
+          <span className="gallery-eyebrow">Overview → Workspace</span>
+          <h1 className="gallery-title">Template Workspace</h1>
           <p className="gallery-subtitle">
-            Create, edit, and preview email templates with drag-and-drop components
+            Choose a template to continue into the editor, or start a new production draft.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
+        <div className="gallery-header-actions">
           <Link href="/" className="btn btn-secondary">
-            ← Home
+            ← Overview
           </Link>
+          <ThemeToggle />
           <button
             type="button"
             className="btn btn-primary"
