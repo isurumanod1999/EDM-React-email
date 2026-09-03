@@ -18,7 +18,8 @@ import { useUnsavedChangesGuard } from '@/builder/hooks/useUnsavedChangesGuard';
 import { BuilderToolbar } from './BuilderToolbar';
 import { BuilderToastContainer } from './BuilderToastContainer';
 import { BuilderMobileNav, type MobileDrawer } from './BuilderMobileNav';
-import { BuilderLeftRail } from './BuilderLeftRail';
+import { ComponentPalette } from './ComponentPalette';
+import { BlockCanvas } from './BlockCanvas';
 import { PropertyPanel } from './PropertyPanel';
 import { LivePreview } from './LivePreview';
 import { ComponentCustomizer } from './ComponentCustomizer';
@@ -161,12 +162,13 @@ export function BuilderEditor({ templateId }: BuilderEditorProps) {
               onClick={() => setMobileDrawer(null)}
             />
           ) : null}
-          <BuilderLeftRail
+          <ComponentPalette
             className={
               mobileDrawer === 'components' ? 'builder-panel--mobile-open' : undefined
             }
           />
           <main className="builder-center">
+            <BlockCanvas />
             <LivePreview />
           </main>
           <PropertyPanel

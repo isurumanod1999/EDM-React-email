@@ -24,7 +24,7 @@ export function BlockCanvas() {
     registry.find((c) => c.id === componentId)?.name ?? componentId;
 
   return (
-    <section className="rail-section rail-section--structure">
+    <section className="builder-canvas-section">
       <div className="builder-panel-header">
         Structure
         <span className="rail-count">
@@ -38,7 +38,7 @@ export function BlockCanvas() {
       >
         {blocks.length === 0 ? (
           <div className="canvas-empty">
-            Drag a component here, or double-click one above
+            Drag components from the palette, or double-click one to add it
           </div>
         ) : (
           <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>

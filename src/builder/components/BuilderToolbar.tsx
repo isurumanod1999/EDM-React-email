@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AiImportModal } from '@/builder/components/AiImportModal';
@@ -39,6 +39,17 @@ export function BuilderToolbar() {
   const [figmaBatchOpen, setFigmaBatchOpen] = useState(false);
   const [sendOpen, setSendOpen] = useState(false);
 
+  useEffect(() => {
+    const handleSaveShortcut = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 's') return;
+      event.preventDefault();
+      if (!isSaving && isDirty) void save();
+    };
+
+    window.addEventListener('keydown', handleSaveShortcut);
+    return () => window.removeEventListener('keydown', handleSaveShortcut);
+  }, [isDirty, isSaving, save]);
+
   const handleDuplicate = async () => {
     if (!template) return;
     if (!confirmLeaveIfDirty()) return;
@@ -57,7 +68,7 @@ export function BuilderToolbar() {
     if (!template || isExporting) return;
 
     if (template.blocks.length === 0) {
-      pushToast('Add at least one component to the canvas before exporting.', 'info');
+      pushToast('Add at least one component to the structure before exporting.', 'info');
       return;
     }
 
@@ -157,7 +168,7 @@ export function BuilderToolbar() {
             onClick={() => setSendOpen(true)}
             disabled={!canDeliver}
             title={
-              canDeliver ? 'Send a test email via Resend' : 'Add components to the canvas first'
+              canDeliver ? 'Send a test email via Resend' : 'Add components to the structure first'
             }
           >
             <SendIcon />
@@ -171,7 +182,7 @@ export function BuilderToolbar() {
             title={
               canDeliver
                 ? 'Download ZIP with HTML and img folder'
-                : 'Add components to the canvas first'
+                : 'Add components to the structure first'
             }
           >
             <ExportIcon />
@@ -187,6 +198,7 @@ export function BuilderToolbar() {
             className="btn btn-primary btn-sm"
             onClick={() => save()}
             disabled={isSaving || !isDirty}
+            title="Save template (Ctrl+S)"
           >
             <SaveIcon />
             {isSaving ? 'Saving…' : 'Save'}
