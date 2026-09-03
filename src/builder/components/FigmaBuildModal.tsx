@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FigmaReviewPanel } from '@/builder/components/figma/FigmaReviewPanel';
-import { OllamaStatusBanner } from '@/builder/components/figma/OllamaStatusBanner';
 import { ImportProgressBanner } from '@/builder/components/ImportProgressBanner';
 import { ImportResultPanel } from '@/builder/components/ImportResultPanel';
 import { useModalA11y } from '@/builder/hooks/useModalA11y';
@@ -347,8 +346,6 @@ export function FigmaBuildModal({ open, onClose, onFetchAgain }: FigmaBuildModal
         </div>
 
         <div className="import-modal-body">
-          <OllamaStatusBanner />
-
           {isBuilding && (
             <ImportProgressBanner message="Building React Email… exporting icons from Figma can take up to a minute." />
           )}
