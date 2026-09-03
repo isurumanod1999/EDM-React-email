@@ -72,7 +72,7 @@ export function CodePreviewPane() {
         ) : (
           <div
             className={`code-modal-preview-frame${isStale ? ' is-stale' : ''}`}
-            style={{ maxWidth: viewMode === 'desktop' ? 700 : 375 }}
+            style={{ maxWidth: viewMode === 'desktop' ? 700 : 360 }}
           >
             {showInitialLoad ? (
               <div className="code-modal-preview-empty" aria-busy="true">

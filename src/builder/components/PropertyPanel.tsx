@@ -140,6 +140,43 @@ export function PropertyPanel({ className }: { className?: string }) {
                 </div>
               </div>
               <div className="field">
+                <label className="field-label">Content Background</label>
+                <div className="field-color-row field-color-row--clearable">
+                  <input
+                    type="color"
+                    className="field-color"
+                    value={template.meta.contentBackgroundColor ?? '#ffffff'}
+                    onChange={(e) =>
+                      updateMeta({ contentBackgroundColor: e.target.value })
+                    }
+                    aria-label="Choose content background color"
+                  />
+                  <input
+                    className="field-input"
+                    placeholder="Transparent"
+                    value={template.meta.contentBackgroundColor ?? ''}
+                    onChange={(e) =>
+                      updateMeta({
+                        contentBackgroundColor: e.target.value.trim() || undefined,
+                      })
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => updateMeta({ contentBackgroundColor: undefined })}
+                    disabled={!template.meta.contentBackgroundColor}
+                    title="Clear content background"
+                  >
+                    Clear
+                  </button>
+                </div>
+                <p className="field-help">
+                  Fills the gaps between components. Set this to your design colour so
+                  seams don&apos;t show through on dark templates.
+                </p>
+              </div>
+              <div className="field">
                 <label className="field-label">Email Width</label>
                 <div className="field-input-suffix">
                   <input

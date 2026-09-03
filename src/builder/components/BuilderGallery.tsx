@@ -154,7 +154,6 @@ export function BuilderGallery() {
         <span className="app-bar-divider" aria-hidden="true" />
         <span className="app-bar-context">Templates</span>
         <div className="app-bar-actions">
-          <ThemeToggle />
           <button
             type="button"
             className="btn btn-primary btn-sm"
@@ -164,6 +163,7 @@ export function BuilderGallery() {
             <PlusIcon />
             {creating ? 'Creating…' : 'New template'}
           </button>
+          <ThemeToggle />
         </div>
       </header>
 

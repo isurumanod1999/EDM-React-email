@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { useTemplatePreview } from '@/builder/hooks/useTemplatePreview';
 import { usePreviewScrollRestore } from '@/builder/hooks/usePreviewScrollRestore';
@@ -27,8 +27,8 @@ export function LivePreview() {
     handleIframeLoad(pushHighlight);
   }, [handleIframeLoad, pushHighlight]);
 
-  const frameWidth = viewMode === 'desktop' ? '100%' : '375px';
-  const maxWidth = viewMode === 'desktop' ? '700px' : '375px';
+  const frameWidth = viewMode === 'desktop' ? '100%' : '360px';
+  const maxWidth = viewMode === 'desktop' ? '700px' : '360px';
 
   const selectedBlock = template?.blocks.find((b) => b.id === selectedBlockId);
   const isFigmaBlock = selectedBlock?.componentId === FIGMA_BLOCK_ID;

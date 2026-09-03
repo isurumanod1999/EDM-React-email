@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export default function PreviewPage() {
   const params = useParams();
@@ -118,6 +119,7 @@ export default function PreviewPage() {
           >
             Mobile
           </button>
+          <ThemeToggle />
         </div>
       </header>
 
@@ -145,7 +147,7 @@ export default function PreviewPage() {
           </div>
         ) : (
           <div style={{
-            width: viewMode === 'desktop' ? '100%' : '375px',
+            width: viewMode === 'desktop' ? '100%' : '360px',
             maxWidth: '700px',
             backgroundColor: '#ffffff',
             borderRadius: '8px',

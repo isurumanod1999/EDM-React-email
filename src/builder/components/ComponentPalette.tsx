@@ -111,7 +111,7 @@ function SavedPaletteItem({ component }: { component: SavedComponentDocument }) 
   );
 }
 
-export function ComponentPalette({ className }: { className?: string }) {
+export function ComponentPalette({ style }: { style?: React.CSSProperties }) {
   const paletteByCategory = useBuilderStore((s) => s.paletteByCategory);
   const savedComponents = useBuilderStore((s) => s.savedComponents);
   const savedComponentsLoading = useBuilderStore((s) => s.savedComponentsLoading);
@@ -147,9 +147,7 @@ export function ComponentPalette({ className }: { className?: string }) {
   const noResults = Boolean(search) && matchedCategories.length === 0 && matchedSaved.length === 0;
 
   return (
-    <aside
-      className={`builder-panel builder-panel--palette${className ? ` ${className}` : ''}`}
-    >
+    <section className="rail-section rail-section--components" style={style}>
       <div className="builder-panel-header">
         Components
         <input
@@ -197,6 +195,6 @@ export function ComponentPalette({ className }: { className?: string }) {
           ))
         )}
       </div>
-    </aside>
+    </section>
   );
 }

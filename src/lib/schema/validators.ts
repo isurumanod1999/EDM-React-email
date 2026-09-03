@@ -13,6 +13,7 @@ export const templateCategorySchema = z.enum([
 export const emailTemplateMetaSchema = z.object({
   previewText: z.string().min(1),
   backgroundColor: z.string().min(1),
+  contentBackgroundColor: z.string().min(1).optional(),
   containerWidth: z.number().int().positive().default(600),
 });
 

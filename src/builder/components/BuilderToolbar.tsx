@@ -203,7 +203,6 @@ export function BuilderToolbar() {
             <SaveIcon />
             {isSaving ? 'Saving…' : 'Save'}
           </button>
-          <ThemeToggle className="builder-theme-toggle" />
           <ToolbarOverflowMenu
             showAdvanced={showAdvanced}
             onToggleAdvanced={setShowAdvanced}
@@ -211,6 +210,10 @@ export function BuilderToolbar() {
             duplicateDisabled={!template}
           />
         </div>
+
+        <span className="builder-toolbar-divider" aria-hidden="true" />
+
+        <ThemeToggle />
       </div>
 
       <FigmaFetchModal
