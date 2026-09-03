@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "d9c9514e-163f-499f-93a0-5d2523a42a22",
-  "name": "NIssan Patrol ( custom warranty card)",
+  "name": "NIssan Patrol Test 2",
   "category": "newsletter",
   "meta": {
     "previewText": "Preview your email",
@@ -349,7 +349,7 @@
                   "children": [
                     {
                       "type": "Heading",
-                      "content": "THE LATEST TECHNOLOGY  AT YOUR COMMANDsfsdfsdf",
+                      "content": "THE LATEST TECHNOLOGY  AT YOUR COMMAND",
                       "as": "h2",
                       "style": {
                         "color": "#caa185",
@@ -866,6 +866,40 @@
       "label": "CTA Banner"
     },
     {
+      "id": "f18d938a-ce76-49e2-a7ee-3bab033d5114",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto",
+            "backgroundColor": "#000000"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-5a163912-f8e4-4d80-aef3-4c2d29dd8389.png",
+              "mobileSrc": "/images/uploads/figma-mob-e6702b3f-9216-4aa4-9029-a6e5b2ea1db9.png",
+              "width": 600,
+              "height": 512,
+              "alt": "Nissan More banner",
+              "align": "center",
+              "fullBleed": true,
+              "className": "figma-frame-img-6f74d086-7c2a-4a91-b9e1-f0276b56087a"
+            }
+          ]
+        },
+        "sourceFrame": "Nissan More banner",
+        "mobileFrame": "Nissan More banner",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "Nissan More banner"
+    },
+    {
       "id": "6cef97c9-fcf7-4f69-af63-94ccb3a33996",
       "componentId": "figma-react-email",
       "componentVersion": 1,
@@ -1041,5 +1075,5 @@
     }
   ],
   "createdAt": "2026-09-03T04:38:04.983Z",
-  "updatedAt": "2026-09-03T05:41:32.199Z"
+  "updatedAt": "2026-09-03T05:47:30.811Z"
 }

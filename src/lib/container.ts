@@ -1,5 +1,6 @@
 import { config } from '@/lib/config';
 import type { TemplateRepository, SavedComponentRepository, AssetStore } from '@/lib/ports';
+import { createBlobTemplateRepository } from '@/lib/adapters/blob/templateRepository';
 import { createFilesystemTemplateRepository } from '@/lib/adapters/filesystem/templateRepository';
 import { createFilesystemSavedComponentRepository } from '@/lib/adapters/filesystem/savedComponentRepository';
 import { createLocalAssetStore } from '@/lib/adapters/local-assets/assetStore';
@@ -7,9 +8,9 @@ import { createLocalAssetStore } from '@/lib/adapters/local-assets/assetStore';
 /**
  * Composition root (Story 1.5 / AD-3).
  *
- * The single place adapters are chosen from config. This phase binds only the
- * filesystem/local adapters; postgres/s3 are accepted by config validation but
- * rejected here with a clear message until their adapters land (Epics F1/F2).
+ * The single place adapters are chosen from config. Vercel Blob is selected
+ * automatically when its credentials are present; local development continues
+ * to use filesystem storage without configuration.
  */
 
 export interface AppContainer {
@@ -20,8 +21,12 @@ export interface AppContainer {
 
 function resolveTemplateRepository(): TemplateRepository {
   switch (config.storageDriver) {
-    case 'filesystem':
-      return createFilesystemTemplateRepository();
+    case 'filesystem': {
+      const filesystemRepository = createFilesystemTemplateRepository();
+      return config.blob.enabled
+        ? createBlobTemplateRepository(filesystemRepository)
+        : filesystemRepository;
+    }
     case 'postgres':
       throw new Error(
         "STORAGE_DRIVER 'postgres' is not available in this phase. Use 'filesystem'."
