@@ -1,34 +1,30 @@
 import type { EmailTemplateDocument, TemplateSummary } from '@/lib/schema/template';
 import { emailTemplateDocumentSchema } from '@/lib/schema/validators';
 import { generateId } from '@/lib/utils/id';
-import {
-  createFilesystemTemplateRepository,
-  DEFAULT_TEMPLATES_DIR,
-} from '@/lib/adapters/filesystem/templateRepository';
+import { getContainer } from '@/lib/container';
+import { DEFAULT_TEMPLATES_DIR } from '@/lib/adapters/filesystem/templateRepository';
 
 /**
  * Backward-compatible template storage API.
  *
- * Filesystem access now lives in the FilesystemTemplateRepository adapter
- * (Story 1.3). These functions delegate to it so existing callers keep working
- * unchanged; create/update/duplicate compose the repository's primitives and
- * will move into TemplateService in Story 1.6.
+ * These functions resolve persistence through the application container so
+ * legacy callers use the same configured repository as the template service.
+ * Create/update/duplicate compose the repository's primitives and will move
+ * into TemplateService in Story 1.6.
  */
 
-const repository = createFilesystemTemplateRepository();
-
 export async function listTemplates(): Promise<TemplateSummary[]> {
-  return repository.list();
+  return getContainer().templateRepository.list();
 }
 
 export async function getTemplate(id: string): Promise<EmailTemplateDocument | null> {
-  return repository.get(id);
+  return getContainer().templateRepository.get(id);
 }
 
 export async function saveTemplate(
   template: EmailTemplateDocument
 ): Promise<EmailTemplateDocument> {
-  return repository.save(template);
+  return getContainer().templateRepository.save(template);
 }
 
 export async function createTemplate(
@@ -43,13 +39,14 @@ export async function createTemplate(
     createdAt: template.createdAt ?? now,
     updatedAt: template.updatedAt ?? now,
   });
-  return repository.save(doc);
+  return getContainer().templateRepository.save(doc);
 }
 
 export async function updateTemplate(
   id: string,
   updates: Partial<Omit<EmailTemplateDocument, 'id' | 'createdAt'>>
 ): Promise<EmailTemplateDocument | null> {
+  const repository = getContainer().templateRepository;
   const existing = await repository.get(id);
   if (!existing) {
     return null;
@@ -67,10 +64,11 @@ export async function updateTemplate(
 }
 
 export async function deleteTemplate(id: string): Promise<boolean> {
-  return repository.delete(id);
+  return getContainer().templateRepository.delete(id);
 }
 
 export async function duplicateTemplate(id: string): Promise<EmailTemplateDocument | null> {
+  const repository = getContainer().templateRepository;
   const existing = await repository.get(id);
   if (!existing) {
     return null;

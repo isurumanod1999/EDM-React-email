@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "d9c9514e-163f-499f-93a0-5d2523a42a22",
-  "name": "NIssan Patrol ( custom warranty card)",
+  "name": "NIssan Patrol Test 2",
   "category": "newsletter",
   "meta": {
     "previewText": "Preview your email",
@@ -349,7 +349,7 @@
                   "children": [
                     {
                       "type": "Heading",
-                      "content": "THE LATEST TECHNOLOGY  AT YOUR COMMANDsfsdfsdf",
+                      "content": "THE LATEST TECHNOLOGY  AT YOUR COMMAND",
                       "as": "h2",
                       "style": {
                         "color": "#caa185",
@@ -1075,5 +1075,5 @@
     }
   ],
   "createdAt": "2026-09-03T04:38:04.983Z",
-  "updatedAt": "2026-09-03T05:42:33.264Z"
+  "updatedAt": "2026-09-03T05:47:30.811Z"
 }

@@ -27,9 +27,8 @@ function envOptional(value: string | undefined): string | undefined {
 const configSchema = z.object({
   nodeEnv: z.enum(['development', 'test', 'production']).default('development'),
 
-  // Deployment drivers — current phase supports filesystem/local only;
-  // postgres/s3 are accepted by the schema but rejected at the composition
-  // root until their adapters land (Epics F1/F2).
+  // Deployment drivers — Blob overlays filesystem automatically when its
+  // credentials are present. Postgres/S3 remain future explicit drivers.
   storageDriver: z.enum(['filesystem', 'postgres']).default('filesystem'),
   assetDriver: z.enum(['local', 's3']).default('local'),
 
@@ -64,6 +63,10 @@ const configSchema = z.object({
     // Empty until send time; the send route falls back to onboarding@resend.dev.
     from: z.string().default(''),
   }),
+
+  blob: z.object({
+    enabled: z.boolean(),
+  }),
 });
 
 export type AppConfig = z.infer<typeof configSchema>;
@@ -93,6 +96,12 @@ function loadConfig(): AppConfig {
     resend: {
       apiKey: envOptional(process.env.RESEND_API_KEY),
       from: envOptional(process.env.RESEND_FROM),
+    },
+    blob: {
+      enabled: Boolean(
+        envOptional(process.env.BLOB_READ_WRITE_TOKEN) ??
+          envOptional(process.env.BLOB_STORE_ID)
+      ),
     },
   });
 
