@@ -1,0 +1,38 @@
+{
+  "name": "Nissan_patro_header",
+  "category": "layout",
+  "componentId": "figma-react-email",
+  "componentVersion": 1,
+  "props": {
+    "tree": {
+      "type": "Section",
+      "style": {
+        "width": "100%",
+        "maxWidth": 600,
+        "margin": "0 auto"
+      },
+      "children": [
+        {
+          "type": "Img",
+          "src": "/images/uploads/figma-desk-64a033eb-58b9-45e2-9ad0-2e21b046269b.png",
+          "mobileSrc": "/images/uploads/figma-mob-60d46cf4-e706-485b-81bd-e29852305f27.png",
+          "width": 600,
+          "height": 480,
+          "alt": "KV",
+          "align": "center",
+          "fullBleed": true,
+          "className": "figma-frame-img-800203d6-cf87-4f76-8a91-aec04e7e4bf4"
+        }
+      ]
+    },
+    "sourceFrame": "KV",
+    "mobileFrame": "KV",
+    "hideBorders": false,
+    "borderColor": ""
+  },
+  "label": "KV",
+  "schemaVersion": 1,
+  "id": "fecc1f9d-4004-479c-a889-28749cbb6ba3",
+  "createdAt": "2026-09-03T04:55:07.395Z",
+  "updatedAt": "2026-09-03T04:55:07.395Z"
+}
