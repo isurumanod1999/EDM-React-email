@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo, useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { ComponentRegistryEntry } from '@/lib/registry/types';
@@ -7,6 +8,7 @@ import type { SavedComponentDocument } from '@/lib/schema/savedComponent';
 import { formatCategoryLabel } from '@/builder/utils/props';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { pushToast } from '@/builder/store/toastStore';
+import { CloseIcon } from './icons';
 
 function PaletteItem({ entry }: { entry: ComponentRegistryEntry }) {
   const addBlock = useBuilderStore((s) => s.addBlock);
@@ -30,7 +32,7 @@ function PaletteItem({ entry }: { entry: ComponentRegistryEntry }) {
       {...attributes}
       tabIndex={0}
       role="button"
-      aria-label={`Add ${entry.name} to canvas`}
+      aria-label={`Add ${entry.name} to the email`}
       onDoubleClick={() => addBlock(entry.id)}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
@@ -38,7 +40,7 @@ function PaletteItem({ entry }: { entry: ComponentRegistryEntry }) {
           addBlock(entry.id);
         }
       }}
-      title="Drag to canvas, double-click, or press Enter to add"
+      title={entry.description ?? 'Drag into Structure, double-click, or press Enter to add'}
     >
       <span className="palette-item-name">{entry.name}</span>
       <span className="palette-item-desc">{entry.description}</span>
@@ -78,7 +80,7 @@ function SavedPaletteItem({ component }: { component: SavedComponentDocument }) 
         {...attributes}
         tabIndex={0}
         role="button"
-        aria-label={`Add reusable component ${component.name} to canvas`}
+        aria-label={`Add reusable component ${component.name} to the email`}
         onDoubleClick={() => addSavedComponent(component.id)}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
@@ -86,7 +88,10 @@ function SavedPaletteItem({ component }: { component: SavedComponentDocument }) 
             addSavedComponent(component.id);
           }
         }}
-        title="Drag to canvas, double-click, or press Enter to add"
+        title={
+          component.description ||
+          'Drag into Structure, double-click, or press Enter to add'
+        }
       >
         <span className="palette-item-name">{component.name}</span>
         <span className="palette-item-desc">
@@ -100,54 +105,96 @@ function SavedPaletteItem({ component }: { component: SavedComponentDocument }) 
         title="Delete reusable component"
         aria-label={`Delete reusable component ${component.name}`}
       >
-        ✕
+        <CloseIcon />
       </button>
     </div>
   );
 }
 
-export function ComponentPalette({ className }: { className?: string }) {
+export function ComponentPalette({ style }: { style?: React.CSSProperties }) {
   const paletteByCategory = useBuilderStore((s) => s.paletteByCategory);
   const savedComponents = useBuilderStore((s) => s.savedComponents);
   const savedComponentsLoading = useBuilderStore((s) => s.savedComponentsLoading);
   const savedComponentsError = useBuilderStore((s) => s.savedComponentsError);
+  const [query, setQuery] = useState('');
 
-  const categories = Object.keys(paletteByCategory).sort();
+  const search = query.trim().toLowerCase();
+
+  const matchedSaved = useMemo(() => {
+    if (!search) return savedComponents;
+    return savedComponents.filter((component) =>
+      `${component.name} ${component.description ?? ''} ${component.label ?? ''}`
+        .toLowerCase()
+        .includes(search)
+    );
+  }, [savedComponents, search]);
+
+  const matchedCategories = useMemo(() => {
+    return Object.keys(paletteByCategory)
+      .sort()
+      .map((category) => ({
+        category,
+        entries: search
+          ? paletteByCategory[category].filter((entry) =>
+              `${entry.name} ${entry.description ?? ''}`.toLowerCase().includes(search)
+            )
+          : paletteByCategory[category],
+      }))
+      .filter((group) => group.entries.length > 0);
+  }, [paletteByCategory, search]);
+
+  const registryLoading = Object.keys(paletteByCategory).length === 0;
+  const noResults = Boolean(search) && matchedCategories.length === 0 && matchedSaved.length === 0;
 
   return (
-    <aside className={`builder-panel builder-panel--palette${className ? ` ${className}` : ''}`}>
-      <div className="builder-panel-header">Components</div>
+    <section className="rail-section rail-section--components" style={style}>
+      <div className="builder-panel-header">
+        Components
+        <input
+          type="search"
+          className="rail-search"
+          placeholder="Search…"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          aria-label="Search components"
+        />
+      </div>
       <div className="builder-panel-body">
-        <div className="palette-category palette-category--reusable">
-          <div className="palette-category-title">Reusable Components</div>
-          {savedComponentsLoading ? (
-            <div className="props-empty">Loading reusable components...</div>
-          ) : savedComponents.length === 0 ? (
-            <div className="props-empty">No reusable components yet.</div>
-          ) : (
-            savedComponents.map((component) => (
-              <SavedPaletteItem key={component.id} component={component} />
-            ))
-          )}
-          {savedComponentsError ? (
-            <div className="palette-error" role="alert">
-              {savedComponentsError}
-            </div>
-          ) : null}
-        </div>
-        {categories.length === 0 ? (
+        {noResults ? <div className="props-empty">No components match “{query.trim()}”.</div> : null}
+
+        {matchedSaved.length > 0 || (!search && !savedComponentsLoading) ? (
+          <div className="palette-category palette-category--reusable">
+            <div className="palette-category-title">Reusable</div>
+            {savedComponentsLoading ? (
+              <div className="props-empty">Loading reusable components...</div>
+            ) : matchedSaved.length === 0 ? (
+              <div className="props-empty">No reusable components yet.</div>
+            ) : (
+              matchedSaved.map((component) => (
+                <SavedPaletteItem key={component.id} component={component} />
+              ))
+            )}
+            {savedComponentsError ? (
+              <div className="palette-error" role="alert">
+                {savedComponentsError}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
+        {registryLoading ? (
           <div className="props-empty">Loading components...</div>
         ) : (
-          categories.map((category) => (
+          matchedCategories.map(({ category, entries }) => (
             <div key={category} className="palette-category">
               <div className="palette-category-title">{formatCategoryLabel(category)}</div>
-              {paletteByCategory[category].map((entry) => (
+              {entries.map((entry) => (
                 <PaletteItem key={entry.id} entry={entry} />
               ))}
             </div>
           ))
         )}
       </div>
-    </aside>
+    </section>
   );
 }

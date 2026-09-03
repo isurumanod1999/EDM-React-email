@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { useTemplatePreview } from '@/builder/hooks/useTemplatePreview';
 import { usePreviewScrollRestore } from '@/builder/hooks/usePreviewScrollRestore';
@@ -27,8 +27,8 @@ export function LivePreview() {
     handleIframeLoad(pushHighlight);
   }, [handleIframeLoad, pushHighlight]);
 
-  const frameWidth = viewMode === 'desktop' ? '100%' : '375px';
-  const maxWidth = viewMode === 'desktop' ? '700px' : '375px';
+  const frameWidth = viewMode === 'desktop' ? '100%' : '360px';
+  const maxWidth = viewMode === 'desktop' ? '700px' : '360px';
 
   const selectedBlock = template?.blocks.find((b) => b.id === selectedBlockId);
   const isFigmaBlock = selectedBlock?.componentId === FIGMA_BLOCK_ID;
@@ -38,31 +38,31 @@ export function LivePreview() {
   return (
     <div className="builder-preview-section">
       <div className="builder-preview-toolbar">
-        <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-          Live Preview
-          {isStale && (
-            <span className="builder-preview-stale-label">· Updating…</span>
-          )}
-          {hasBlocks && !isStale && (
-            <span style={{ marginLeft: 8, color: 'var(--accent)', fontWeight: 500 }}>
+        <span className="builder-preview-label">
+          Preview
+          {isStale ? <span className="builder-preview-stale-label">Updating…</span> : null}
+          {hasBlocks && !isStale ? (
+            <span className="builder-preview-hint">
               {isFigmaBlock
-                ? '· Click an element to customize'
-                : '· Click any component to edit it'}
+                ? 'Click an element to customize'
+                : 'Click any component to edit it'}
             </span>
-          )}
+          ) : null}
         </span>
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div className="builder-preview-viewport" role="group" aria-label="Preview width">
           <button
             type="button"
-            className={`btn btn-secondary btn-sm btn-toggle ${viewMode === 'desktop' ? 'active' : ''}`}
+            className={`btn btn-secondary btn-sm btn-toggle${viewMode === 'desktop' ? ' active' : ''}`}
             onClick={() => setViewMode('desktop')}
+            aria-pressed={viewMode === 'desktop'}
           >
             Desktop
           </button>
           <button
             type="button"
-            className={`btn btn-secondary btn-sm btn-toggle ${viewMode === 'mobile' ? 'active' : ''}`}
+            className={`btn btn-secondary btn-sm btn-toggle${viewMode === 'mobile' ? ' active' : ''}`}
             onClick={() => setViewMode('mobile')}
+            aria-pressed={viewMode === 'mobile'}
           >
             Mobile
           </button>

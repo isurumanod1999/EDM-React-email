@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "id": "041d8b65-7c34-487c-8dd3-09e7c88afd47",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "d7391497-3e02-433a-9b06-838fca6e3cbd",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto",
+            "backgroundColor": "#000000"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-300fe70d-2c39-437a-9d51-88950d0d3d56.png",
+              "width": 600,
+              "height": 160,
+              "alt": "header",
+              "align": "center",
+              "fullBleed": true
+            }
+          ]
+        },
+        "sourceFrame": "header",
+        "mobileFrame": "",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "NissanHeader",
+      "sourceSavedComponentId": "cd5c35f0-75d9-4664-a035-971e93d4687c"
+    },
+    {
+      "id": "229b4fc5-ee9d-48b2-9669-34d30c4d8df6",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "24px 40px 0px 40px"
+          },
+          "children": [
+            {
+              "type": "Text",
+              "content": "Can’t see this email? Click here to view online",
+              "html": "Can’t see this email? Click <span style=\"text-decoration:underline\">here</span> to view online",
+              "style": {
+                "color": "#efefef",
+                "fontSize": "12px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "16px",
+                "whiteSpace": "pre-line",
+                "marginBottom": 0
+              },
+              "mobileStyle": {
+                "lineHeight": "14px"
+              }
+            }
+          ]
+        },
+        "sourceFrame": "preheader",
+        "mobileFrame": "preheader",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "preheader",
+      "sourceSavedComponentId": "2ff85dca-e747-4d2d-87e6-ddb28ed5c083"
+    }
+  ],
+  "createdAt": "2026-09-02T14:28:04.815Z",
+  "updatedAt": "2026-09-02T14:35:42.820Z"
+}

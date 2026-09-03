@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Direction D — Technical Editorial | EDM Email Template Builder</title>
+<style>
+/* ==========================================================================
+   DIRECTION D — TECHNICAL EDITORIAL
+   Primary theme: dark (warm ink-reversed paper). Personality: a typeset
+   technical document that happens to be an editor. Serif headings, numbered
+   command sections, 2px top rules instead of boxes, monospaced identifiers,
+   footnote-style helper text. Navigation merges the document outline and the
+   insert list into one left "document" column so the preview can own the
+   centre. Density: airy vertically, information-dense typographically.
+
+   PALETTE (primary / dark warm)
+   --------------------------------------------------------------------------
+   pasteboard              #100F0E
+   chrome / masthead       #161513
+   panel surface           #1C1A17
+   raised control          #232019
+   rule (hairline)         #34302A
+   rule (strong)           #4A443C
+   text primary            #EFE9DF
+   text secondary          #A79E90
+   text muted              #7C7367
+   accent (ink red)        #C6493F
+   accent quiet            #7C3A33
+   positive                #6E9C6A
+   content-true preview    #FFFFFF
+   ALTERNATE THEME (light) paper #FBF9F4 / panel #FFFFFF / rule #DCD5C8
+                           text #1B1916 / accent #A3231F
+   ========================================================================== */
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 34px;
+    background: #100F0E;
+    color: #EFE9DF;
+    font-family: ui-sans-serif, "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13.5px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sheet { max-width: 1460px; margin: 0 auto; }
+  .serif { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+
+  .doc { border-top: 2px solid #C6493F; background: #1C1A17; padding: 20px 24px; margin-bottom: 22px; }
+  .doc .kicker { font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: #A79E90; font-weight: 700; }
+  .doc h1 { margin: 4px 0 0; font-size: 24px; font-weight: 600; letter-spacing: -.01em; font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; }
+  .doc p { margin: 10px 0 0; color: #A79E90; max-width: 92ch; }
+  .swatches { display: flex; gap: 28px; margin-top: 18px; flex-wrap: wrap; }
+  .swgroup b { display: block; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #7C7367; margin-bottom: 6px; }
+  .swrow { display: flex; gap: 4px; }
+  .sw { width: 30px; height: 17px; border: 1px solid #4A443C; }
+
+  .frame { border: 1px solid #4A443C; background: #161513; }
+  .frame-bar { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid #34302A; }
+  .dots { display: flex; gap: 5px; }
+  .dots i { width: 9px; height: 9px; border: 1px solid #4A443C; display: block; }
+  .url { flex: 1; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; color: #7C7367; border-bottom: 1px solid #34302A; padding: 3px 2px; }
+
+  /* ---- masthead (product chrome) ---- */
+  .masthead { display: flex; align-items: baseline; gap: 20px; padding: 12px 20px 10px; background: #161513; border-bottom: 2px solid #34302A; }
+  .masthead .mark { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-size: 16px; letter-spacing: .01em; }
+  .masthead .mark em { font-style: normal; color: #C6493F; }
+  .masthead .modnav { display: flex; gap: 18px; }
+  .masthead .modnav a { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #7C7367; text-decoration: none; padding-bottom: 2px; }
+  .masthead .modnav a.on { color: #EFE9DF; border-bottom: 2px solid #C6493F; font-weight: 650; }
+  .masthead .right { margin-left: auto; display: flex; align-items: baseline; gap: 16px; font-size: 11.5px; color: #7C7367; }
+  .themepair span { padding: 0 6px; letter-spacing: .08em; text-transform: uppercase; font-size: 10.5px; }
+  .themepair span.on { color: #EFE9DF; border-bottom: 1px solid #C6493F; }
+
+  /* ---- document header + numbered command sections ---- */
+  .dochead { display: flex; align-items: flex-end; gap: 24px; padding: 16px 20px 14px; background: #161513; border-bottom: 1px solid #34302A; }
+  .dochead .titleblock { min-width: 300px; }
+  .dochead .crumb { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #7C7367; }
+  .dochead input { display: block; margin-top: 4px; width: 340px; background: transparent; border: 0; border-bottom: 1px solid #4A443C; color: #EFE9DF; font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-size: 22px; padding: 2px 0 4px; }
+  .dochead .meta { margin-top: 6px; font-size: 11.5px; color: #7C7367; }
+  .dochead .meta .saved { color: #6E9C6A; }
+  .cmds { margin-left: auto; display: flex; gap: 26px; }
+  .cmdsec > b { display: block; font-size: 9.5px; letter-spacing: .18em; text-transform: uppercase; color: #7C7367; font-weight: 700; border-bottom: 1px solid #34302A; padding-bottom: 4px; margin-bottom: 7px; }
+  .cmdsec > b i { font-style: normal; color: #C6493F; margin-right: 6px; }
+  .cmdsec .row { display: flex; gap: 14px; align-items: baseline; }
+  .lbtn { font: inherit; font-size: 13px; background: transparent; border: 0; border-bottom: 1px solid #4A443C; color: #EFE9DF; padding: 1px 0 2px; cursor: default; white-space: nowrap; }
+  .lbtn-accent { color: #C6493F; border-bottom-color: #C6493F; font-weight: 650; }
+  .lbtn-quiet { color: #A79E90; border-bottom-color: transparent; }
+  .lbtn-dim { color: #6A6259; border-bottom-color: transparent; }
+  .lbtn .live { color: #6E9C6A; font-size: 9px; margin-left: 5px; }
+  .box-btn { border: 1px solid #4A443C; background: #232019; padding: 4px 12px; font: inherit; font-size: 12.5px; color: #EFE9DF; }
+  .box-btn-primary { border-color: #C6493F; background: #C6493F; color: #161513; font-weight: 700; }
+  .chk { display: inline-flex; align-items: baseline; gap: 6px; font-size: 12.5px; color: #A79E90; }
+  .chk i { width: 12px; height: 12px; border: 1px solid #4A443C; display: inline-block; }
+
+  /* ---- body: document column | preview | inspector ---- */
+  .body { display: grid; grid-template-columns: 288px 1fr 300px; background: #100F0E; min-height: 740px; }
+  .col { border-right: 1px solid #34302A; min-width: 0; background: #1C1A17; }
+  .col:last-child { border-right: 0; border-left: 1px solid #34302A; }
+  .colsec { padding: 16px 18px 20px; border-bottom: 1px solid #34302A; }
+  .colsec:last-child { border-bottom: 0; }
+  .sechead { display: flex; align-items: baseline; justify-content: space-between; border-top: 2px solid #4A443C; padding-top: 7px; margin-bottom: 12px; }
+  .sechead h3 { margin: 0; font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-size: 15px; font-weight: 600; }
+  .sechead .n { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #7C7367; }
+
+  /* document outline = canvas */
+  .outline { list-style: none; margin: 0; padding: 0; }
+  .outline li { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px dotted #34302A; }
+  .outline li.sel { background: #232019; box-shadow: -18px 0 0 #232019, 18px 0 0 #232019; }
+  .outline .n { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; color: #7C7367; font-variant-numeric: tabular-nums; }
+  .outline .lab { font-size: 13px; }
+  .outline .sel .lab { color: #EFE9DF; font-weight: 650; }
+  .outline .cid { display: block; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; color: #7C7367; }
+  .outline .acts { display: flex; gap: 8px; }
+  .outline .acts button { background: transparent; border: 0; color: #7C7367; font-size: 11px; padding: 0; }
+
+  /* insert list = palette */
+  .insert { margin: 0; padding: 0; list-style: none; }
+  .insert .grp { font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: #7C7367; font-weight: 700; margin: 14px 0 6px; }
+  .insert .grp:first-child { margin-top: 0; }
+  .insert li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 4px 0; border-bottom: 1px dotted #2B2823; }
+  .insert li .nm { font-size: 12.5px; }
+  .insert li .id { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; color: #7C7367; }
+  .insert li.reusable .nm { border-left: 2px solid #C6493F; padding-left: 7px; }
+  .fnote { margin-top: 12px; font-size: 11.5px; color: #7C7367; border-top: 1px solid #34302A; padding-top: 8px; }
+  .fnote sup { color: #C6493F; }
+
+  /* preview column */
+  .center { display: flex; flex-direction: column; background: #100F0E; }
+  .ptop { display: flex; align-items: baseline; justify-content: space-between; padding: 14px 22px 12px; border-bottom: 1px solid #34302A; background: #161513; }
+  .ptop h3 { margin: 0; font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-size: 15px; font-weight: 600; }
+  .ptop .hint { font-size: 11.5px; color: #A79E90; margin-left: 10px; font-family: ui-sans-serif, system-ui, sans-serif; }
+  .viewsel { display: flex; gap: 14px; }
+  .viewsel button { background: transparent; border: 0; border-bottom: 1px solid transparent; font: inherit; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #7C7367; padding: 0 0 2px; }
+  .viewsel button.on { color: #EFE9DF; border-bottom-color: #C6493F; font-weight: 650; }
+  .stage { flex: 1; padding: 30px 22px; display: flex; justify-content: center; overflow: hidden; }
+  .paper { width: 100%; max-width: 700px; background: #FFFFFF; color: #1A1A1A; border: 1px solid #4A443C; }
+
+  .em-head { padding: 18px 26px; border-bottom: 1px solid #EAEAEA; font-size: 12.5px; font-weight: 700; letter-spacing: .24em; }
+  .em-hero { padding: 34px 26px; background: #F5F2EC; }
+  .em-hero h2 { margin: 0 0 8px; font-family: Georgia, "Times New Roman", serif; font-size: 27px; font-weight: 600; letter-spacing: -.01em; }
+  .em-hero p { margin: 0 0 16px; font-size: 13.5px; color: #4A4A4A; }
+  .em-cta { display: inline-block; background: #1A1A1A; color: #FFFFFF; font-size: 11px; letter-spacing: .13em; padding: 10px 18px; font-weight: 700; }
+  .em-promo { display: flex; gap: 18px; padding: 22px 26px; background: #1A1A1A; color: #FFFFFF; align-items: center; }
+  .em-promo .thumb { width: 152px; height: 88px; background: #333333; flex: none; }
+  .em-promo h3 { margin: 0 0 4px; font-family: Georgia, "Times New Roman", serif; font-size: 17px; }
+  .em-promo p { margin: 0 0 8px; font-size: 12.5px; color: #CFCFCF; }
+  .em-promo .link { font-size: 10.5px; letter-spacing: .12em; font-weight: 700; border-bottom: 1px solid #FFFFFF; }
+  .em-cols { display: flex; gap: 18px; padding: 22px 26px; }
+  .em-cols div { flex: 1; }
+  .em-cols .ph { height: 68px; background: #F0EDE7; margin-bottom: 9px; }
+  .em-cols b { display: block; font-size: 13px; }
+  .em-cols span { font-size: 12.5px; color: #6A6A6A; }
+  .em-foot { padding: 18px 26px; background: #FAF8F4; font-size: 11px; color: #6A6A6A; border-top: 1px solid #EAEAEA; }
+
+  /* inspector as definition list */
+  .dl { margin: 0; }
+  .dl .pair { display: grid; grid-template-columns: 108px 1fr; gap: 10px; padding: 6px 0; border-bottom: 1px dotted #34302A; align-items: baseline; }
+  .dl dt { font-size: 11.5px; color: #A79E90; }
+  .dl dt sup { color: #C6493F; }
+  .dl dd { margin: 0; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11.5px; color: #EFE9DF; word-break: break-all; }
+  .dl dd.text { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12.5px; }
+  .swatchline { display: inline-flex; align-items: center; gap: 7px; }
+  .swatchline i { width: 14px; height: 14px; border: 1px solid #4A443C; display: inline-block; }
+  .noselect { border-top: 2px solid #4A443C; padding-top: 10px; margin-top: 4px; font-size: 12.5px; color: #A79E90; }
+
+  /* ---- secondary: workspace as an index ---- */
+  .secondary { margin-top: 28px; }
+  .sectag { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #7C7367; font-weight: 700; margin-bottom: 10px; }
+  .wshead { padding: 22px 22px 16px; background: #161513; border-bottom: 2px solid #34302A; display: flex; align-items: flex-end; gap: 20px; }
+  .wshead .eyebrow { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #7C7367; }
+  .wshead h2 { margin: 4px 0 4px; font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-size: 24px; font-weight: 600; }
+  .wshead p { margin: 0; font-size: 13px; color: #A79E90; max-width: 60ch; }
+  .wshead .acts { margin-left: auto; display: flex; gap: 14px; align-items: baseline; }
+  .wsctl { display: flex; gap: 20px; align-items: baseline; padding: 12px 22px; border-bottom: 1px solid #34302A; background: #1C1A17; }
+  .wsctl input { background: transparent; border: 0; border-bottom: 1px solid #4A443C; color: #EFE9DF; font: inherit; font-size: 13px; padding: 3px 0; width: 260px; }
+  .wsctl select { background: #232019; border: 1px solid #4A443C; color: #EFE9DF; font: inherit; font-size: 12.5px; padding: 4px 8px; }
+  .index { padding: 4px 22px 22px; background: #1C1A17; }
+  .idxrow { display: grid; grid-template-columns: 30px 1fr 150px 78px 108px 220px; gap: 14px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid #34302A; }
+  .idxrow.head { border-bottom: 2px solid #4A443C; font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: #7C7367; font-weight: 700; padding: 10px 0 6px; }
+  .idxrow .num { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; color: #7C7367; }
+  .idxrow h4 { margin: 0; font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-size: 16px; font-weight: 600; }
+  .idxrow .sub { font-size: 11.5px; color: #7C7367; }
+  .idxrow .cat { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #A79E90; }
+  .idxrow .tabnum { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; color: #A79E90; font-variant-numeric: tabular-nums; }
+  .idxrow .acts { display: flex; gap: 14px; justify-content: flex-end; }
+  .emptyblock { border-top: 2px solid #4A443C; padding: 34px 22px 40px; background: #1C1A17; text-align: center; }
+  .emptyblock h4 { margin: 0 0 6px; font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-size: 19px; font-weight: 600; }
+  .emptyblock p { margin: 0 auto 16px; font-size: 13px; color: #A79E90; max-width: 56ch; }
+  .caption { font-size: 12px; color: #7C7367; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="doc">
+    <div class="kicker">Direction D</div>
+    <h1>Technical Editorial</h1>
+    <p>
+      This direction treats the template as a typeset document. Serif headings and numbered command sections replace
+      button clusters, rules and dotted leaders replace panels, and every identifier — component id, hex, URL — is set
+      in monospace so values read as data rather than prose. The block list and the insert list are merged into one
+      left-hand document column, which frees the centre for a preview at near-mail width and gives the screen an
+      unusually calm reading order for a tool this dense.
+    </p>
+    <div class="swatches">
+      <div class="swgroup">
+        <b>Primary theme — dark (warm ink)</b>
+        <div class="swrow">
+          <span class="sw" style="background:#100F0E"></span>
+          <span class="sw" style="background:#161513"></span>
+          <span class="sw" style="background:#1C1A17"></span>
+          <span class="sw" style="background:#232019"></span>
+          <span class="sw" style="background:#4A443C"></span>
+          <span class="sw" style="background:#EFE9DF"></span>
+          <span class="sw" style="background:#C6493F"></span>
+          <span class="sw" style="background:#6E9C6A"></span>
+        </div>
+      </div>
+      <div class="swgroup">
+        <b>Alternate theme — light (paper)</b>
+        <div class="swrow">
+          <span class="sw" style="background:#FBF9F4"></span>
+          <span class="sw" style="background:#FFFFFF"></span>
+          <span class="sw" style="background:#F1EDE4"></span>
+          <span class="sw" style="background:#DCD5C8"></span>
+          <span class="sw" style="background:#1B1916"></span>
+          <span class="sw" style="background:#A3231F"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ PRIMARY: EDITOR ============================ -->
+  <div class="frame">
+    <div class="frame-bar">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="url">edm-builder.internal/builder/8f2c41</div>
+    </div>
+
+    <div class="masthead">
+      <div class="mark"><em>EDM</em> Email Template Builder</div>
+      <nav class="modnav">
+        <a href="#">Overview</a>
+        <a href="#">Workspace</a>
+        <a href="#" class="on">Editor</a>
+      </nav>
+      <div class="right">
+        <span class="themepair"><span class="on">Dark</span><span>Light</span></span>
+        <span>I. Senanayake · Operations</span>
+      </div>
+    </div>
+
+    <div class="dochead">
+      <div class="titleblock">
+        <div class="crumb">Workspace / Template</div>
+        <input value="Autumn Service Reminder" aria-label="Template name" readonly />
+        <div class="meta">Promotional · 6 blocks · <span class="saved">Saved 17:34</span> · autosave every 45s</div>
+      </div>
+
+      <div class="cmds">
+        <div class="cmdsec">
+          <b><i>01</i> Import</b>
+          <div class="row">
+            <button class="lbtn">Build from Figma<span class="live">●</span></button>
+            <button class="lbtn">Import ▾</button>
+          </div>
+        </div>
+        <div class="cmdsec">
+          <b><i>02</i> Review</b>
+          <div class="row">
+            <button class="lbtn">Tagging</button>
+            <button class="lbtn">Code</button>
+            <label class="chk"><i></i> Advanced</label>
+          </div>
+        </div>
+        <div class="cmdsec">
+          <b><i>03</i> Deliver</b>
+          <div class="row">
+            <button class="lbtn">Send email</button>
+            <button class="lbtn lbtn-accent">Export</button>
+            <button class="lbtn lbtn-quiet">Duplicate</button>
+            <button class="box-btn lbtn-dim" title="No unsaved changes">Saved</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- left: document outline + insert list -->
+      <div class="col">
+        <div class="colsec">
+          <div class="sechead"><h3>Contents</h3><span class="n">Canvas · 6 blocks</span></div>
+          <ul class="outline">
+            <li><span class="n">01</span><span class="lab">Brand Header<span class="cid">header</span></span><span class="acts"><button>＋</button><button>⧉</button><button>✕</button></span></li>
+            <li><span class="n">02</span><span class="lab">Autumn hero<span class="cid">hero-banner</span></span><span class="acts"><button>＋</button><button>⧉</button><button>✕</button></span></li>
+            <li class="sel"><span class="n">03</span><span class="lab">Service Plus offer<span class="cid">promo-block</span></span><span class="acts"><button>＋</button><button>⧉</button><button>✕</button></span></li>
+            <li><span class="n">04</span><span class="lab">Parts picks<span class="cid">two-col-stacked</span></span><span class="acts"><button>＋</button><button>⧉</button><button>✕</button></span></li>
+            <li><span class="n">05</span><span class="lab">Book a service<span class="cid">cta-banner</span></span><span class="acts"><button>＋</button><button>⧉</button><button>✕</button></span></li>
+            <li><span class="n">06</span><span class="lab">Legal Footer AU<span class="cid">footer</span></span><span class="acts"><button>＋</button><button>⧉</button><button>✕</button></span></li>
+          </ul>
+          <p class="fnote"><sup>1</sup> Drag to reorder, or press Enter on an insert entry to append.</p>
+        </div>
+
+        <div class="colsec">
+          <div class="sechead"><h3>Insert</h3><span class="n">Components · 20</span></div>
+          <ul class="insert">
+            <div class="grp">Reusable Components</div>
+            <li class="reusable"><span class="nm">Service Offer Card</span><span class="id">promo-block</span></li>
+            <li class="reusable"><span class="nm">Legal Footer AU</span><span class="id">footer</span></li>
+            <div class="grp">Layout</div>
+            <li><span class="nm">Header</span><span class="id">header</span></li>
+            <li><span class="nm">Section Title</span><span class="id">section-title</span></li>
+            <li><span class="nm">Image Block</span><span class="id">image-block</span></li>
+            <li><span class="nm">Divider</span><span class="id">divider</span></li>
+            <li><span class="nm">Spacer</span><span class="id">spacer</span></li>
+            <li><span class="nm">Footer</span><span class="id">footer</span></li>
+            <li><span class="nm">Figma React Email</span><span class="id">figma-react-email</span></li>
+            <div class="grp">Promotional</div>
+            <li><span class="nm">Hero Banner</span><span class="id">hero-banner</span></li>
+            <li><span class="nm">Promo Block</span><span class="id">promo-block</span></li>
+            <li><span class="nm">CTA Banner</span><span class="id">cta-banner</span></li>
+            <li><span class="nm">Button Row</span><span class="id">button-row</span></li>
+            <li><span class="nm">Stats Row</span><span class="id">stats-row</span></li>
+            <li><span class="nm">Three Col Icon</span><span class="id">three-col-icon</span></li>
+            <div class="grp">Product Showcase</div>
+            <li><span class="nm">2-Col Dual CTA</span><span class="id">two-col-dual-cta</span></li>
+            <li><span class="nm">Two Col Stacked</span><span class="id">two-col-stacked</span></li>
+            <li><span class="nm">One Col Product</span><span class="id">one-col-product</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- centre: preview -->
+      <main class="center">
+        <div class="ptop">
+          <h3>Live Preview <span class="hint">· Click any component to edit it</span></h3>
+          <div class="viewsel"><button class="on">Desktop</button><button>Mobile</button></div>
+        </div>
+        <div class="stage">
+          <div class="paper">
+            <div class="em-head">MERIDIAN</div>
+            <div class="em-hero">
+              <h2>Autumn Service Reminder</h2>
+              <p>Book before 30 November and save on essential seasonal checks.</p>
+              <span class="em-cta">BOOK A SERVICE</span>
+            </div>
+            <div class="em-promo">
+              <div class="thumb"></div>
+              <div>
+                <h3>Service Plus</h3>
+                <p>Up to <strong>3 years of scheduled maintenance</strong> included.</p>
+                <span class="link">LEARN MORE</span>
+              </div>
+            </div>
+            <div class="em-cols">
+              <div><div class="ph"></div><b>Cabin Filter Kit</b><span>$48.00</span></div>
+              <div><div class="ph"></div><b>Wiper Blade Set</b><span>$32.00</span></div>
+            </div>
+            <div class="em-foot">You are receiving this because your vehicle is serviced by Meridian. Unsubscribe · Privacy</div>
+          </div>
+        </div>
+      </main>
+
+      <!-- right: inspector -->
+      <div class="col">
+        <div class="colsec">
+          <div class="sechead"><h3>Properties</h3><span class="n">Promo Block</span></div>
+          <dl class="dl">
+            <div class="pair"><dt>Component</dt><dd>promo-block</dd></div>
+            <div class="pair"><dt>Position</dt><dd>03 / 06</dd></div>
+          </dl>
+          <p class="fnote">Promotional banner with image, title, and CTA.</p>
+        </div>
+
+        <div class="colsec">
+          <div class="sechead"><h3>Content</h3><span class="n">5 fields</span></div>
+          <dl class="dl">
+            <div class="pair"><dt>Image URL <sup>*</sup></dt><dd>/images/service-plus-520.jpg</dd></div>
+            <div class="pair"><dt>Title</dt><dd class="text">Service Plus</dd></div>
+            <div class="pair"><dt>Subtitle</dt><dd class="text">Up to <strong>3 years of scheduled maintenance</strong> included.</dd></div>
+            <div class="pair"><dt>Button Text</dt><dd class="text">LEARN MORE</dd></div>
+            <div class="pair"><dt>Button URL</dt><dd>https://meridian.example/service-plus</dd></div>
+          </dl>
+        </div>
+
+        <div class="colsec">
+          <div class="sechead"><h3>Layout &amp; Style</h3><span class="n">3 fields</span></div>
+          <dl class="dl">
+            <div class="pair"><dt>Image Width</dt><dd>520 px</dd></div>
+            <div class="pair"><dt>Image Height</dt><dd>Auto</dd></div>
+            <div class="pair"><dt>Section Background</dt><dd><span class="swatchline"><i style="background:#1A1A1A"></i> #1A1A1A</span></dd></div>
+          </dl>
+          <p class="fnote"><sup>2</sup> Advanced fields are hidden. Enable <strong>Advanced</strong> in section 02 to reveal them.</p>
+        </div>
+
+        <div class="colsec">
+          <div class="sechead"><h3>Email Meta</h3><span class="n">Template</span></div>
+          <dl class="dl">
+            <div class="pair"><dt>Preview Text</dt><dd class="text">Autumn checks from $99 — book before 30 Nov</dd></div>
+            <div class="pair"><dt>Background</dt><dd><span class="swatchline"><i style="background:#FFFFFF"></i> #FFFFFF</span></dd></div>
+            <div class="pair"><dt>Category</dt><dd class="text">Promotional</dd></div>
+          </dl>
+          <div class="noselect">Deselect the block to edit template description and category.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="caption">State shown: clean document after a successful write — <strong>Saved 17:34</strong> with the save command at rest and <strong>Export</strong> available; advanced fields collapsed with a footnote.</p>
+
+  <!-- ============================ SECONDARY: WORKSPACE ============================ -->
+  <div class="secondary">
+    <div class="sectag">Secondary view — Template Workspace (index of records)</div>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <div class="url">edm-builder.internal/builder</div>
+      </div>
+      <div class="masthead">
+        <div class="mark"><em>EDM</em> Email Template Builder</div>
+        <nav class="modnav">
+          <a href="#">Overview</a>
+          <a href="#" class="on">Workspace</a>
+          <a href="#">Editor</a>
+        </nav>
+        <div class="right">
+          <span class="themepair"><span class="on">Dark</span><span>Light</span></span>
+          <span>I. Senanayake · Operations</span>
+        </div>
+      </div>
+
+      <div class="wshead">
+        <div>
+          <div class="eyebrow">Overview → Workspace</div>
+          <h2>Template Workspace</h2>
+          <p>Choose a template to continue into the editor, or start a new production draft.</p>
+        </div>
+        <div class="acts">
+          <button class="lbtn lbtn-quiet">← Overview</button>
+          <button class="box-btn box-btn-primary">+ New Template</button>
+        </div>
+      </div>
+
+      <div class="wsctl">
+        <input value="" placeholder="Search templates…" readonly />
+        <select><option>Recently updated</option><option>Oldest updated</option><option>Name A–Z</option><option>Name Z–A</option></select>
+        <span class="fnote" style="border:0;margin:0;padding:0">4 records</span>
+      </div>
+
+      <div class="index">
+        <div class="idxrow head"><span>#</span><span>Template</span><span>Category</span><span>Blocks</span><span>Updated</span><span style="text-align:right">Actions</span></div>
+        <div class="idxrow">
+          <span class="num">01</span>
+          <span><h4>Autumn Service Reminder</h4><span class="sub">Seasonal service push · tagging complete</span></span>
+          <span class="cat">Promotional</span>
+          <span class="tabnum">6</span>
+          <span class="tabnum">02 Sep 2026</span>
+          <span class="acts"><button class="lbtn lbtn-accent">Edit</button><button class="lbtn">Duplicate</button><button class="lbtn lbtn-quiet">Delete</button></span>
+        </div>
+        <div class="idxrow">
+          <span class="num">02</span>
+          <span><h4>Monthly Owner Newsletter</h4><span class="sub">Recurring send, first Tuesday</span></span>
+          <span class="cat">Newsletter</span>
+          <span class="tabnum">9</span>
+          <span class="tabnum">28 Aug 2026</span>
+          <span class="acts"><button class="lbtn lbtn-accent">Edit</button><button class="lbtn">Duplicate</button><button class="lbtn lbtn-quiet">Delete</button></span>
+        </div>
+        <div class="idxrow">
+          <span class="num">03</span>
+          <span><h4>Parts Order Confirmation</h4><span class="sub">Triggered by order webhook</span></span>
+          <span class="cat">Transactional</span>
+          <span class="tabnum">4</span>
+          <span class="tabnum">21 Aug 2026</span>
+          <span class="acts"><button class="lbtn lbtn-accent">Edit</button><button class="lbtn">Duplicate</button><button class="lbtn lbtn-quiet">Delete</button></span>
+        </div>
+        <div class="idxrow">
+          <span class="num">04</span>
+          <span><h4>Q4 Model Range Teaser</h4><span class="sub">Imported from Figma frame “Range / Teaser”</span></span>
+          <span class="cat">Product Showcase</span>
+          <span class="tabnum">7</span>
+          <span class="tabnum">14 Aug 2026</span>
+          <span class="acts"><button class="lbtn lbtn-dim">Edit</button><button class="lbtn lbtn-dim">Duplicate</button><button class="lbtn" style="color:#C6493F;border-bottom-color:#7C3A33">Deleting…</button></span>
+        </div>
+      </div>
+
+      <div class="emptyblock">
+        <h4>No templates yet</h4>
+        <p>Create your first email template and start building with drag-and-drop components.</p>
+        <button class="box-btn box-btn-primary">Create first template</button>
+      </div>
+    </div>
+    <p class="caption">States shown: a record mid-<strong>Deleting…</strong> with its row actions dimmed, and the first-run <strong>No templates yet</strong> empty state set as a closing block.</p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -5,6 +5,7 @@ import { useBuilderStore } from '@/builder/store/builderStore';
 import { FieldRenderer, getFieldValue } from './FieldRenderer';
 import type { TemplateCategory } from '@/lib/schema/template';
 import { parseFieldPath } from '@/lib/preview/selectionIdentity';
+import { ChevronLeftIcon } from './icons';
 
 const TEMPLATE_CATEGORIES: { value: TemplateCategory; label: string }[] = [
   { value: 'promotional', label: 'Promotional' },
@@ -23,6 +24,7 @@ export function PropertyPanel({ className }: { className?: string }) {
   const updateBlockProp = useBuilderStore((s) => s.updateBlockProp);
   const updateMeta = useBuilderStore((s) => s.updateMeta);
   const updateTemplateInfo = useBuilderStore((s) => s.updateTemplateInfo);
+  const selectBlock = useBuilderStore((s) => s.selectBlock);
 
   const selectedBlock = template?.blocks.find((b) => b.id === selectedBlockId);
   const selectedFieldKey = parseFieldPath(selectedNodePath);
@@ -52,9 +54,31 @@ export function PropertyPanel({ className }: { className?: string }) {
     );
   }
 
+  const panelTitle = selectedBlock
+    ? selectedBlock.label || componentDef?.name || 'Block properties'
+    : 'Template settings';
+
   return (
     <aside className={panelClass}>
-      <div className="builder-panel-header">Properties</div>
+      <div className="builder-panel-header property-panel-header">
+        {selectedBlock ? (
+          <button
+            type="button"
+            className="property-panel-back"
+            onClick={() => selectBlock(null)}
+            title="Back to template settings"
+            aria-label="Back to template settings"
+          >
+            <ChevronLeftIcon />
+          </button>
+        ) : null}
+        <span className="property-panel-title" title={panelTitle}>
+          {panelTitle}
+        </span>
+        <span className="property-panel-context">
+          {selectedBlock ? 'Block' : 'Email'}
+        </span>
+      </div>
       <div className="builder-panel-body">
         {/* Template settings when no block selected */}
         {!selectedBlock && (
@@ -100,12 +124,13 @@ export function PropertyPanel({ className }: { className?: string }) {
               </div>
               <div className="field">
                 <label className="field-label">Background Color</label>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <div className="field-color-row">
                   <input
                     type="color"
+                    className="field-color"
                     value={template.meta.backgroundColor}
                     onChange={(e) => updateMeta({ backgroundColor: e.target.value })}
-                    style={{ width: 40, height: 36 }}
+                    aria-label="Choose background color"
                   />
                   <input
                     className="field-input"
@@ -114,10 +139,61 @@ export function PropertyPanel({ className }: { className?: string }) {
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="props-empty">
-              Select a block to edit its properties
+              <div className="field">
+                <label className="field-label">Content Background</label>
+                <div className="field-color-row field-color-row--clearable">
+                  <input
+                    type="color"
+                    className="field-color"
+                    value={template.meta.contentBackgroundColor ?? '#ffffff'}
+                    onChange={(e) =>
+                      updateMeta({ contentBackgroundColor: e.target.value })
+                    }
+                    aria-label="Choose content background color"
+                  />
+                  <input
+                    className="field-input"
+                    placeholder="Transparent"
+                    value={template.meta.contentBackgroundColor ?? ''}
+                    onChange={(e) =>
+                      updateMeta({
+                        contentBackgroundColor: e.target.value.trim() || undefined,
+                      })
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => updateMeta({ contentBackgroundColor: undefined })}
+                    disabled={!template.meta.contentBackgroundColor}
+                    title="Clear content background"
+                  >
+                    Clear
+                  </button>
+                </div>
+                <p className="field-help">
+                  Fills the gaps between components. Set this to your design colour so
+                  seams don&apos;t show through on dark templates.
+                </p>
+              </div>
+              <div className="field">
+                <label className="field-label">Email Width</label>
+                <div className="field-input-suffix">
+                  <input
+                    type="number"
+                    className="field-input"
+                    min={320}
+                    max={800}
+                    step={10}
+                    value={template.meta.containerWidth}
+                    onChange={(e) =>
+                      updateMeta({ containerWidth: Number(e.target.value) || 600 })
+                    }
+                  />
+                  <span>px</span>
+                </div>
+                <p className="field-help">Recommended range: 600–700px.</p>
+              </div>
             </div>
           </>
         )}
@@ -125,9 +201,9 @@ export function PropertyPanel({ className }: { className?: string }) {
         {/* Block properties */}
         {selectedBlock && componentDef && (
           <>
-            <div className="field-group">
-              <div className="field-group-title">{componentDef.name}</div>
-              <p className="field-help" style={{ marginBottom: 12 }}>
+            <div className="property-panel-summary">
+              <span className="property-panel-summary-type">{componentDef.name}</span>
+              <p>
                 {componentDef.description}
               </p>
             </div>

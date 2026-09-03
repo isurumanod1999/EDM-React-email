@@ -9,7 +9,7 @@ interface BuilderMobileNavProps {
 
 /**
  * Bottom navigation for narrow viewports (Builder Polish #1).
- * Keeps canvas/preview as the primary viewport; palette and properties open as drawers.
+ * Keeps the preview as the primary viewport; components/structure and properties open as drawers.
  */
 export function BuilderMobileNav({ activeDrawer, onSelect }: BuilderMobileNavProps) {
   return (
@@ -28,7 +28,7 @@ export function BuilderMobileNav({ activeDrawer, onSelect }: BuilderMobileNavPro
         onClick={() => onSelect(null)}
         aria-pressed={activeDrawer === null}
       >
-        Canvas
+        Preview
       </button>
       <button
         type="button"

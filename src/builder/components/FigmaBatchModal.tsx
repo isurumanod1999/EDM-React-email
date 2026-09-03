@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { ImportProgressBanner } from '@/builder/components/ImportProgressBanner';
 import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
+import { CloseIcon } from './icons';
 
 interface FigmaBatchModalProps {
   open: boolean;
@@ -179,9 +180,7 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
   }, [rows, importRow, patchRow]);
 
   const handleAddAll = useCallback(() => {
-    const blocks = rows.flatMap((r) =>
-      r.blocks?.length ? r.blocks : r.block ? [r.block] : []
-    );
+    const blocks = rows.flatMap((r) => (r.blocks?.length ? r.blocks : r.block ? [r.block] : []));
     if (blocks.length === 0) return;
     addBlocksFromAi(blocks);
     reset();
@@ -231,12 +230,12 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
           </div>
           <button
             type="button"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm btn-icon"
             onClick={handleClose}
             disabled={isRunning}
             aria-label="Close dialog"
           >
-            ✕
+            <CloseIcon />
           </button>
         </div>
 
@@ -279,7 +278,7 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
                       disabled={isRunning || rows.length <= 1}
                       title="Remove row"
                     >
-                      ✕
+                      <CloseIcon />
                     </button>
                   </div>
                   <div className="figma-batch-urls">
@@ -309,9 +308,7 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
                         <input
                           type="checkbox"
                           checked={row.autoDetectImages}
-                          onChange={(e) =>
-                            patchRow(row.id, { autoDetectImages: e.target.checked })
-                          }
+                          onChange={(e) => patchRow(row.id, { autoDetectImages: e.target.checked })}
                           disabled={isRunning}
                         />
                         Auto-detect icons → 2× images
@@ -321,9 +318,7 @@ export function FigmaBatchModal({ open, onClose }: FigmaBatchModalProps) {
                         className="import-modal-input figma-batch-instructions"
                         placeholder="Image instructions (optional) — e.g. badges & social icons as images"
                         value={row.imageInstructions}
-                        onChange={(e) =>
-                          patchRow(row.id, { imageInstructions: e.target.value })
-                        }
+                        onChange={(e) => patchRow(row.id, { imageInstructions: e.target.value })}
                         disabled={isRunning}
                       />
                     </div>

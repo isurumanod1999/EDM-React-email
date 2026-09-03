@@ -6,6 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import type { TemplateBlock } from '@/lib/schema/template';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import { SaveReusableComponentModal } from './SaveReusableComponentModal';
+import { CloseIcon, DragHandleIcon, DuplicateIcon, PlusIcon } from './icons';
 
 interface BlockItemProps {
   block: TemplateBlock;
@@ -55,7 +56,7 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
         {...listeners}
         aria-label={`Reorder ${label}`}
       >
-        ⠿
+        <DragHandleIcon />
       </span>
       <div className="block-info">
         <div className="block-name">{label}</div>
@@ -64,7 +65,7 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
       <div className="block-actions">
         <button
           type="button"
-          className="btn btn-ghost btn-sm"
+          className="btn btn-ghost btn-sm btn-icon"
           onClick={(e) => {
             e.stopPropagation();
             setSaveModalOpen(true);
@@ -72,11 +73,11 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
           title="Add to components"
           aria-label={`Add ${label} to reusable components`}
         >
-          ＋
+          <PlusIcon />
         </button>
         <button
           type="button"
-          className="btn btn-ghost btn-sm"
+          className="btn btn-ghost btn-sm btn-icon"
           onClick={(e) => {
             e.stopPropagation();
             duplicateBlock(block.id);
@@ -84,11 +85,11 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
           title="Duplicate"
           aria-label={`Duplicate ${label}`}
         >
-          ⧉
+          <DuplicateIcon />
         </button>
         <button
           type="button"
-          className="btn btn-ghost btn-sm btn-danger"
+          className="btn btn-ghost btn-sm btn-icon btn-danger"
           onClick={(e) => {
             e.stopPropagation();
             if (!window.confirm(`Remove "${label}" from the canvas?`)) return;
@@ -97,7 +98,7 @@ export function BlockItem({ block, componentName }: BlockItemProps) {
           title="Remove"
           aria-label={`Remove ${label}`}
         >
-          ✕
+          <CloseIcon />
         </button>
       </div>
       <SaveReusableComponentModal

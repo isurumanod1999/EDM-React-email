@@ -6,6 +6,7 @@ import { useBuilderStore } from '@/builder/store/builderStore';
 import { discoverLinkableTargets } from '@/lib/tagging/discoverTargets';
 import { matchTaggingRows } from '@/lib/tagging/matchRows';
 import type { LinkableTarget, TaggingRow, TaggingRowStatus } from '@/lib/tagging/types';
+import { TagIcon } from '@/builder/components/icons';
 
 type ChecklistMark = 'pass' | 'fail' | null;
 type ChecklistState = Record<string, { desktop: ChecklistMark; mobile: ChecklistMark }>;
@@ -243,20 +244,9 @@ export function TaggingPanel() {
         disabled={busy || !template}
         title="Upload campaign tagging Excel after the template is built"
       >
+        <TagIcon />
         {busy ? 'Working…' : 'Tagging'}
       </button>
-      {rows.length === 0 && appliedItems.length === 0 && (
-        <button
-          type="button"
-          className="btn btn-ghost btn-sm"
-          onClick={openPicker}
-          disabled={busy || !template}
-          style={{ marginLeft: 4 }}
-          title="Upload .xlsx"
-        >
-          Upload
-        </button>
-      )}
 
       {open && (
         <div className="tagging-popover">

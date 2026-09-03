@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
+import { CloseIcon } from './icons';
 
 interface SendTestModalProps {
   open: boolean;
@@ -85,7 +86,9 @@ export function SendTestModal({ open, onClose }: SendTestModalProps) {
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        throw new Error(typeof data.error === 'string' ? data.error : `Send failed (${res.status})`);
+        throw new Error(
+          typeof data.error === 'string' ? data.error : `Send failed (${res.status})`
+        );
       }
 
       setSuccess(
@@ -126,12 +129,12 @@ export function SendTestModal({ open, onClose }: SendTestModalProps) {
           </div>
           <button
             type="button"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm btn-icon"
             onClick={handleClose}
             disabled={isSending}
             aria-label="Close dialog"
           >
-            ✕
+            <CloseIcon />
           </button>
         </div>
 
@@ -186,7 +189,12 @@ export function SendTestModal({ open, onClose }: SendTestModalProps) {
         </div>
 
         <div className="import-modal-footer">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose} disabled={isSending}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={handleClose}
+            disabled={isSending}
+          >
             {success ? 'Close' : 'Cancel'}
           </button>
           <button

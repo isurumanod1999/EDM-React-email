@@ -54,9 +54,13 @@ export function DynamicEmailTemplate({
         }}
       >
         <Container
+          bgcolor={resolvedMeta.contentBackgroundColor}
           style={{
             maxWidth: `${resolvedMeta.containerWidth}px`,
             margin: '0 auto',
+            ...(resolvedMeta.contentBackgroundColor
+              ? { backgroundColor: resolvedMeta.contentBackgroundColor }
+              : null),
           }}
         >
           {blocks.map((block) => {

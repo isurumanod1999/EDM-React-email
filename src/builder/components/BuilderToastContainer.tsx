@@ -1,6 +1,7 @@
 'use client';
 
 import { useToastStore } from '@/builder/store/toastStore';
+import { CloseIcon } from './icons';
 
 export function BuilderToastContainer() {
   const toasts = useToastStore((s) => s.toasts);
@@ -11,10 +12,7 @@ export function BuilderToastContainer() {
   return (
     <div className="builder-toast-stack" role="status" aria-live="polite" aria-atomic="false">
       {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`builder-toast builder-toast--${toast.variant}`}
-        >
+        <div key={toast.id} className={`builder-toast builder-toast--${toast.variant}`}>
           <span className="builder-toast-message">{toast.message}</span>
           <button
             type="button"
@@ -22,7 +20,7 @@ export function BuilderToastContainer() {
             onClick={() => dismiss(toast.id)}
             aria-label="Dismiss notification"
           >
-            ×
+            <CloseIcon />
           </button>
         </div>
       ))}

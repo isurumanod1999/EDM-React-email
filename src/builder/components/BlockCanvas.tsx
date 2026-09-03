@@ -24,22 +24,21 @@ export function BlockCanvas() {
     registry.find((c) => c.id === componentId)?.name ?? componentId;
 
   return (
-    <div className="builder-canvas-section">
+    <section className="rail-section rail-section--structure">
       <div className="builder-panel-header">
-        Canvas ({blocks.length} block{blocks.length !== 1 ? 's' : ''})
+        Structure
+        <span className="rail-count">
+          {blocks.length} block{blocks.length !== 1 ? 's' : ''}
+        </span>
       </div>
       <div
         ref={setNodeRef}
-        className="builder-panel-body builder-canvas-drop"
-        aria-label="Email block canvas. Drag components here or use Enter on palette items to add blocks."
-        style={{
-          outline: isOver ? '2px dashed var(--accent)' : undefined,
-          outlineOffset: -2,
-        }}
+        className={`builder-panel-body builder-canvas-drop${isOver ? ' is-drop-target' : ''}`}
+        aria-label="Email block structure. Drag components here or use Enter on palette items to add blocks."
       >
         {blocks.length === 0 ? (
           <div className="canvas-empty">
-            Drag components from the palette or double-click to add blocks
+            Drag a component here, or double-click one above
           </div>
         ) : (
           <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
@@ -55,6 +54,6 @@ export function BlockCanvas() {
           </SortableContext>
         )}
       </div>
-    </div>
+    </section>
   );
 }

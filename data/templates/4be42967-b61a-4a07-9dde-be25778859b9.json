@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "4be42967-b61a-4a07-9dde-be25778859b9",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [],
+  "createdAt": "2026-09-02T11:54:34.871Z",
+  "updatedAt": "2026-09-02T11:54:34.871Z"
+}

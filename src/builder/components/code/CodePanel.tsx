@@ -8,6 +8,7 @@ import { REACT_EMAIL_COMPONENT_NAMES } from '@/lib/codeview/nodeSchema';
 import { CodeEditor } from '@/builder/components/code/CodeEditor';
 import { CodePreviewPane } from '@/builder/components/code/CodePreviewPane';
 import { pushToast } from '@/builder/store/toastStore';
+import { CodeIcon } from '@/builder/components/icons';
 
 const DEBOUNCE_MS = 450;
 const MIN_FONT = 11;
@@ -366,6 +367,7 @@ export function CodePanel() {
         disabled={!template}
         title="View and edit the React Email JSX for this template"
       >
+        <CodeIcon />
         Code
       </button>
       {open && mounted ? createPortal(modal, document.body) : null}

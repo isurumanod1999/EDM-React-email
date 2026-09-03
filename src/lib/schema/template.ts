@@ -16,7 +16,14 @@ export type ComponentCategory =
 
 export interface EmailTemplateMeta {
   previewText: string;
+  /** Page background, visible outside the content column. */
   backgroundColor: string;
+  /**
+   * Background of the content column itself. Without it, any gap between two
+   * blocks exposes `backgroundColor`, which shows as a pale seam on dark
+   * designs. Left undefined the column stays transparent, as it always was.
+   */
+  contentBackgroundColor?: string;
   containerWidth: number;
 }
 

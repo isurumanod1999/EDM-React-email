@@ -29,8 +29,8 @@ export function ImportResultPanel({
   const getComponentName = (id: string) =>
     registry.find((r) => r.id === id)?.name ?? id;
 
-  const frameWidth = previewMode === 'desktop' ? '100%' : '375px';
-  const frameMaxWidth = previewMode === 'desktop' ? '600px' : '375px';
+  const frameWidth = previewMode === 'desktop' ? '100%' : '360px';
+  const frameMaxWidth = previewMode === 'desktop' ? '600px' : '360px';
   const showConfidence = buildMode !== 'react-email';
 
   return (

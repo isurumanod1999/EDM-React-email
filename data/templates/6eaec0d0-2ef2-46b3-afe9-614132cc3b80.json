@@ -1,0 +1,581 @@
+{
+  "schemaVersion": 1,
+  "id": "6eaec0d0-2ef2-46b3-afe9-614132cc3b80",
+  "name": "Untitled Template",
+  "category": "newsletter",
+  "meta": {
+    "previewText": "Preview your email",
+    "backgroundColor": "#f4f4f4",
+    "containerWidth": 600
+  },
+  "blocks": [
+    {
+      "id": "95ba7544-7b4f-4a37-86e3-73024a00a01a",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "24px 40px 0px 40px"
+          },
+          "children": [
+            {
+              "type": "Text",
+              "content": "Can’t see this email? Click here to view online",
+              "html": "Can’t see this email? Click <span style=\"text-decoration:underline\">here</span> to view online",
+              "style": {
+                "color": "#efefef",
+                "fontSize": "12px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "16px",
+                "whiteSpace": "pre-line",
+                "marginBottom": 0
+              },
+              "mobileStyle": {
+                "lineHeight": "14px"
+              }
+            }
+          ]
+        },
+        "sourceFrame": "preheader",
+        "mobileFrame": "preheader",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "preheader",
+      "sourceSavedComponentId": "2ff85dca-e747-4d2d-87e6-ddb28ed5c083"
+    },
+    {
+      "id": "9a89bcd3-439b-44ba-9c9f-59a46a9fc74a",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto",
+            "backgroundColor": "#000000"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-300fe70d-2c39-437a-9d51-88950d0d3d56.png",
+              "width": 600,
+              "height": 160,
+              "alt": "header",
+              "align": "center",
+              "fullBleed": true
+            }
+          ]
+        },
+        "sourceFrame": "header",
+        "mobileFrame": "",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "NissanHeader",
+      "sourceSavedComponentId": "cd5c35f0-75d9-4664-a035-971e93d4687c"
+    },
+    {
+      "id": "15d64030-014a-48f0-ba08-5ca9cb1b44af",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto",
+            "backgroundColor": "#ffffff"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-4a6d8e48-7d05-452e-9206-9cf5d5040a21.png",
+              "mobileSrc": "/images/uploads/figma-mob-1c239cdf-6b07-4265-9d7a-c4dc1da12db1.png",
+              "width": 600,
+              "height": 820,
+              "alt": "Hero section",
+              "align": "center",
+              "fullBleed": true,
+              "className": "figma-frame-img-8a73b00e-78b0-4f0b-950a-6b0079c707e1"
+            }
+          ]
+        },
+        "sourceFrame": "Hero section",
+        "mobileFrame": "Hero section",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "Hero section",
+      "sourceSavedComponentId": "418a9503-c9da-40c9-8db2-417caa664cdf"
+    },
+    {
+      "id": "a18a00eb-0431-4d82-9485-8c671b6e69ee",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#131722",
+            "textAlign": "center",
+            "padding": "48px 55px 64px 55px"
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "The Nissan New Car Warranty already includes:",
+              "as": "h2",
+              "style": {
+                "color": "#ffffff",
+                "fontSize": "28px",
+                "fontWeight": 400,
+                "textAlign": "center",
+                "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "36px",
+                "whiteSpace": "pre-line"
+              },
+              "mobileStyle": {
+                "fontSize": "20px",
+                "lineHeight": "28px"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 40
+            },
+            {
+              "type": "Row",
+              "style": {
+                "width": "100%"
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "31%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 0,
+                    "paddingRight": 10
+                  },
+                  "children": [
+                    {
+                      "type": "Section",
+                      "style": {
+                        "width": 72,
+                        "height": 72,
+                        "boxSizing": "border-box",
+                        "marginLeft": "auto",
+                        "marginRight": "auto",
+                        "backgroundColor": "#29333e",
+                        "borderRadius": 36,
+                        "padding": "13.5px 0px 13.5px 0px"
+                      },
+                      "children": [
+                        {
+                          "type": "Img",
+                          "src": "/images/uploads/figma-export-1a3e514e-2022-4a34-89f0-5ff4e32b13f3.png",
+                          "width": 32,
+                          "height": 32,
+                          "alt": "Component 2",
+                          "className": "figma-img-I8687-5550-7005-1402",
+                          "align": "center",
+                          "isIcon": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Spacer",
+                      "height": 24
+                    },
+                    {
+                      "type": "Text",
+                      "content": "5-year / 150,000km Warranty",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "18px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "28px",
+                        "whiteSpace": "pre-line"
+                      },
+                      "mobileStyle": {
+                        "fontSize": "14px",
+                        "lineHeight": "20px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "31%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 10,
+                    "paddingRight": 10
+                  },
+                  "children": [
+                    {
+                      "type": "Section",
+                      "style": {
+                        "width": 72,
+                        "height": 72,
+                        "boxSizing": "border-box",
+                        "marginLeft": "auto",
+                        "marginRight": "auto",
+                        "backgroundColor": "#29333e",
+                        "borderRadius": 36,
+                        "padding": "13.5px 0px 13.5px 0px"
+                      },
+                      "children": [
+                        {
+                          "type": "Img",
+                          "src": "/images/uploads/figma-export-5a83ee15-c592-4c01-a46e-b512fb710ef3.png",
+                          "width": 32,
+                          "height": 32,
+                          "alt": "Component 2",
+                          "className": "figma-img-I8687-5550-7005-1409",
+                          "align": "center",
+                          "isIcon": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Spacer",
+                      "height": 24
+                    },
+                    {
+                      "type": "Text",
+                      "content": "1-year Standard Roadside Assist",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "18px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "28px",
+                        "whiteSpace": "pre-line"
+                      },
+                      "mobileStyle": {
+                        "fontSize": "14px",
+                        "lineHeight": "20px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Column",
+                  "className": "figma-col-stack",
+                  "style": {
+                    "width": "31%",
+                    "verticalAlign": "top",
+                    "paddingLeft": 10,
+                    "paddingRight": 0
+                  },
+                  "children": [
+                    {
+                      "type": "Section",
+                      "style": {
+                        "width": 72,
+                        "height": 72,
+                        "boxSizing": "border-box",
+                        "marginLeft": "auto",
+                        "marginRight": "auto",
+                        "backgroundColor": "#29333e",
+                        "borderRadius": 36,
+                        "padding": "13.5px 0px 13.5px 0px"
+                      },
+                      "children": [
+                        {
+                          "type": "Img",
+                          "src": "/images/uploads/figma-export-e5ddbd1c-8708-47ec-9aa0-0fee24812511.png",
+                          "width": 32,
+                          "height": 32,
+                          "alt": "Component 2",
+                          "className": "figma-img-I8687-5550-7005-1396",
+                          "align": "center",
+                          "isIcon": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Spacer",
+                      "height": 24
+                    },
+                    {
+                      "type": "Text",
+                      "content": "5 years of flat price service**",
+                      "style": {
+                        "color": "#ffffff",
+                        "fontSize": "18px",
+                        "fontWeight": 400,
+                        "textAlign": "center",
+                        "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                        "margin": 0,
+                        "padding": 0,
+                        "lineHeight": "28px",
+                        "whiteSpace": "pre-line"
+                      },
+                      "mobileStyle": {
+                        "fontSize": "14px",
+                        "lineHeight": "20px"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sourceFrame": "call-out",
+        "mobileFrame": "call-out",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "call-out",
+      "sourceSavedComponentId": "9bc2c817-1501-4f8e-9c3b-1384d6d93b62"
+    },
+    {
+      "id": "4cce35f5-175e-486c-b381-65a5e4c676d2",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "width": "100%",
+            "maxWidth": 600,
+            "margin": "0 auto"
+          },
+          "children": [
+            {
+              "type": "Img",
+              "src": "/images/uploads/figma-desk-0d5d1fba-e0a2-4cfe-95b3-136fff5067f2.png",
+              "mobileSrc": "/images/uploads/figma-mob-89502139-0f47-4c24-8e20-64ebdd036cce.png",
+              "width": 600,
+              "height": 480,
+              "alt": "KV",
+              "align": "center",
+              "fullBleed": true,
+              "className": "figma-frame-img-8ad71384-5898-4110-8175-113b723b6aed"
+            }
+          ]
+        },
+        "sourceFrame": "KV",
+        "mobileFrame": "KV",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "KV"
+    },
+    {
+      "id": "8177222a-4984-4396-bdd3-1d0b4a341aea",
+      "componentId": "figma-react-email",
+      "componentVersion": 1,
+      "props": {
+        "tree": {
+          "type": "Section",
+          "style": {
+            "maxWidth": 600,
+            "width": "100%",
+            "margin": "0 auto",
+            "backgroundColor": "#000000",
+            "textAlign": "center",
+            "padding": "40px 40px 40px 40px"
+          },
+          "children": [
+            {
+              "type": "Heading",
+              "content": "THE NEW ERA  OF PATROL",
+              "as": "h1",
+              "style": {
+                "color": "#caa185",
+                "fontSize": "56px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "50px",
+                "whiteSpace": "pre-line"
+              },
+              "mobileStyle": {
+                "fontSize": "33.60000228881836px",
+                "lineHeight": "30px"
+              }
+            },
+            {
+              "type": "Heading",
+              "content": "ARRIVES EARLY 2027",
+              "as": "h1",
+              "style": {
+                "color": "#caa185",
+                "fontSize": "32px",
+                "fontWeight": 700,
+                "textAlign": "center",
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "margin": 0,
+                "padding": 0,
+                "lineHeight": "45px",
+                "whiteSpace": "pre-line"
+              },
+              "mobileStyle": {
+                "fontSize": "19.200000762939453px",
+                "lineHeight": "27px"
+              }
+            },
+            {
+              "type": "Spacer",
+              "height": 40
+            },
+            {
+              "type": "Section",
+              "style": {
+                "width": "100%",
+                "textAlign": "center",
+                "padding": "0px 12px 0px 12px",
+                "backgroundColor": "#000000"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "content": "<Name>,",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 16
+                  }
+                },
+                {
+                  "type": "Text",
+                  "content": "The road ahead is going to get a whole lot more exciting!",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 16
+                  }
+                },
+                {
+                  "type": "Text",
+                  "content": "The all-new Nissan Patrol arrives in early 2027, bringing together elevated comfort, commanding performance, legendary off-road capability and new to Patrol features.",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 16
+                  }
+                },
+                {
+                  "type": "Text",
+                  "content": "Register your interest to be the first to know when the  latest all-new Patrol updates drops.",
+                  "style": {
+                    "color": "#ffffff",
+                    "fontSize": "16px",
+                    "fontWeight": 400,
+                    "textAlign": "center",
+                    "fontFamily": "\"Verdana\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                    "margin": 0,
+                    "padding": 0,
+                    "lineHeight": "24px",
+                    "whiteSpace": "pre-line",
+                    "marginBottom": 0
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "height": 40
+            },
+            {
+              "type": "Button",
+              "href": "#",
+              "label": "Register your interest",
+              "mobileStyle": {
+                "fontSize": "14px",
+                "lineHeight": "20px"
+              },
+              "containerStyle": {
+                "textAlign": "center",
+                "width": "100%",
+                "margin": 0,
+                "padding": 0
+              },
+              "style": {
+                "backgroundColor": "#b42535",
+                "color": "#ffffff",
+                "borderRadius": 999,
+                "fontFamily": "\"Nissan Brand\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": "16px",
+                "fontWeight": 400,
+                "lineHeight": "24px",
+                "padding": "12px 32px",
+                "textAlign": "center",
+                "textTransform": "uppercase",
+                "textDecoration": "none",
+                "width": "290px",
+                "maxWidth": "100%",
+                "display": "inline-block",
+                "boxSizing": "border-box",
+                "margin": 0
+              }
+            }
+          ]
+        },
+        "sourceFrame": "Opening",
+        "mobileFrame": "Opening",
+        "hideBorders": false,
+        "borderColor": ""
+      },
+      "label": "Opening"
+    }
+  ],
+  "createdAt": "2026-09-03T03:59:39.783Z",
+  "updatedAt": "2026-09-03T04:04:11.799Z"
+}

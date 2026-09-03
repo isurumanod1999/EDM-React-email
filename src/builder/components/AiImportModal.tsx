@@ -8,6 +8,7 @@ import { ImportResultPanel } from '@/builder/components/ImportResultPanel';
 import { useModalA11y } from '@/builder/hooks/useModalA11y';
 import { useBuilderStore } from '@/builder/store/builderStore';
 import type { AiBlock } from '@/lib/ai/schemas/analyzeResult';
+import { CloseIcon } from './icons';
 
 interface AiImportModalProps {
   open: boolean;
@@ -122,16 +123,18 @@ export function AiImportModal({ open, onClose }: AiImportModalProps) {
         <div className="import-modal-header">
           <div>
             <h2 id="screenshot-upload-title">Screenshot Upload</h2>
-            <p className="import-modal-subtitle">Upload screenshots to map them to email components</p>
+            <p className="import-modal-subtitle">
+              Upload screenshots to map them to email components
+            </p>
           </div>
           <button
             type="button"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm btn-icon"
             onClick={handleClose}
             disabled={isAnalyzing}
             aria-label="Close dialog"
           >
-            ✕
+            <CloseIcon />
           </button>
         </div>
 
@@ -186,7 +189,12 @@ export function AiImportModal({ open, onClose }: AiImportModalProps) {
         </div>
 
         <div className="import-modal-footer">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={handleClose} disabled={isAnalyzing}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={handleClose}
+            disabled={isAnalyzing}
+          >
             Cancel
           </button>
           {!result ? (

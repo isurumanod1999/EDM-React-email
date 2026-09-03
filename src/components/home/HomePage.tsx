@@ -4,24 +4,6 @@ import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import '@/app/home.css';
 
-const CAPABILITIES = [
-  {
-    title: 'Design-system aware',
-    description:
-      'Build from the reusable component registry or import Figma frames into editable React Email structures.',
-  },
-  {
-    title: 'Built for iteration',
-    description:
-      'Adjust content and properties on canvas while the live HTML preview stays close to the work.',
-  },
-  {
-    title: 'Ready to hand off',
-    description:
-      'Save reusable templates, export a production ZIP, and send a test through Resend when configured.',
-  },
-];
-
 const WORKFLOW = [
   {
     number: '01',
@@ -69,24 +51,6 @@ export function HomePage() {
           <Link href="/builder" className="btn btn-primary">
             Open Workspace <span aria-hidden>→</span>
           </Link>
-        </section>
-
-        <section className="home-section" aria-labelledby="capabilities-heading">
-          <div className="home-section-header">
-            <div>
-              <span className="home-eyebrow">Demonstrable now</span>
-              <h2 id="capabilities-heading">One focused production surface</h2>
-            </div>
-          </div>
-          <div className="home-capabilities">
-            {CAPABILITIES.map((capability) => (
-              <article key={capability.title} className="home-capability">
-                <span className="home-capability-mark" aria-hidden />
-                <h3>{capability.title}</h3>
-                <p>{capability.description}</p>
-              </article>
-            ))}
-          </div>
         </section>
 
         <section className="home-section home-workflow" aria-labelledby="workflow-heading">
